@@ -1,87 +1,83 @@
-import Image from "next/image";
+import Link from "next/link";
+import Footer from '@/components/layout/Footer';
+import HomeNavbar from '@/components/layout/HomeNavbar';
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      {/* Hero Section */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/hero.png"
-          alt="ScriptNex Hero"
-          fill
-          className="object-cover opacity-30 blur-[2px]"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/50 to-background" />
-      </div>
+    <div className="min-h-screen flex flex-col bg-[#0f1115] text-[#f8fafc] overflow-hidden">
+      {/* Background glows */}
+      <div className="fixed top-[-30%] left-[20%] w-[50%] h-[50%] rounded-full bg-[#00d285] opacity-[0.03] blur-[150px] z-0 pointer-events-none" />
+      <div className="fixed bottom-[-30%] right-[10%] w-[50%] h-[50%] rounded-full bg-[#6366f1] opacity-[0.02] blur-[150px] z-0 pointer-events-none" />
 
-      <nav className="fixed top-0 left-0 right-0 z-50 glass">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold gradient-text">ScriptNex</div>
-          <div className="hidden md:flex space-x-8 text-sm font-medium">
-            <a href="#" className="hover:text-primary transition-colors">Platform</a>
-            <a href="#" className="hover:text-primary transition-colors">Solutions</a>
-            <a href="#" className="hover:text-primary transition-colors">Pricing</a>
-            <a href="#" className="hover:text-primary transition-colors">Docs</a>
-          </div>
-          <button className="px-6 py-2 rounded-full bg-primary text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
-            Get Started
-          </button>
+      {/* Navbar */}
+      <HomeNavbar />
+      <div className="h-[65px]" aria-hidden="true"></div>
+
+      {/* Hero */}
+      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 text-center py-20">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d285]/30 text-xs font-medium text-[#00d285] mb-10 bg-[#00d285]/5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00d285] animate-pulse" />
+          Level Up Your Coding Skills
         </div>
-      </nav>
 
-      <div className="relative z-10 container mx-auto px-6 pt-32 pb-20 text-center">
-        <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
-          Automate Your <br />
-          <span className="gradient-text">Workflow Reality</span>
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl leading-[1.1]">
+          Practice. Compete.<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00d285] to-[#00e691]">
+            Get Certified.
+          </span>
         </h1>
-        <p className="text-xl md:text-2xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-          The next-generation scripting platform for developers who demand speed, 
-          security, and absolute control.
+
+        <p className="text-[#94a3b8] text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
+          Join thousands of developers who sharpen their skills through coding challenges, earn industry-recognized certifications, and showcase their expertise.
         </p>
-        <div className="flex flex-col md:flex-row justify-center gap-4 mb-20">
-          <button className="px-8 py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-slate-100 transition-all">
-            Start Building Free
-          </button>
-          <button className="px-8 py-4 rounded-xl glass text-white font-bold text-lg hover:bg-white/10 transition-all">
-            Watch Demo
-          </button>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
+          <Link href="/register" className="px-8 py-4 rounded-xl bg-[#00d285] text-black font-bold text-base hover:bg-[#00e691] transition-colors shadow-[0_0_30px_rgba(0,210,133,0.2)]">
+            Get Started — It&apos;s Free
+          </Link>
+          <Link href="/problems" className="px-8 py-4 rounded-xl border border-[#2a2d35] text-white font-semibold text-base hover:bg-white/5 transition-colors">
+            Explore Challenges
+          </Link>
         </div>
 
-        {/* Feature Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mt-20">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-8 max-w-lg">
           {[
-            {
-              title: "Lightning Fast",
-              desc: "Optimized runtime for scripts that execute in milliseconds, not seconds.",
-              icon: "⚡"
-            },
-            {
-              title: "Enterprise Security",
-              desc: "Bank-grade encryption and sandboxed environments for every execution.",
-              icon: "🛡️"
-            },
-            {
-              title: "Global Scale",
-              desc: "Deploy scripts globally with edge-ready architecture out of the box.",
-              icon: "🌐"
-            }
-          ].map((feature, i) => (
-            <div key={i} className="glass p-8 rounded-3xl text-left hover:-translate-y-2 transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:animate-float">{feature.icon}</div>
-              <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
-              <p className="text-slate-400 leading-relaxed">{feature.desc}</p>
+            { num: '500+', label: 'Coding Problems' },
+            { num: '50K+', label: 'Developers' },
+            { num: '20+', label: 'Certifications' },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-2xl font-bold text-[#00d285]">{stat.num}</div>
+              <div className="text-xs text-[#64748b] mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 py-12 border-t border-border">
-        <div className="container mx-auto px-6 text-center text-slate-500">
-          <p>© 2026 ScriptNex Inc. Built for the future of development.</p>
+      {/* Features */}
+      <section className="relative z-10 border-t border-[#2a2d35] py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Everything you need to level up</h2>
+          <p className="text-[#94a3b8] text-center mb-14 max-w-xl mx-auto">From beginner to expert, ScriptNex has tools for every stage of your coding journey.</p>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: '⌨️', title: 'Practice Problems', desc: 'Solve 500+ challenges across arrays, strings, trees, DP, graphs, and more with an in-browser code editor.' },
+              { icon: '🏆', title: 'Live Contests', desc: 'Compete in rated and unrated contests. Climb the leaderboard and earn recognition.' },
+              { icon: '📜', title: 'Certifications', desc: 'Take timed exams and earn verified certificates to prove your skills to employers.' },
+            ].map((f) => (
+              <div key={f.title} className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6 hover:border-[#00d285]/20 transition-colors group">
+                <div className="text-3xl mb-4">{f.icon}</div>
+                <h3 className="text-lg font-semibold mb-2 group-hover:text-[#00d285] transition-colors">{f.title}</h3>
+                <p className="text-sm text-[#94a3b8] leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </footer>
-    </main>
+      </section>
+
+      <Footer />
+    </div>
   );
 }
