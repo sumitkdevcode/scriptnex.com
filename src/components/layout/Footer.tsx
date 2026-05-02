@@ -4,19 +4,19 @@ import logoNav from '../../../public/logo-nav.png';
 export default function Footer() {
   return (
     <footer className="bg-[#0f1115] border-t border-[#2a2d35] pt-16 pb-8 relative z-10 mt-auto">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="md:col-span-1">
+      <div className="w-full px-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12 mb-16">
+          <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-1 mb-4">
-              <img src={logoNav.src} alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" />
+              <img src={logoNav.src} alt="ScriptNex Logo" className="h-[50px] md:h-[60px] w-auto object-contain" />
 
             </Link>
-            <p className="text-[#64748b] text-sm leading-relaxed mb-6">
+            <p className="text-[#64748b] text-sm leading-relaxed mb-6 max-w-sm">
               The ultimate platform to level up your coding skills, prepare for technical interviews, and earn verified certifications.
             </p>
           </div>
 
-          <div>
+          <div className="col-span-1">
             <h3 className="text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-3">
               <li><Link href="/problems" className="text-[#64748b] hover:text-[#00d285] transition-colors text-sm">Practice Problems</Link></li>
@@ -26,7 +26,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="col-span-1">
             <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
               <li><Link href="/tracks" className="text-[#64748b] hover:text-[#00d285] transition-colors text-sm">Learning Tracks</Link></li>
@@ -36,7 +36,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="col-span-2 sm:col-span-1">
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-3">
               <li><Link href="#" className="text-[#64748b] hover:text-[#00d285] transition-colors text-sm">About Us</Link></li>

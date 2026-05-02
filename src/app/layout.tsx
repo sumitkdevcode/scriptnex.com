@@ -10,9 +10,41 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ScriptNex — Code. Certify. Excel.",
+  title: {
+    default: "ScriptNex — Code. Certify. Excel.",
+    template: "%s | ScriptNex",
+  },
   description:
-    "Practice coding challenges, earn certifications, and compete in programming contests on ScriptNex.",
+    "Practice coding challenges, earn certifications, and compete in programming contests on ScriptNex — India's premier competitive programming platform.",
+  keywords: [
+    "competitive programming",
+    "coding challenges",
+    "programming contests",
+    "coding certifications",
+    "learn to code",
+    "ScriptNex",
+    "HackerRank alternative",
+    "coding practice",
+  ],
+  authors: [{ name: "ScriptNex" }],
+  openGraph: {
+    type: "website",
+    siteName: "ScriptNex",
+    title: "ScriptNex — Code. Certify. Excel.",
+    description:
+      "Practice coding challenges, earn certifications, and compete in programming contests.",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ScriptNex — Code. Certify. Excel.",
+    description:
+      "Practice coding challenges, earn certifications, and compete in programming contests.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
