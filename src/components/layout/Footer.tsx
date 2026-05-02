@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import logoNav from '../../../public/logo-nav.png';
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-1 mb-4">
-              <img src="/logo-nav.png" alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" />
+              <img src={logoNav.src} alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" />
 
             </Link>
             <p className="text-[#64748b] text-sm leading-relaxed mb-6">

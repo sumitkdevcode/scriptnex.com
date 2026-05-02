@@ -18,7 +18,7 @@ const authPaths = [
   '/forgot-password'
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Note: Since we are using an API-only approach without server-side cookies

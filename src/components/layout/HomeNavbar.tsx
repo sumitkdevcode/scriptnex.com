@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import logoNav from '../../../public/logo-nav.png';
 
 export default function HomeNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -9,7 +10,7 @@ export default function HomeNavbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 w-full flex items-center justify-between px-4 md:px-12 lg:px-24 py-1.5 border-b border-[#2a2d35] z-50 bg-[#0f1115]/80 backdrop-blur-md">
       <Link href="/" className="flex items-center z-10 shrink-0">
-        <img src="/logo-nav.png" alt="ScriptNex Logo" className="h-[40px] md:h-[60px] w-auto object-contain" />
+        <img src={logoNav.src} alt="ScriptNex Logo" className="h-[40px] md:h-[60px] w-auto object-contain" />
       </Link>
       
       {/* Desktop Links */}

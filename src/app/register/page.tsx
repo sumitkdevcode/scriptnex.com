@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import logoNav from '../../../../public/logo-nav.png';
 
 export default function RegisterPage() {
   const { register, error, fieldErrors, isLoading, clearErrors } = useAuth();
@@ -42,7 +43,7 @@ export default function RegisterPage() {
 
       <nav className="navbar">
         <Link href="/" className="brand">
-          <img src="/logo-nav.png" alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" style={{ background: 'transparent' }} />
+          <img src={logoNav.src} alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" style={{ background: 'transparent' }} />
         </Link>
       </nav>
 
