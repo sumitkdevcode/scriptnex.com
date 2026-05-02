@@ -1,31 +1,17 @@
-const { createServer } = require('http');
-const { parse } = require('url');
-const next = require('next');
+// server.js
+// CPanel Passenger Standalone Wrapper
 
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
-const port = process.env.PORT || 3000;
+// Force Next.js standalone server to bind properly in CPanel
+process.env.NODE_ENV = 'production';
+process.env.HOSTNAME = '127.0.0.1';
+process.env.PORT = process.env.PORT || 3000;
 
-// Initialize the Next.js application
-const app = next({ dev, hostname, port });
-const handle = app.getRequestHandler();
+console.log('Starting standalone Next.js server on port ' + process.env.PORT);
 
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true);
-      await handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error('Error occurred handling', req.url, err);
-      res.statusCode = 500;
-      res.end('Internal Server Error');
-    }
-  })
-    .once('error', (err) => {
-      console.error(err);
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
-    });
-});
+// Boot the highly-optimized standalone server directly
+try {
+  require('./.next/standalone/server.js');
+} catch (e) {
+  console.error("Failed to start standalone server. Make sure you uploaded the .next folder.", e);
+  process.exit(1);
+}
