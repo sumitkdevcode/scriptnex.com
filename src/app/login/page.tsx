@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import logoNav from '../../../../public/logo-nav.png';
+import Navbar from '@/components/layout/Navbar';
 
 export default function LoginPage() {
   const { login, error, isLoading, clearErrors } = useAuth();
@@ -29,11 +29,7 @@ export default function LoginPage() {
       <div className="bg-glow bg-glow-2" />
 
       {/* Navbar */}
-      <nav className="navbar">
-        <Link href="/" className="brand">
-          <img src={logoNav.src} alt="ScriptNex Logo" className="h-[60px] w-auto object-contain" style={{ background: 'transparent' }} />
-        </Link>
-      </nav>
+      <Navbar />
 
       {/* Login Form */}
       <main className="login-main">

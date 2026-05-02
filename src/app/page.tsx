@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Footer from '@/components/layout/Footer';
-import HomeNavbar from '@/components/layout/HomeNavbar';
+import Navbar from '@/components/layout/Navbar';
 
 export default function Home() {
   return (
@@ -10,8 +10,7 @@ export default function Home() {
       <div className="fixed bottom-[-30%] right-[10%] w-[50%] h-[50%] rounded-full bg-[#6366f1] opacity-[0.02] blur-[150px] z-0 pointer-events-none" />
 
       {/* Navbar */}
-      <HomeNavbar />
-      <div className="h-[65px]" aria-hidden="true"></div>
+      <Navbar />
 
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 text-center py-20">
