@@ -51,14 +51,14 @@ export default function TrackDetailPage() {
               </div>
               <div className="divide-y divide-[#2a2d35]/50">
                 {mod.lessons.map(lesson => (
-                  <div key={lesson.id} className="flex items-center gap-4 px-6 py-3.5 hover:bg-white/[0.02] transition-colors cursor-pointer">
+                  <Link key={lesson.id} href={`/tracks/${track.slug}/${lesson.slug}`} className="flex items-center gap-4 px-6 py-3.5 hover:bg-white/[0.02] transition-colors cursor-pointer">
                     <span className="text-lg">{ICONS[lesson.type] || '📄'}</span>
                     <div className="flex-1">
                       <span className="text-sm">{lesson.title}</span>
                     </div>
                     <span className="text-xs text-[#64748b]">{lesson.duration_minutes} min</span>
                     <span className="px-2 py-0.5 text-[10px] rounded bg-white/5 text-[#64748b] capitalize">{lesson.type}</span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

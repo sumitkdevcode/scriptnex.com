@@ -20,7 +20,13 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === 'undefined') {
+      return true;
+    }
+
+    return Boolean(localStorage.getItem('auth_token'));
+  });
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]> | null>(null);
 
@@ -32,16 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Check for existing token on mount
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
-    if (token) {
-      api.get<{ user: User }>('/auth/me')
-        .then((res) => setUser(res.data.user))
-        .catch(() => {
-          localStorage.removeItem('auth_token');
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
+    if (!token) {
+      return;
     }
+
+    api.get<{ user: User }>('/auth/me')
+      .then((res) => setUser(res.data.user))
+      .catch(() => {
+        localStorage.removeItem('auth_token');
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const login = useCallback(async (payload: LoginPayload) => {

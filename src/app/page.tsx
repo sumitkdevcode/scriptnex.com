@@ -76,6 +76,59 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How It Works */}
+      <section className="relative z-10 py-20 px-6 bg-[#16181d] border-t border-[#2a2d35]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">Your Path to Mastery</h2>
+            <p className="text-[#94a3b8] max-w-xl mx-auto">Follow a structured approach to land your dream role.</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              { step: '01', title: 'Learn', desc: 'Read curated tracks and editorials to master the fundamentals of algorithms.' },
+              { step: '02', title: 'Practice', desc: 'Solve hundreds of problems in our blazing-fast IDE with real-time feedback.' },
+              { step: '03', title: 'Compete', desc: 'Participate in weekly contests to test your speed and accuracy under pressure.' },
+              { step: '04', title: 'Certify', desc: 'Pass timed exams to earn verified certificates to attach to your resume.' },
+            ].map((s) => (
+              <div key={s.step} className="relative">
+                <div className="text-5xl font-extrabold text-[#2a2d35] mb-4">{s.step}</div>
+                <h3 className="text-xl font-semibold mb-2 text-white">{s.title}</h3>
+                <p className="text-sm text-[#94a3b8] leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted By / Social Proof */}
+      <section className="relative z-10 py-16 px-6 border-t border-[#2a2d35]">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="text-xs font-semibold text-[#64748b] uppercase tracking-widest mb-8">Developers from top companies train here</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+            {/* Fake Logos using Text for demonstration */}
+            <div className="text-xl font-bold tracking-tighter">Google</div>
+            <div className="text-xl font-bold">Meta</div>
+            <div className="text-xl font-bold tracking-tight">amazon</div>
+            <div className="text-xl font-bold">Microsoft</div>
+            <div className="text-xl font-bold italic">Netflix</div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-24 px-6 border-t border-[#2a2d35] overflow-hidden">
+        <div className="absolute inset-0 bg-[#00d285]/5" />
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <h2 className="text-4xl font-bold mb-6">Ready to write better code?</h2>
+          <p className="text-[#94a3b8] text-lg mb-10">Join ScriptNex today and unlock your full potential. Start solving problems for free.</p>
+          <Link href="/register" className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#00d285] text-black font-bold text-base hover:bg-[#00e691] transition-transform hover:scale-105 shadow-[0_0_30px_rgba(0,210,133,0.3)]">
+            Create Free Account
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </Link>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

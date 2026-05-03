@@ -39,7 +39,7 @@ export default function CertificationResultPage() {
       try {
         const res = await api.get<{ result: AttemptResult }>(`/certifications/${slug}/result?attempt_id=${attemptId}`);
         setResult(res.data.result);
-      } catch (err) {
+      } catch {
         // handle error
       } finally {
         setLoading(false);
@@ -106,15 +106,13 @@ export default function CertificationResultPage() {
             </div>
 
             <div className="flex items-center justify-center gap-4">
-              {isPassed ? (
-                <a 
-                  href={result.certificate_url || '#'} 
-                  target="_blank" 
-                  rel="noreferrer"
+              {isPassed && result.certificate_url ? (
+                <Link 
+                  href={result.certificate_url}
                   className="px-6 py-3 bg-[#00d285] text-black font-bold rounded-xl hover:bg-[#00e691] transition-colors"
                 >
                   View Certificate
-                </a>
+                </Link>
               ) : (
                 <Link 
                   href={`/certifications/${slug}`}

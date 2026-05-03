@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
+import { formatShortTimestamp } from '@/lib/dates';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -37,14 +38,6 @@ export default function DiscussionDetailPage() {
     finally { setPosting(false); }
   };
 
-  function timeAgo(date: string) {
-    const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-    if (s < 60) return 'just now';
-    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-    return `${Math.floor(s / 86400)}d ago`;
-  }
-
   if (loading) return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]"><Navbar />
       <div className="flex justify-center py-32"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#00d285]" /></div>
@@ -72,7 +65,7 @@ export default function DiscussionDetailPage() {
               {discussion.user.name.charAt(0)}
             </div>
             <span className="font-semibold text-[#cbd5e1]">@{discussion.user.username}</span>
-            <span>{timeAgo(discussion.created_at)}</span>
+            <span>{formatShortTimestamp(discussion.created_at)}</span>
             <span>👍 {discussion.upvotes}</span>
           </div>
           <div className="text-sm text-[#cbd5e1] whitespace-pre-wrap leading-relaxed">{discussion.body}</div>
@@ -95,7 +88,7 @@ export default function DiscussionDetailPage() {
                   {r.user.name.charAt(0)}
                 </div>
                 <span className="font-semibold text-[#cbd5e1]">@{r.user.username}</span>
-                <span>{timeAgo(r.created_at)}</span>
+                <span>{formatShortTimestamp(r.created_at)}</span>
                 <span>👍 {r.upvotes}</span>
               </div>
               <div className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{r.body}</div>

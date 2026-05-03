@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-
 interface Certificate {
   uuid: string;
   user: { name: string; username: string };
@@ -22,6 +21,68 @@ export default function VerifyCertPage() {
   const [cert, setCert] = useState<Certificate | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPdf = async () => {
+    if (!certificateRef.current || !cert) return;
+
+    try {
+      setIsDownloading(true);
+      
+      // Dynamically import to prevent SSR issues
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+
+      const element = certificateRef.current;
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        backgroundColor: '#16181d',
+        useCORS: true,
+        logging: false,
+        allowTaint: true,
+        removeContainer: true,
+        // Ignore complex CSS that html2canvas can't handle
+        ignoreElements: (el) => {
+          return el.classList?.contains('animate-pulse') || false;
+        },
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      
+      // A4 landscape dimensions in mm
+      const pdfWidth = 297;
+      const pdfHeight = 210;
+      
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      
+      const scaledWidth = imgWidth * ratio;
+      const scaledHeight = imgHeight * ratio;
+      const offsetX = (pdfWidth - scaledWidth) / 2;
+      const offsetY = (pdfHeight - scaledHeight) / 2;
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      // Fill background
+      pdf.setFillColor(22, 24, 29);
+      pdf.rect(0, 0, pdfWidth, pdfHeight, 'F');
+
+      pdf.addImage(imgData, 'PNG', offsetX, offsetY, scaledWidth, scaledHeight);
+      pdf.save(`ScriptNex-Certificate-${cert.user.name.replace(/\s+/g, '-')}.pdf`);
+    } catch (err) {
+      console.error('Failed to generate PDF:', err);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     api.get<{ certificate: Certificate }>(`/certifications/verify/${uuid}`)
@@ -50,7 +111,10 @@ export default function VerifyCertPage() {
         ) : (
           <div className="max-w-lg w-full">
             {/* Certificate Card */}
-            <div className="relative bg-[#16181d] border border-[#2a2d35] rounded-2xl p-10 text-center overflow-hidden mb-6">
+            <div 
+              ref={certificateRef}
+              className="relative bg-[#16181d] border border-[#2a2d35] rounded-2xl p-10 text-center overflow-hidden mb-6"
+            >
               {/* Decorative top bar */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00d285] via-[#00a669] to-[#00d285]" />
               {/* Background glow */}
@@ -94,6 +158,26 @@ export default function VerifyCertPage() {
 
                 <div className="text-[10px] text-[#475569] font-mono break-all">ID: {cert.uuid}</div>
               </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+              <button 
+                onClick={handleDownloadPdf}
+                disabled={isDownloading}
+                className="px-6 py-2.5 bg-[#00d285] text-black font-bold rounded-xl hover:bg-[#00e691] transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isDownloading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-black" />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download PDF
+                  </>
+                )}
+              </button>
             </div>
 
             <div className="text-center">

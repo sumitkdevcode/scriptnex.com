@@ -10,6 +10,7 @@ import Footer from '@/components/layout/Footer';
 interface Lesson {
   id: number; title: string; slug: string; type: string;
   content: string | null; video_url: string | null; duration_minutes: number;
+  problem?: { id: number; title: string; slug: string } | null;
 }
 interface Module {
   id: number; title: string; order: number;
@@ -33,27 +34,53 @@ export default function LessonPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<{ track: TrackDetail; modules: Module[] }>(`/tracks/${trackSlug}`)
-      .then(r => {
-        setTrack(r.data.track);
-        setModules(r.data.modules);
-        // Find lesson from modules
-        for (const mod of r.data.modules) {
-          const found = mod.lessons.find(l => l.slug === lessonSlug);
-          if (found) {
-            // Fetch lesson detail
-            api.get<{ lesson: Lesson }>(`/tracks/${trackSlug}/lessons/${lessonSlug}`)
-              .then(lr => setLesson(lr.data.lesson))
-              .catch(() => {
-                // Fallback: use partial data from list
-                setLesson({ ...found, content: null, video_url: null });
-              });
-            break;
+    let cancelled = false;
+
+    async function loadLesson() {
+      try {
+        const trackResponse = await api.get<{ track: TrackDetail; modules: Module[] }>(`/tracks/${trackSlug}`);
+        if (cancelled) {
+          return;
+        }
+
+        setTrack(trackResponse.data.track);
+        setModules(trackResponse.data.modules);
+
+        const fallbackLesson = trackResponse.data.modules
+          .flatMap((module) => module.lessons)
+          .find((candidate) => candidate.slug === lessonSlug);
+
+        if (!fallbackLesson) {
+          setLesson(null);
+          return;
+        }
+
+        try {
+          const lessonResponse = await api.get<{ lesson: Lesson }>(`/tracks/${trackSlug}/lessons/${lessonSlug}`);
+          if (!cancelled) {
+            setLesson(lessonResponse.data.lesson);
+          }
+        } catch {
+          if (!cancelled) {
+            setLesson({ ...fallbackLesson, content: null, video_url: null });
           }
         }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      } catch {
+        if (!cancelled) {
+          setLesson(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadLesson();
+
+    return () => {
+      cancelled = true;
+    };
   }, [trackSlug, lessonSlug]);
 
   const allLessons = modules.flatMap(m => m.lessons);
@@ -141,6 +168,16 @@ export default function LessonPage() {
               {lesson.content ? (
                 <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-8 mb-6 prose prose-invert max-w-none">
                   <div className="text-[#cbd5e1] leading-relaxed whitespace-pre-wrap text-sm">{lesson.content}</div>
+                </div>
+              ) : lesson.problem ? (
+                <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-8 mb-6">
+                  <div className="text-sm text-[#94a3b8] mb-4">This lesson is a guided coding exercise.</div>
+                  <Link
+                    href={`/problems/${lesson.problem.slug}`}
+                    className="inline-flex items-center gap-2 px-5 py-3 bg-[#00d285] text-black font-bold rounded-xl text-sm hover:bg-[#00e691] transition-colors"
+                  >
+                    Open Problem: {lesson.problem.title}
+                  </Link>
                 </div>
               ) : !lesson.video_url ? (
                 <div className="bg-[#16181d] border border-[#2a2d35] border-dashed rounded-xl p-12 text-center mb-6">

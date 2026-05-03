@@ -6,22 +6,13 @@ import { api } from '@/lib/api';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import type { Contest } from '@/types/contest';
-
-interface LeaderboardEntry {
-  user_id: number;
-  user: { name: string; username: string };
-  total_score: number;
-  total_penalty: number;
-  problems_solved: number;
-  rank: number;
-}
+import type { Contest, ContestLeaderboardEntry } from '@/types/contest';
 
 export default function ContestLeaderboardPage() {
   const params = useParams();
   const slug = params.slug as string;
   const [contest, setContest] = useState<Contest | null>(null);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboard, setLeaderboard] = useState<ContestLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,9 +20,9 @@ export default function ContestLeaderboardPage() {
       try {
         const contestRes = await api.get<{ contest: Contest }>(`/contests/${slug}`);
         setContest(contestRes.data.contest);
-        const lbRes = await api.get<{ leaderboard: LeaderboardEntry[] }>(`/contests/${slug}/leaderboard`);
+        const lbRes = await api.get<{ leaderboard: ContestLeaderboardEntry[] }>(`/contests/${slug}/leaderboard`);
         setLeaderboard(lbRes.data.leaderboard);
-      } catch (err) {
+      } catch {
         // Handle error
       } finally {
         setLoading(false);
@@ -88,11 +79,11 @@ export default function ContestLeaderboardPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-[#2a2d35] flex items-center justify-center text-xs font-bold text-[#00d285]">
-                            {entry.user?.name?.charAt(0) || 'U'}
+                            {entry.name?.charAt(0) || 'U'}
                           </div>
                           <div>
-                            <div className="font-semibold">{entry.user?.name || 'Unknown User'}</div>
-                            <div className="text-xs text-[#64748b]">@{entry.user?.username || `user${entry.user_id}`}</div>
+                            <div className="font-semibold">{entry.name || 'Unknown User'}</div>
+                            <div className="text-xs text-[#64748b]">@{entry.username || `user${entry.user_id}`}</div>
                           </div>
                         </div>
                       </td>

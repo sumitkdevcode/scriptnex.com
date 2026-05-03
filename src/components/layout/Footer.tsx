@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import logoNav from '../../../public/logo-nav.png';
 
@@ -8,8 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12 mb-16">
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-1 mb-4">
-              <img src={logoNav.src} alt="ScriptNex Logo" className="h-[50px] md:h-[60px] w-auto object-contain" />
-
+              <Image src={logoNav} alt="ScriptNex Logo" className="h-[50px] md:h-[60px] w-auto object-contain" />
             </Link>
             <p className="text-[#64748b] text-sm leading-relaxed mb-6 max-w-sm">
               The ultimate platform to level up your coding skills, prepare for technical interviews, and earn verified certifications.

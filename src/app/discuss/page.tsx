@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
+import { formatShortTimestamp } from '@/lib/dates';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
@@ -41,14 +42,6 @@ export default function DiscussionsPage() {
     } catch { /* ignore */ }
     finally { setPosting(false); }
   };
-
-  function timeAgo(date: string) {
-    const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-    if (s < 60) return 'just now';
-    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-    return `${Math.floor(s / 86400)}d ago`;
-  }
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
@@ -111,7 +104,7 @@ export default function DiscussionsPage() {
                       <h3 className="font-semibold truncate group-hover:text-[#00d285] transition-colors">{d.title}</h3>
                       <div className="flex items-center gap-3 mt-2 text-xs text-[#64748b]">
                         <span>@{d.user.username}</span>
-                        <span>{timeAgo(d.created_at)}</span>
+                        <span>{formatShortTimestamp(d.created_at)}</span>
                         <span>💬 {d.reply_count}</span>
                         <span>👍 {d.upvotes}</span>
                       </div>

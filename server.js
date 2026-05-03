@@ -13,10 +13,13 @@ process.env.NEXT_MANUAL_SIG_HANDLE = 'true';
 
 console.log('Starting standalone Next.js server on port ' + process.env.PORT);
 
-// Boot the highly-optimized standalone server directly
-try {
-  require('./.next/standalone/server.js');
-} catch (e) {
-  console.error("Failed to start standalone server. Make sure you uploaded the .next folder.", e);
-  process.exit(1);
+async function boot() {
+  try {
+    await import('./.next/standalone/server.js');
+  } catch (error) {
+    console.error('Failed to start standalone server. Make sure you uploaded the .next folder.', error);
+    process.exit(1);
+  }
 }
+
+void boot();
