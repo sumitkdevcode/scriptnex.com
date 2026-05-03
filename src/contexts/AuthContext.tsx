@@ -31,17 +31,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Check for existing token on mount
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-      return;
-    }
+    let isActive = true;
 
-    api.get<{ user: User }>('/auth/me')
-      .then((res) => setUser(res.data.user))
-      .catch(() => {
+    const bootstrapSession = async () => {
+      const token = localStorage.getItem('auth_token');
+
+      if (!token) {
+        if (isActive) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const res = await api.get<{ user: User }>('/auth/me');
+        if (isActive) {
+          setUser(res.data.user);
+        }
+      } catch {
         localStorage.removeItem('auth_token');
-      })
-      .finally(() => setIsLoading(false));
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void bootstrapSession();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const login = useCallback(async (payload: LoginPayload) => {

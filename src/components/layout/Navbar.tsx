@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import logoNav from '../../../public/logo-nav.png';
-import GlobalSearch from './GlobalSearch';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -14,22 +13,22 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
-    if (path === '/problems' && (pathname.startsWith('/problems') || pathname.startsWith('/tracks'))) {
-      return true;
-    }
-    return pathname.startsWith(path);
+    if (path === '/' && pathname !== '/') return false;
+    return pathname === path || pathname.startsWith(path + '/');
   };
 
   const isAuthPage = pathname === '/login' || pathname === '/register';
 
   const publicLinks = [
     { name: 'Practice', href: '/problems' },
+    { name: 'Tracks', href: '/tracks' },
     { name: 'Certify', href: '/certifications' },
     { name: 'Leaderboard', href: '/leaderboard' },
   ];
 
   const privateLinks = [
     { name: 'Practice', href: '/problems' },
+    { name: 'Tracks', href: '/tracks' },
     { name: 'Contests', href: '/contests' },
     { name: 'Certify', href: '/certifications' },
     { name: 'Dashboard', href: '/dashboard' },
@@ -40,7 +39,7 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
-        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5 relative">
+        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5">
           <Link href="/" className="flex items-center z-10 shrink-0">
             <Image src={logoNav} alt="ScriptNex Logo" className="h-[50px] md:h-[60px] w-auto object-contain" priority />
           </Link>
@@ -65,7 +64,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 md:gap-3 z-10 shrink-0">
-            <GlobalSearch />
             {!isAuthenticated ? (
               !isAuthPage && (
                 <>
@@ -74,21 +72,21 @@ export default function Navbar() {
                 </>
               )
             ) : (
-              <div className="hidden sm:flex items-center gap-3">
-                <Link href="/pricing" className="px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-lg text-xs font-bold transition-colors flex items-center gap-1">Premium</Link>
+              <div className="flex items-center gap-2 md:gap-3">
+                <Link href="/pricing" className="hidden sm:flex px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-lg text-xs font-bold transition-colors items-center gap-1">Premium</Link>
                 
-                <div className="flex items-center gap-4 text-[#94a3b8] mx-2">
+                <div className="flex items-center gap-3 text-[#94a3b8] mx-1">
                   <button className="hover:text-[#f59e0b] transition-colors flex items-center gap-1" title="0 Day Streak">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
                     <span className="text-xs font-bold text-white">0</span>
                   </button>
                   <button className="hover:text-white transition-colors relative" title="Notifications">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-[#0f1115]"></span>
                   </button>
                 </div>
 
-                <Link href={user?.username ? `/profile/${user.username}` : '/dashboard'} className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border border-[#2a2d35] hover:border-white transition-all overflow-hidden shrink-0 bg-gradient-to-br from-[#00d285] to-[#00a669] text-black">
+                <Link href={user?.username ? `/profile/${user.username}` : '/dashboard'} className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border border-[#2a2d35] hover:border-white transition-all overflow-hidden shrink-0 bg-gradient-to-br from-[#00d285] to-[#00a669] text-black">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
@@ -117,40 +115,51 @@ export default function Navbar() {
 
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
-          <div className="absolute top-[100%] left-0 right-0 bg-[#16181d] border-b border-[#2a2d35] p-6 flex flex-col gap-5 md:hidden shadow-xl shadow-black/50 z-50">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={
-                  isActive(link.href)
-                    ? 'text-[#00d285] font-semibold text-lg'
-                    : 'text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium'
-                }
-              >
-                {link.name}
-              </Link>
-            ))}
-            {!isAuthenticated && (
-               <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Pro Plans</Link>
-            )}
-            
-            <div className="h-px bg-[#2a2d35] my-2"></div>
-            
-            {!isAuthenticated ? (
-              <>
-                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-[#94a3b8] hover:text-white transition-colors text-lg font-medium">Log In</Link>
-                <Link href="/register" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Sign Up</Link>
-              </>
-            ) : (
-              <button 
-                onClick={() => { logout(); setIsMobileMenuOpen(false); }}
-                className="text-[#94a3b8] hover:text-white text-left text-lg font-medium"
-              >
-                Log Out
-              </button>
-            )}
+          <div className="md:hidden absolute top-full left-0 right-0 bg-[#16181d] border-b border-[#2a2d35] shadow-xl shadow-black/50 max-h-[calc(100vh-65px)] overflow-y-auto">
+            <div className="p-6 flex flex-col gap-5">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={
+                    isActive(link.href)
+                      ? 'text-[#00d285] font-semibold text-lg'
+                      : 'text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium'
+                  }
+                >
+                  {link.name}
+                </Link>
+              ))}
+              {!isAuthenticated && (
+                <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Pro Plans</Link>
+              )}
+              
+              {isAuthenticated && (
+                <>
+                  <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-[#f59e0b] font-semibold text-lg">Premium</Link>
+                  <Link href={user?.username ? `/profile/${user.username}` : '/dashboard'} onClick={() => setIsMobileMenuOpen(false)} className="text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium">Profile</Link>
+                </>
+              )}
+              
+              <div className="h-px bg-[#2a2d35] my-2"></div>
+              
+              {!isAuthenticated ? (
+                !isAuthPage && (
+                  <>
+                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-[#94a3b8] hover:text-white transition-colors text-lg font-medium">Log In</Link>
+                    <Link href="/register" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Sign Up</Link>
+                  </>
+                )
+              ) : (
+                <button 
+                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                  className="text-[#94a3b8] hover:text-white text-left text-lg font-medium"
+                >
+                  Log Out
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

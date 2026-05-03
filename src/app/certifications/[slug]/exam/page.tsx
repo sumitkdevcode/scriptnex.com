@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { api } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import dynamic from 'next/dynamic';
@@ -49,6 +47,14 @@ interface CertificationDetail {
   duration_minutes: number;
 }
 
+const normalizeTimeLeft = (seconds: number) => {
+  if (!Number.isFinite(seconds)) {
+    return 0;
+  }
+
+  return Math.max(0, Math.ceil(seconds));
+};
+
 export default function CertificationExamPage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -57,7 +63,7 @@ export default function CertificationExamPage() {
 
   const [exam, setExam] = useState<(CertificationDetail & { questions: Question[] }) | null>(null);
   const [loading, setLoading] = useState(true);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [submitting, setSubmitting] = useState(false);
   const [attemptId, setAttemptId] = useState<number | null>(null);
@@ -76,17 +82,28 @@ export default function CertificationExamPage() {
       return;
     }
 
+    if (!exam) {
+      alert('Exam data not loaded. Please refresh the page.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      await api.post(`/certifications/attempts/${attemptId}/submit`, { answers });
+      // Send answers as-is, backend will handle validation
+      const payload = { answers };
+      console.log('Submitting payload:', JSON.stringify(payload, null, 2));
+      
+      await api.post(`/certifications/attempts/${attemptId}/submit`, payload);
       router.push(`/certifications/${slug}/result?attempt_id=${attemptId}`);
-    } catch {
+    } catch (error: unknown) {
       hasAutoSubmitted.current = false;
-      alert('Error submitting exam. Please try again.');
+      console.error('Full error:', error);
+      const message = error instanceof Error ? error.message : 'Error submitting exam. Please try again.';
+      alert(message);
       setSubmitting(false);
     }
-  }, [answers, attemptId, router, slug, submitting]);
+  }, [answers, attemptId, exam, router, slug, submitting]);
 
   useEffect(() => {
     if (authLoading) {
@@ -117,7 +134,7 @@ export default function CertificationExamPage() {
           questions: startResponse.data.questions,
         });
         setAttemptId(startResponse.data.attempt.id);
-        setTimeLeft(startResponse.data.remaining_seconds);
+        setTimeLeft(normalizeTimeLeft(startResponse.data.remaining_seconds));
 
         const availableLanguages = languagesResponse.data.languages;
         setLanguages(availableLanguages);
@@ -150,12 +167,14 @@ export default function CertificationExamPage() {
 
     const timer = window.setInterval(() => {
       setTimeLeft((current) => {
-        if (current <= 1) {
+        const wholeSeconds = normalizeTimeLeft(current);
+
+        if (wholeSeconds <= 1) {
           window.clearInterval(timer);
           return 0;
         }
 
-        return current - 1;
+        return wholeSeconds - 1;
       });
     }, 1000);
 
@@ -165,7 +184,7 @@ export default function CertificationExamPage() {
   }, [exam, timeLeft]);
 
   useEffect(() => {
-    if (timeLeft === 0 && attemptId && !hasAutoSubmitted.current) {
+    if (timeLeft <= 0 && attemptId && !hasAutoSubmitted.current) {
       hasAutoSubmitted.current = true;
       void handleSubmit();
     }
@@ -176,8 +195,9 @@ export default function CertificationExamPage() {
   };
 
   const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
+    const wholeSeconds = normalizeTimeLeft(seconds);
+    const minutes = Math.floor(wholeSeconds / 60);
+    const remainingSeconds = wholeSeconds % 60;
 
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
@@ -187,7 +207,7 @@ export default function CertificationExamPage() {
   const activeQuestion = exam?.questions[activeQuestionIndex];
 
   const handleRun = useCallback(async () => {
-    if (!exam || submitting) return;
+    if (!exam || submitting || isRunning) return;
 
     if (!activeQuestion?.problem?.id || !selectedLangId) {
       alert('Cannot run code for this question. Missing problem or language.');
@@ -231,6 +251,8 @@ export default function CertificationExamPage() {
         problem_id: activeQuestion.problem.id,
         language_id: selectedLangId,
         source_code: answers[activeQuestion.id] || '',
+        certification_attempt_id: attemptId,
+        certification_question_id: activeQuestion.id,
       });
 
       setRunResult(`Submission Status: ${response.data.submission.status}\nID: ${response.data.submission.uuid}`);
@@ -242,7 +264,7 @@ export default function CertificationExamPage() {
     } finally {
       setIsRunning(false);
     }
-  }, [activeQuestion, answers, exam, selectedLangId, submitting]);
+  }, [activeQuestion, answers, attemptId, exam, selectedLangId, submitting]);
 
   if (loading) {
     return (
@@ -256,7 +278,7 @@ export default function CertificationExamPage() {
     return null;
   }
 
-  const isCoding = true;
+  const isCoding = activeQuestion.type === 'coding' && activeQuestion.problem;
 
   return (
     <div className="h-screen flex flex-col bg-[#0f1115] text-[#f8fafc] overflow-hidden">
@@ -344,6 +366,26 @@ export default function CertificationExamPage() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                   Hint
                 </span>
+              </div>
+            )}
+
+            {/* MCQ Options */}
+            {activeQuestion.type === 'mcq' && activeQuestion.options && (
+              <div className="mt-8 space-y-3">
+                {Object.entries(activeQuestion.options).map(([key, value]) => (
+                  <button
+                    key={key}
+                    onClick={() => handleOptionSelect(activeQuestion.id, key)}
+                    className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-all ${
+                      answers[activeQuestion.id] === key
+                        ? 'border-[#00d285] bg-[#00d285]/10 text-white'
+                        : 'border-[#2a2d35] bg-[#1a1c23] text-[#cbd5e1] hover:border-[#00d285]/50'
+                    }`}
+                  >
+                    <span className="font-semibold mr-3">{key}.</span>
+                    {value}
+                  </button>
+                ))}
               </div>
             )}
 

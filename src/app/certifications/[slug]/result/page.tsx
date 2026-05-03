@@ -13,6 +13,9 @@ interface AttemptResult {
   score: number;
   total_possible: number;
   certificate_url?: string;
+  certificate_uuid?: string;
+  download_paid?: boolean;
+  download_price_paise?: number | null;
   certification: {
     title: string;
     passing_score: number;
@@ -60,6 +63,7 @@ export default function CertificationResultPage() {
 
   const percentage = Math.round((result.score / result.total_possible) * 100);
   const isPassed = result.status === 'passed';
+  const downloadPrice = Math.round((result.download_price_paise ?? 0) / 100);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0f1115] text-[#f8fafc]">
@@ -128,6 +132,14 @@ export default function CertificationResultPage() {
                 Back to Certifications
               </Link>
             </div>
+
+            {isPassed && result.certificate_url && (
+              <p className="mt-5 text-sm text-[#94a3b8]">
+                {result.download_paid
+                  ? 'Your certificate PDF is already unlocked for download.'
+                  : `Certificate generated successfully. PDF download unlock costs ₹${downloadPrice}.`}
+              </p>
+            )}
           </div>
         </div>
       </main>

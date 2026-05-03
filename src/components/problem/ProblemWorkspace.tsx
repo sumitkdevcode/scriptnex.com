@@ -139,6 +139,8 @@ export default function ProblemWorkspace({
     }
   }, [code, isAuthenticated, problem, selectedLang]);
 
+  const [mobileTab, setMobileTab] = useState<'description' | 'code' | 'results'>('description');
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0f1115]">
@@ -160,120 +162,113 @@ export default function ProblemWorkspace({
 
   return (
     <div className="h-screen flex flex-col bg-[#0f1115] text-[#f8fafc] overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[#2a2d35] bg-[#16181d] shrink-0">
-        <div className="flex items-center gap-3">
-          <Link href={backHref} className="text-[#94a3b8] hover:text-white transition-colors">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+      {/* Top Header */}
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2a2d35] bg-[#16181d] shrink-0">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <Link href={backHref} className="text-[#94a3b8] hover:text-white transition-colors p-1 shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           </Link>
-          {headerPrefix ? (
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-xs uppercase tracking-wider text-[#64748b]">{headerPrefix}</span>
-              <span className="text-[#2a2d35]">|</span>
-              <span className="font-semibold text-sm">{problem.title}</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold capitalize" style={{ color: diffConfig[problem.difficulty]?.color }}>
-                {problem.difficulty}
-              </span>
-            </div>
-          ) : (
-            <>
-              <span className="font-semibold">{problem.title}</span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-semibold capitalize" style={{ color: diffConfig[problem.difficulty]?.color }}>
-                {problem.difficulty}
-              </span>
-            </>
-          )}
+          <div className="flex items-center gap-2 truncate">
+            {headerPrefix && <span className="hidden sm:inline font-semibold text-xs uppercase tracking-wider text-[#64748b]">{headerPrefix} | </span>}
+            <span className="font-semibold text-sm truncate">{problem.title}</span>
+            <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-semibold capitalize bg-white/5" style={{ color: diffConfig[problem.difficulty]?.color }}>
+              {problem.difficulty}
+            </span>
+          </div>
         </div>
         <select
           value={selectedLang?.id || ''}
           onChange={(event) => handleLanguageChange(event.target.value)}
-          className="px-3 py-1.5 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-xs text-white focus:outline-none focus:border-[#00d285]"
+          className="px-2 py-1 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-[11px] text-white focus:outline-none focus:border-[#00d285] max-w-[120px]"
         >
           {languages.map((language) => (
             <option key={language.id} value={language.id}>
-              {language.name} {language.version}
+              {language.name}
             </option>
           ))}
         </select>
       </div>
 
+      {/* Mobile Tab Switcher */}
+      <div className="flex md:hidden border-b border-[#2a2d35] bg-[#0f1115] shrink-0">
+        <button onClick={() => setMobileTab('description')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Info</button>
+        <button onClick={() => setMobileTab('code')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'code' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Code</button>
+        <button onClick={() => setMobileTab('results')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'results' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Results</button>
+      </div>
+
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-[45%] border-r border-[#2a2d35] flex flex-col overflow-hidden">
+        {/* Left Panel: Description / Editorial */}
+        <div className={`w-full md:w-[40%] lg:w-[45%] border-r border-[#2a2d35] flex flex-col overflow-hidden ${mobileTab !== 'description' ? 'hidden md:flex' : 'flex'}`}>
           <div className="flex border-b border-[#2a2d35] shrink-0">
-            <button onClick={() => setActiveTab('description')} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${activeTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Description</button>
-            <button onClick={() => setActiveTab('editorial')} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${activeTab === 'editorial' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Editorial</button>
+            <button onClick={() => setActiveTab('description')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Description</button>
+            <button onClick={() => setActiveTab('editorial')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'editorial' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Editorial</button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          <div className="flex-1 overflow-y-auto p-4 space-y-5">
             {activeTab === 'description' ? (
               <>
-                <div className="flex items-center gap-4 text-xs text-[#94a3b8]">
-                  {problem.category && <span className="px-2.5 py-1 bg-white/5 rounded">{problem.category.name}</span>}
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#94a3b8]">
+                  {problem.category && <span className="px-2 py-0.5 bg-white/5 rounded">{problem.category.name}</span>}
                   <span>⏱ {problem.time_limit_ms}ms</span>
                   <span>💾 {Math.round(problem.memory_limit_kb / 1024)}MB</span>
                 </div>
 
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#cbd5e1]">{problem.description}</div>
+                  <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-[#cbd5e1]">{problem.description}</div>
                 </div>
 
                 {problem.input_format && (
                   <div>
-                    <h3 className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mb-2">Input Format</h3>
-                    <p className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{problem.input_format}</p>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Input Format</h3>
+                    <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.input_format}</p>
                   </div>
                 )}
 
                 {problem.output_format && (
                   <div>
-                    <h3 className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mb-2">Output Format</h3>
-                    <p className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{problem.output_format}</p>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Output Format</h3>
+                    <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.output_format}</p>
                   </div>
                 )}
 
                 {problem.constraints && (
                   <div>
-                    <h3 className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mb-2">Constraints</h3>
-                    <pre className="text-sm text-[#cbd5e1] bg-[#1a1c23] rounded-lg p-3 border border-[#2a2d35] whitespace-pre-wrap">{problem.constraints}</pre>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Constraints</h3>
+                    <pre className="text-xs text-[#cbd5e1] bg-[#1a1c23] rounded-lg p-3 border border-[#2a2d35] whitespace-pre-wrap">{problem.constraints}</pre>
                   </div>
                 )}
 
                 {sampleCases.map((sampleCase, index) => (
                   <div key={sampleCase.id} className="space-y-2">
-                    <h3 className="text-xs uppercase tracking-wider text-[#64748b] font-semibold">Example {index + 1}</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold">Example {index + 1}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#475569] mb-1 font-semibold">Input</div>
-                        <pre className="text-sm bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono">{sampleCase.input}</pre>
+                        <div className="text-[9px] uppercase tracking-wider text-[#475569] mb-1 font-bold">Input</div>
+                        <pre className="text-xs bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono overflow-x-auto">{sampleCase.input}</pre>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase tracking-wider text-[#475569] mb-1 font-semibold">Output</div>
-                        <pre className="text-sm bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono">{sampleCase.expected_output}</pre>
+                        <div className="text-[9px] uppercase tracking-wider text-[#475569] mb-1 font-bold">Output</div>
+                        <pre className="text-xs bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono overflow-x-auto">{sampleCase.expected_output}</pre>
                       </div>
                     </div>
                   </div>
                 ))}
-
-                {problem.explanation && (
-                  <div>
-                    <h3 className="text-xs uppercase tracking-wider text-[#64748b] font-semibold mb-2">Explanation</h3>
-                    <p className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{problem.explanation}</p>
-                  </div>
-                )}
               </>
             ) : (
               <div className="text-sm text-[#cbd5e1]">
                 {problem.editorial ? (
-                  <div className="whitespace-pre-wrap">{problem.editorial}</div>
+                  <div className="whitespace-pre-wrap leading-relaxed">{problem.editorial}</div>
                 ) : (
-                  <p className="text-[#64748b]">{editorialFallbackMessage}</p>
+                  <p className="text-[#64748b] italic">{editorialFallbackMessage}</p>
                 )}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 min-h-0">
+        {/* Right Panel: Code / Results */}
+        <div className={`flex-1 flex flex-col overflow-hidden ${mobileTab === 'description' ? 'hidden md:flex' : 'flex'}`}>
+          <div className={`flex-1 min-h-0 ${mobileTab === 'results' ? 'hidden md:block' : 'block'}`}>
             <MonacoEditor
               height="100%"
               language={selectedLang?.monaco_id || 'python'}
@@ -289,53 +284,54 @@ export default function ProblemWorkspace({
                 lineNumbers: 'on',
                 renderLineHighlight: 'gutter',
                 automaticLayout: true,
+                tabSize: 4,
               }}
             />
           </div>
 
-          <div className="h-[200px] border-t border-[#2a2d35] flex flex-col shrink-0">
-            <div className="flex items-center justify-between px-4 py-2 border-b border-[#2a2d35] bg-[#16181d]">
+          <div className={`h-[220px] md:h-[180px] border-t border-[#2a2d35] flex flex-col shrink-0 ${mobileTab === 'code' ? 'hidden md:flex' : 'flex'}`}>
+            <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2a2d35] bg-[#16181d]">
               <div className="flex gap-4">
-                <button onClick={() => setResultTab('testcases')} className={`text-xs font-semibold uppercase tracking-wider ${resultTab === 'testcases' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Test Cases</button>
-                <button onClick={() => setResultTab('output')} className={`text-xs font-semibold uppercase tracking-wider ${resultTab === 'output' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Output</button>
+                <button onClick={() => setResultTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'testcases' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Test Cases</button>
+                <button onClick={() => setResultTab('output')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'output' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Output</button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleRun}
                   disabled={submitting || !isAuthenticated}
-                  className="px-4 py-1.5 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-xs font-semibold text-white hover:border-[#00d285]/50 transition-colors disabled:opacity-50"
+                  className="px-3 md:px-4 py-1.5 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-[10px] md:text-xs font-semibold text-white hover:border-[#00d285]/50 transition-colors disabled:opacity-50"
                 >
-                  Run Code
+                  Run
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !isAuthenticated}
-                  className="px-4 py-1.5 bg-[#00d285] rounded-lg text-xs font-bold text-black hover:bg-[#00e691] transition-colors disabled:opacity-50"
+                  className="px-3 md:px-4 py-1.5 bg-[#00d285] rounded-lg text-[10px] md:text-xs font-bold text-black hover:bg-[#00e691] transition-colors disabled:opacity-50"
                 >
-                  {submitting ? 'Submitting...' : submitLabel}
+                  {submitting ? '...' : submitLabel}
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-[#0f1115]">
+            <div className="flex-1 overflow-y-auto p-3 bg-[#0f1115]">
               {resultTab === 'testcases' ? (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {sampleCases.map((sampleCase, index) => (
-                    <div key={sampleCase.id} className="bg-[#16181d] border border-[#2a2d35] rounded-lg p-3">
-                      <div className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">Case {index + 1}</div>
-                      <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                        <div><span className="text-[#475569]">Input:</span> <span className="text-[#cbd5e1]">{sampleCase.input}</span></div>
-                        <div><span className="text-[#475569]">Expected:</span> <span className="text-[#00d285]">{sampleCase.expected_output}</span></div>
+                    <div key={sampleCase.id} className="bg-[#16181d] border border-[#2a2d35] rounded-lg p-2.5">
+                      <div className="text-[9px] uppercase tracking-wider text-[#64748b] font-bold mb-1.5">Case {index + 1}</div>
+                      <div className="flex flex-col sm:flex-row sm:gap-4 text-[11px] font-mono">
+                        <div className="flex gap-2"><span className="text-[#475569]">In:</span> <span className="text-[#cbd5e1] truncate">{sampleCase.input}</span></div>
+                        <div className="flex gap-2"><span className="text-[#475569]">Out:</span> <span className="text-[#00d285] truncate">{sampleCase.expected_output}</span></div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-sm font-mono">
+                <div className="text-xs font-mono">
                   {runResult ? (
-                    <pre className="text-[#cbd5e1] whitespace-pre-wrap">{runResult}</pre>
+                    <pre className="text-[#cbd5e1] whitespace-pre-wrap break-all">{runResult}</pre>
                   ) : (
-                    <p className="text-[#64748b]">Run or submit your code to see results.</p>
+                    <p className="text-[#64748b] italic">Run or submit your code to see results.</p>
                   )}
                 </div>
               )}

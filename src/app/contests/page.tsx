@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
+import InfiniteScrollTrigger from '@/components/ui/InfiniteScrollTrigger';
+
 interface Contest {
   id: number; uuid: string; title: string; slug: string; type: string;
   start_time: string; end_time: string; duration_minutes: number;
@@ -20,13 +22,47 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
 export default function ContestsPage() {
   const [contests, setContests] = useState<Contest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
+  const fetchContests = (page = 1, append = false) => {
+    if (append) setLoadingMore(true);
+    else setLoading(true);
+
+    api.get<Contest[]>(`/contests?page=${page}`).then(res => {
+      const r = res as any;
+      if (append) {
+        setContests(prev => {
+          const combined = [...prev, ...r.data];
+          const unique = Array.from(new Map(combined.map(item => [item.id, item])).values());
+          return unique;
+        });
+      } else {
+        setContests(r.data);
+      }
+      if (r.meta?.pagination) {
+        setCurrentPage(r.meta.pagination.current_page);
+        setLastPage(r.meta.pagination.last_page);
+      }
+      setLoading(false);
+      setLoadingMore(false);
+    }).catch(() => {
+      if (!append) setContests([]);
+      setLoading(false);
+      setLoadingMore(false);
+    });
+  };
 
   useEffect(() => {
-    api.get<{ contests: Contest[] }>('/contests').then(res => {
-      setContests(res.data.contests);
-      setLoading(false);
-    });
+    fetchContests(1);
   }, []);
+
+  const loadMore = () => {
+    if (currentPage < lastPage && !loadingMore) {
+      fetchContests(currentPage + 1, true);
+    }
+  };
 
   const upcoming = contests.filter(c => c.status === 'upcoming');
   const active = contests.filter(c => c.status === 'active');
@@ -61,9 +97,9 @@ export default function ContestsPage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold mb-2">Contests</h1>
-        <p className="text-[#94a3b8] mb-8">Compete with developers worldwide</p>
+      <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
+        <h1 className="text-2xl font-bold mb-1">Contests</h1>
+        <p className="text-[#94a3b8] text-sm mb-4">Compete with developers worldwide</p>
         {loading ? (
           <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#00d285]"></div></div>
         ) : (
@@ -81,11 +117,19 @@ export default function ContestsPage() {
               </section>
             )}
             {past.length > 0 && (
-              <section>
+              <section className="mb-4">
                 <h2 className="text-sm uppercase tracking-widest text-[#64748b] font-bold mb-4">Past Contests</h2>
                 <div className="grid md:grid-cols-2 gap-4">{past.map(c => <ContestCard key={c.id} contest={c} />)}</div>
               </section>
             )}
+            
+            {contests.length === 0 && <div className="text-center py-20 text-[#64748b]">No contests found.</div>}
+
+            <InfiniteScrollTrigger 
+              onIntersect={loadMore}
+              isLoading={loadingMore}
+              hasMore={currentPage < lastPage}
+            />
           </>
         )}
       </div>

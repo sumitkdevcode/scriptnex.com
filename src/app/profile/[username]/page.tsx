@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
+import ActivityGraph from '@/components/profile/ActivityGraph';
 
 interface PublicProfile {
   id: number; name: string; username: string; avatar: string | null;
@@ -18,6 +19,7 @@ interface UserStats {
   problems_solved: number; acceptance_rate: number;
   easy_solved: number; medium_solved: number; hard_solved: number;
   current_streak: number; certificates_earned: number;
+  submission_calendar: Record<string, number>;
 }
 
 export default function ProfilePage() {
@@ -67,7 +69,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
-      <div className="max-w-[1200px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-4">
+      <div className="max-w-7xl mx-auto px-4 pt-0 pb-6 flex flex-col md:flex-row gap-4">
         
         {/* Left Sidebar */}
         <div className="w-full md:w-[280px] shrink-0 flex flex-col gap-4">
@@ -211,30 +213,19 @@ export default function ProfilePage() {
           {/* Activity Heatmap */}
           <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-xl p-5">
             <div className="flex justify-between text-xs text-[#94a3b8] mb-4">
-              <span><strong className="text-white">0 submissions</strong> in the past one year</span>
+              <span>
+                <strong className="text-white">
+                  {Object.values(stats?.submission_calendar || {}).reduce((a, b) => a + b, 0)} submissions
+                </strong> in the past one year
+              </span>
               <div className="flex gap-4">
                 <span>Total active days: <strong>{stats?.current_streak || 0}</strong></span>
                 <span>Max streak: <strong>{stats?.current_streak || 0}</strong></span>
               </div>
             </div>
             
-            {/* Mocked Heatmap Grid */}
-            <div className="flex gap-1 overflow-x-auto pb-2 custom-scrollbar">
-              {Array.from({ length: 52 }).map((_, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-1">
-                  {Array.from({ length: 7 }).map((_, dayIndex) => {
-                    // Randomly highlight some blocks for effect if they have solved problems
-                    const isActive = totalSolved > 0 && Math.random() > 0.85;
-                    return (
-                      <div 
-                        key={dayIndex} 
-                        className={`w-[11px] h-[11px] rounded-[2px] ${isActive ? 'bg-[#00d285]' : 'bg-[#2a2d35]'}`} 
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+            {/* Activity Heatmap Grid */}
+            <ActivityGraph calendar={stats?.submission_calendar || {}} />
           </div>
 
           {/* Recent Submissions */}

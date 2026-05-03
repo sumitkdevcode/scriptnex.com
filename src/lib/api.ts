@@ -10,6 +10,7 @@ interface ApiResponse<T = unknown> {
 
 class ApiClient {
   private baseUrl: string;
+  private cache: Map<string, { data: any; expiry: number }> = new Map();
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -35,22 +36,41 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
-      headers,
-    });
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
+        headers,
+      });
 
-    const data: ApiResponse<T> = await response.json();
+      const data: ApiResponse<T> = await response.json();
 
-    if (!response.ok && !data.success) {
-      throw new ApiError(data.message, response.status, data.errors);
+      if (!response.ok || !data.success) {
+        const errorMessage = data.message || `Request failed with status ${response.status}`;
+        throw new ApiError(errorMessage, response.status, data.errors);
+      }
+
+      return data;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      // Network or parsing error
+      throw new ApiError(
+        error instanceof Error ? error.message : 'Network error occurred',
+        0
+      );
     }
-
-    return data;
   }
 
   async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'GET' });
+    const cached = this.cache.get(endpoint);
+    if (cached && cached.expiry > Date.now()) {
+      return cached.data;
+    }
+
+    const data = await this.request<T>(endpoint, { method: 'GET' });
+    this.cache.set(endpoint, { data, expiry: Date.now() + 30000 }); // Cache for 30s
+    return data;
   }
 
   async post<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {

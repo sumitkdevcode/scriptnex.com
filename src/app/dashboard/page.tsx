@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import Link from 'next/link';
+import ActivityGraph from '@/components/profile/ActivityGraph';
 
 interface UserStats {
   problems_solved: number;
@@ -13,6 +14,7 @@ interface UserStats {
   current_streak: number;
   certificates_earned: number;
   acceptance_rate: number;
+  submission_calendar: Record<string, number>;
 }
 
 export default function DashboardPage() {
@@ -38,7 +40,7 @@ export default function DashboardPage() {
   const solvedOffset = circumference - solvedFraction * circumference;
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 py-8 w-full">
+    <div className="max-w-7xl mx-auto px-4 pt-0 pb-8 w-full">
 
       {/* Top row: Solved + Calendar + Streak */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
@@ -125,26 +127,7 @@ export default function DashboardPage() {
             <span>Max streak: <strong className="text-white">{stats?.current_streak || 0}</strong></span>
           </div>
         </div>
-        <div className="flex gap-[3px] overflow-x-auto pb-2">
-          {Array.from({ length: 52 }).map((_, wi) => (
-            <div key={wi} className="flex flex-col gap-[3px]">
-              {Array.from({ length: 7 }).map((_, di) => {
-                const active = totalSolved > 0 && Math.random() > 0.85;
-                const intensity = active ? (Math.random() > 0.5 ? 'bg-[#00d285]' : 'bg-[#00d285]/50') : 'bg-[#1f2229]';
-                return <div key={di} className={`w-[11px] h-[11px] rounded-[2px] ${intensity}`} />;
-              })}
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center gap-1 mt-3 justify-end text-[10px] text-[#64748b]">
-          <span>Less</span>
-          <div className="w-[11px] h-[11px] rounded-[2px] bg-[#1f2229]" />
-          <div className="w-[11px] h-[11px] rounded-[2px] bg-[#00d285]/30" />
-          <div className="w-[11px] h-[11px] rounded-[2px] bg-[#00d285]/50" />
-          <div className="w-[11px] h-[11px] rounded-[2px] bg-[#00d285]/80" />
-          <div className="w-[11px] h-[11px] rounded-[2px] bg-[#00d285]" />
-          <span>More</span>
-        </div>
+        <ActivityGraph calendar={stats?.submission_calendar || {}} />
       </div>
 
       {/* Bottom row: Recent + Quick Actions */}

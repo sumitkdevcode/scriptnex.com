@@ -18,6 +18,7 @@ interface CertDetail {
   passing_score: number;
   total_questions: number;
   is_premium: boolean;
+  certificate_price_paise: number;
 }
 
 export default function CertDetailPage() {
@@ -110,6 +111,9 @@ export default function CertDetailPage() {
         >
           {isAuthenticated ? 'Start Exam' : 'Sign In to Start'}
         </button>
+        <p className="mt-4 text-sm text-[#94a3b8]">
+          Pass the exam with at least {cert.passing_score}% to generate your certificate. PDF download unlock: ₹{Math.round(cert.certificate_price_paise / 100)}.
+        </p>
       </div>
       <Footer />
     </div>

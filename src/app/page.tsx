@@ -13,52 +13,52 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 text-center py-20">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d285]/30 text-xs font-medium text-[#00d285] mb-10 bg-[#00d285]/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00d285] animate-pulse" />
+      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 text-center py-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00d285]/30 text-[10px] font-bold text-[#00d285] mb-6 bg-[#00d285]/5 uppercase tracking-wider">
+          <span className="w-1 h-1 rounded-full bg-[#00d285] animate-pulse" />
           Level Up Your Coding Skills
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl leading-[1.1]">
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 max-w-4xl leading-[1.1]">
           Practice. Compete.<br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00d285] to-[#00e691]">
             Get Certified.
           </span>
         </h1>
 
-        <p className="text-[#94a3b8] text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
+        <p className="text-[#94a3b8] text-base md:text-lg max-w-2xl mb-8 leading-relaxed">
           Join thousands of developers who sharpen their skills through coding challenges, earn industry-recognized certifications, and showcase their expertise.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
-          <Link href="/register" className="px-8 py-4 rounded-xl bg-[#00d285] text-black font-bold text-base hover:bg-[#00e691] transition-colors shadow-[0_0_30px_rgba(0,210,133,0.2)]">
+        <div className="flex flex-col sm:flex-row items-center gap-3 mb-12">
+          <Link href="/register" className="px-6 py-3.5 rounded-xl bg-[#00d285] text-black font-bold text-sm hover:bg-[#00e691] transition-colors shadow-[0_0_30px_rgba(0,210,133,0.2)]">
             Get Started — It&apos;s Free
           </Link>
-          <Link href="/problems" className="px-8 py-4 rounded-xl border border-[#2a2d35] text-white font-semibold text-base hover:bg-white/5 transition-colors">
+          <Link href="/problems" className="px-6 py-3.5 rounded-xl border border-[#2a2d35] text-white font-semibold text-sm hover:bg-white/5 transition-colors">
             Explore Challenges
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-8 max-w-lg">
+        <div className="grid grid-cols-3 gap-6 max-w-md">
           {[
             { num: '500+', label: 'Coding Problems' },
             { num: '50K+', label: 'Developers' },
             { num: '20+', label: 'Certifications' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-2xl font-bold text-[#00d285]">{stat.num}</div>
-              <div className="text-xs text-[#64748b] mt-1">{stat.label}</div>
+              <div className="text-xl font-bold text-[#00d285]">{stat.num}</div>
+              <div className="text-[10px] text-[#64748b] mt-0.5 uppercase tracking-wide font-medium">{stat.label}</div>
             </div>
           ))}
         </div>
       </main>
 
       {/* Features */}
-      <section className="relative z-10 border-t border-[#2a2d35] py-20 px-6">
+      <section className="relative z-10 border-t border-[#2a2d35] py-12 px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4">Everything you need to level up</h2>
-          <p className="text-[#94a3b8] text-center mb-14 max-w-xl mx-auto">From beginner to expert, ScriptNex has tools for every stage of your coding journey.</p>
+          <h2 className="text-2xl font-bold text-center mb-3">Everything you need to level up</h2>
+          <p className="text-[#94a3b8] text-sm text-center mb-10 max-w-xl mx-auto">From beginner to expert, ScriptNex has tools for every stage of your coding journey.</p>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[

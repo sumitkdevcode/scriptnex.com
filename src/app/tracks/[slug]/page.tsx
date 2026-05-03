@@ -31,11 +31,11 @@ export default function TrackDetailPage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <Link href="/tracks" className="text-sm text-[#64748b] hover:text-white mb-4 inline-block">← Back to Tracks</Link>
-        <h1 className="text-3xl font-bold mb-3">{track.title}</h1>
-        <p className="text-[#94a3b8] mb-6">{track.description}</p>
-        <div className="flex gap-6 text-sm text-[#64748b] mb-10">
+      <div className="max-w-5xl mx-auto px-4 pt-0 pb-6">
+        <Link href="/tracks" className="text-xs text-[#64748b] hover:text-white mb-2 inline-block">← Back to Tracks</Link>
+        <h1 className="text-2xl font-bold mb-1.5">{track.title}</h1>
+        <p className="text-[#94a3b8] text-sm mb-4">{track.description}</p>
+        <div className="flex gap-6 text-xs text-[#64748b] mb-6">
           <span className="capitalize">{track.difficulty}</span>
           <span>{track.estimated_hours}h</span>
           <span>{modules.length} modules</span>

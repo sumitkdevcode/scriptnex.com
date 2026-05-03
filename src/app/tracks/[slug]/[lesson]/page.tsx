@@ -97,20 +97,20 @@ export default function LessonPage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col">
       <Navbar />
-      <div className="flex flex-1 max-w-7xl mx-auto w-full px-4 py-8 gap-8">
+      <div className="flex flex-1 max-w-7xl mx-auto w-full px-4 pt-0 pb-6 gap-8">
         {/* Sidebar */}
         <aside className="hidden lg:block w-72 shrink-0">
-          <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden sticky top-24">
-            <div className="px-4 py-3 border-b border-[#2a2d35]">
-              <Link href={`/tracks/${trackSlug}`} className="text-xs text-[#64748b] hover:text-[#00d285] transition-colors">
+          <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden sticky top-20">
+            <div className="px-3 py-2 border-b border-[#2a2d35]">
+              <Link href={`/tracks/${trackSlug}`} className="text-[10px] text-[#64748b] hover:text-[#00d285] transition-colors">
                 ← {track?.title}
               </Link>
             </div>
-            <div className="overflow-y-auto max-h-[70vh]">
+            <div className="overflow-y-auto max-h-[75vh]">
               {modules.map((mod, mi) => (
                 <div key={mod.id}>
-                  <div className="px-4 py-2 bg-[#0f1115]/60">
-                    <span className="text-[10px] uppercase tracking-widest text-[#64748b] font-semibold">
+                  <div className="px-4 py-1.5 bg-[#0f1115]/60">
+                    <span className="text-[9px] uppercase tracking-widest text-[#64748b] font-semibold">
                       Module {mi + 1}: {mod.title}
                     </span>
                   </div>
@@ -118,15 +118,15 @@ export default function LessonPage() {
                     <Link
                       key={l.id}
                       href={`/tracks/${trackSlug}/${l.slug}`}
-                      className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors border-l-2 ${
+                      className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors border-l-2 ${
                         l.slug === lessonSlug
                           ? 'border-[#00d285] bg-[#00d285]/5 text-[#00d285]'
                           : 'border-transparent text-[#94a3b8] hover:text-white hover:bg-white/[0.02]'
                       }`}
                     >
                       <span className="text-xs">{TYPE_ICON[l.type] || '📄'}</span>
-                      <span className="flex-1 truncate">{l.title}</span>
-                      <span className="text-[10px] text-[#475569] shrink-0">{l.duration_minutes}m</span>
+                      <span className="flex-1 truncate text-xs">{l.title}</span>
+                      <span className="text-[9px] text-[#475569] shrink-0">{l.duration_minutes}m</span>
                     </Link>
                   ))}
                 </div>
@@ -139,22 +139,22 @@ export default function LessonPage() {
         <main className="flex-1 min-w-0">
           {lesson ? (
             <>
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
                   <span
-                    className="text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full"
+                    className="text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
                     style={{ color: TYPE_COLOR[lesson.type] || '#64748b', background: `${TYPE_COLOR[lesson.type]}15` }}
                   >
                     {TYPE_ICON[lesson.type]} {lesson.type}
                   </span>
-                  <span className="text-xs text-[#64748b]">{lesson.duration_minutes} min read</span>
+                  <span className="text-[10px] text-[#64748b]">{lesson.duration_minutes} min read</span>
                 </div>
-                <h1 className="text-2xl font-bold mb-2">{lesson.title}</h1>
+                <h1 className="text-xl font-bold mb-1.5">{lesson.title}</h1>
               </div>
 
               {/* Video */}
               {lesson.video_url && (
-                <div className="aspect-video bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden mb-6">
+                <div className="aspect-video bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden mb-4">
                   <iframe
                     src={lesson.video_url.replace('watch?v=', 'embed/')}
                     className="w-full h-full"
@@ -166,51 +166,51 @@ export default function LessonPage() {
 
               {/* Article Content */}
               {lesson.content ? (
-                <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-8 mb-6 prose prose-invert max-w-none">
-                  <div className="text-[#cbd5e1] leading-relaxed whitespace-pre-wrap text-sm">{lesson.content}</div>
+                <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6 mb-4 prose prose-invert max-w-none">
+                  <div className="text-[#cbd5e1] leading-relaxed whitespace-pre-wrap text-[13px]">{lesson.content}</div>
                 </div>
               ) : lesson.problem ? (
-                <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-8 mb-6">
-                  <div className="text-sm text-[#94a3b8] mb-4">This lesson is a guided coding exercise.</div>
+                <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6 mb-4">
+                  <div className="text-xs text-[#94a3b8] mb-3">This lesson is a guided coding exercise.</div>
                   <Link
                     href={`/problems/${lesson.problem.slug}`}
-                    className="inline-flex items-center gap-2 px-5 py-3 bg-[#00d285] text-black font-bold rounded-xl text-sm hover:bg-[#00e691] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#00d285] text-black font-bold rounded-xl text-xs hover:bg-[#00e691] transition-colors"
                   >
                     Open Problem: {lesson.problem.title}
                   </Link>
                 </div>
               ) : !lesson.video_url ? (
-                <div className="bg-[#16181d] border border-[#2a2d35] border-dashed rounded-xl p-12 text-center mb-6">
-                  <div className="text-5xl mb-4">{TYPE_ICON[lesson.type] || '📄'}</div>
-                  <p className="text-[#64748b] text-sm">Content for this lesson is being prepared.</p>
+                <div className="bg-[#16181d] border border-[#2a2d35] border-dashed rounded-xl p-8 text-center mb-4">
+                  <div className="text-4xl mb-3">{TYPE_ICON[lesson.type] || '📄'}</div>
+                  <p className="text-[#64748b] text-xs">Content for this lesson is being prepared.</p>
                 </div>
               ) : null}
 
               {/* Navigation */}
-              <div className="flex items-center justify-between pt-4 border-t border-[#2a2d35]">
+              <div className="flex items-center justify-between pt-4 border-t border-[#2a2d35] gap-2">
                 {prevLesson ? (
                   <Link href={`/tracks/${trackSlug}/${prevLesson.slug}`}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#16181d] border border-[#2a2d35] rounded-xl text-sm hover:border-[#00d285]/30 transition-colors group">
-                    <span className="text-[#64748b] group-hover:text-white">←</span>
-                    <div>
-                      <div className="text-[10px] text-[#64748b] uppercase tracking-wider">Previous</div>
-                      <div className="font-medium text-xs truncate max-w-[180px]">{prevLesson.title}</div>
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#16181d] border border-[#2a2d35] rounded-xl text-xs sm:text-sm hover:border-[#00d285]/30 transition-colors group min-w-0">
+                    <span className="text-[#64748b] group-hover:text-white shrink-0">←</span>
+                    <div className="min-w-0">
+                      <div className="text-[9px] sm:text-[10px] text-[#64748b] uppercase tracking-wider">Prev</div>
+                      <div className="font-medium text-[10px] sm:text-xs truncate max-w-[80px] sm:max-w-[180px]">{prevLesson.title}</div>
                     </div>
                   </Link>
                 ) : <div />}
                 {nextLesson ? (
                   <Link href={`/tracks/${trackSlug}/${nextLesson.slug}`}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-[#00d285]/10 border border-[#00d285]/20 rounded-xl text-sm hover:bg-[#00d285]/20 transition-colors group text-right">
-                    <div>
-                      <div className="text-[10px] text-[#00d285] uppercase tracking-wider">Next</div>
-                      <div className="font-medium text-xs text-[#00d285] truncate max-w-[180px]">{nextLesson.title}</div>
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#00d285]/10 border border-[#00d285]/20 rounded-xl text-xs sm:text-sm hover:bg-[#00d285]/20 transition-colors group text-right min-w-0">
+                    <div className="min-w-0">
+                      <div className="text-[9px] sm:text-[10px] text-[#00d285] uppercase tracking-wider">Next</div>
+                      <div className="font-medium text-[10px] sm:text-xs text-[#00d285] truncate max-w-[80px] sm:max-w-[180px]">{nextLesson.title}</div>
                     </div>
-                    <span className="text-[#00d285]">→</span>
+                    <span className="text-[#00d285] shrink-0">→</span>
                   </Link>
                 ) : (
                   <Link href={`/tracks/${trackSlug}`}
-                    className="px-4 py-2.5 bg-[#00d285] text-black font-bold rounded-xl text-sm hover:bg-[#00e691] transition-colors">
-                    🎉 Complete Track
+                    className="px-4 py-2 sm:py-2.5 bg-[#00d285] text-black font-bold rounded-xl text-xs sm:text-sm hover:bg-[#00e691] transition-colors shrink-0">
+                    🎉 Done
                   </Link>
                 )}
               </div>
