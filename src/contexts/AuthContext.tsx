@@ -20,13 +20,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(() => {
-    if (typeof window === 'undefined') {
-      return true;
-    }
-
-    return Boolean(localStorage.getItem('auth_token'));
-  });
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]> | null>(null);
 
