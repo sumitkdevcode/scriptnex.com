@@ -343,7 +343,7 @@ export default function VerifyCertPage() {
           <div className="bg-[#16181d] border border-red-500/20 rounded-2xl p-12 max-w-md w-full text-center">
             <div className="text-5xl mb-4">❌</div>
             <h1 className="text-xl font-bold mb-2 text-red-400">Certificate Not Found</h1>
-            <p className="text-[#94a3b8] text-sm mb-6">
+            <p className="text-[#ababab] text-sm mb-6">
               This certificate ID is invalid or doesn&apos;t exist. It may have been revoked.
             </p>
             <Link href="/" className="px-6 py-3 bg-[#16181d] border border-[#2a2d35] rounded-xl text-sm font-semibold hover:border-[#00d285]/30 transition-colors">
@@ -369,7 +369,7 @@ export default function VerifyCertPage() {
                 </div>
 
                 <h1 className="text-2xl font-bold mb-1">{cert.certification.title}</h1>
-                <p className="text-[#94a3b8] text-sm mb-6 capitalize">{cert.certification.difficulty_level} Level</p>
+                <p className="text-[#ababab] text-sm mb-6 capitalize">{cert.certification.difficulty_level} Level</p>
 
                 <div className="bg-[#0f1115] rounded-xl p-5 mb-6 text-left">
                   <div className="flex items-center gap-3 mb-4">
@@ -378,16 +378,16 @@ export default function VerifyCertPage() {
                     </div>
                     <div>
                       <div className="font-semibold">{cert.user.name}</div>
-                      <div className="text-xs text-[#64748b]">@{cert.user.username}</div>
+                      <div className="text-xs text-[#ababab]">@{cert.user.username}</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <div className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold mb-1">Score</div>
+                      <div className="text-[10px] uppercase tracking-wider text-[#ababab] font-semibold mb-1">Score</div>
                       <div className="font-bold text-[#00d285]">{cert.percentage}%</div>
                     </div>
                     <div>
-                      <div className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold mb-1">Issued On</div>
+                      <div className="text-[10px] uppercase tracking-wider text-[#ababab] font-semibold mb-1">Issued On</div>
                       <div className="font-medium text-xs">
                         {new Date(cert.issued_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </div>
@@ -395,7 +395,7 @@ export default function VerifyCertPage() {
                   </div>
                 </div>
 
-                <div className="text-[10px] text-[#475569] font-mono break-all">ID: {cert.uuid}</div>
+                <div className="text-[10px] text-[#ababab] font-mono break-all">ID: {cert.uuid}</div>
               </div>
             </div>
 
@@ -434,11 +434,11 @@ export default function VerifyCertPage() {
                   )}
                 </button>
               ) : authLoading || ownerStatusLoading ? (
-                <div className="px-6 py-2.5 bg-[#16181d] border border-[#2a2d35] text-[#94a3b8] rounded-xl text-sm">
+                <div className="px-6 py-2.5 bg-[#16181d] border border-[#2a2d35] text-[#ababab] rounded-xl text-sm">
                   Checking download access...
                 </div>
               ) : isAuthenticated ? (
-                <div className="px-6 py-2.5 bg-[#16181d] border border-[#2a2d35] text-[#94a3b8] rounded-xl text-sm text-center">
+                <div className="px-6 py-2.5 bg-[#16181d] border border-[#2a2d35] text-[#ababab] rounded-xl text-sm text-center">
                   Only the certificate owner can unlock this PDF download.
                 </div>
               ) : (
@@ -452,7 +452,7 @@ export default function VerifyCertPage() {
             </div>
 
             <div className="text-center mb-6">
-              <p className="text-xs text-[#64748b]">
+              <p className="text-xs text-[#ababab]">
                 {canDownload
                   ? 'PDF download is unlocked for this certificate.'
                   : `Viewing is free. PDF download requires a one-time ₹${downloadPrice} payment from the certificate owner.`}
@@ -460,7 +460,7 @@ export default function VerifyCertPage() {
             </div>
 
             <div className="text-center">
-              <p className="text-xs text-[#64748b] mb-4">
+              <p className="text-xs text-[#ababab] mb-4">
                 This certificate was issued by ScriptNex and is cryptographically verified.
               </p>
               <Link href="/certifications" className="text-sm text-[#00d285] hover:underline">

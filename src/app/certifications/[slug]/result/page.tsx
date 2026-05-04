@@ -70,7 +70,7 @@ export default function CertificationResultPage() {
       <Navbar />
       
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-20 flex flex-col items-center justify-center">
-        <div className="bg-[#16181d] border border-[#2a2d35] rounded-2xl w-full p-10 text-center relative overflow-hidden">
+        <div className="bg-[#16181d] border border-[#2a2d35] rounded-md w-full p-10 text-center relative overflow-hidden">
           {/* Decorative glow */}
           <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 blur-[80px] opacity-20 pointer-events-none ${
             isPassed ? 'bg-[#00d285]' : 'bg-red-500'
@@ -90,21 +90,21 @@ export default function CertificationResultPage() {
             <h1 className="text-3xl font-bold mb-2">
               {isPassed ? 'Congratulations!' : 'Exam Failed'}
             </h1>
-            <p className="text-[#94a3b8] mb-8">
+            <p className="text-[#ababab] mb-8">
               {isPassed 
                 ? `You have successfully passed the ${result.certification.title} certification.` 
                 : `You did not meet the required passing score for ${result.certification.title}.`}
             </p>
 
-            <div className="bg-[#1a1c23] rounded-xl p-6 mb-8 inline-block min-w-[280px]">
-              <div className="text-[10px] uppercase tracking-widest text-[#64748b] font-bold mb-1">Your Score</div>
+            <div className="bg-[#1a1c23] rounded-md p-6 mb-8 inline-block min-w-[280px]">
+              <div className="text-[10px] uppercase tracking-widest text-[#ababab] font-bold mb-1">Your Score</div>
               <div className={`text-5xl font-black mb-2 ${isPassed ? 'text-[#00d285]' : 'text-red-500'}`}>
                 {percentage}%
               </div>
-              <div className="text-sm text-[#94a3b8]">
+              <div className="text-sm text-[#ababab]">
                 {result.score} out of {result.total_possible} points
               </div>
-              <div className="mt-4 pt-4 border-t border-[#2a2d35] text-xs text-[#64748b]">
+              <div className="mt-4 pt-4 border-t border-[#2a2d35] text-xs text-[#ababab]">
                 Passing Score: {result.certification.passing_score}%
               </div>
             </div>
@@ -113,28 +113,28 @@ export default function CertificationResultPage() {
               {isPassed && result.certificate_url ? (
                 <Link 
                   href={result.certificate_url}
-                  className="px-6 py-3 bg-[#00d285] text-black font-bold rounded-xl hover:bg-[#00e691] transition-colors"
+                  className="px-6 py-3 bg-[#00d285] text-black font-bold rounded-md hover:bg-[#00e691] transition-colors"
                 >
                   View Certificate
                 </Link>
               ) : (
                 <Link 
                   href={`/certifications/${slug}`}
-                  className="px-6 py-3 bg-[#00d285] text-black font-bold rounded-xl hover:bg-[#00e691] transition-colors"
+                  className="px-6 py-3 bg-[#00d285] text-black font-bold rounded-md hover:bg-[#00e691] transition-colors"
                 >
                   Try Again
                 </Link>
               )}
               <Link 
                 href="/certifications"
-                className="px-6 py-3 bg-[#1a1c23] border border-[#2a2d35] text-white font-bold rounded-xl hover:border-[#475569] transition-colors"
+                className="px-6 py-3 bg-[#1a1c23] border border-[#2a2d35] text-white font-bold rounded-md hover:border-[#ababab] transition-colors"
               >
                 Back to Certifications
               </Link>
             </div>
 
             {isPassed && result.certificate_url && (
-              <p className="mt-5 text-sm text-[#94a3b8]">
+              <p className="mt-5 text-sm text-[#ababab]">
                 {result.download_paid
                   ? 'Your certificate PDF is already unlocked for download.'
                   : `Certificate generated successfully. PDF download unlock costs ₹${downloadPrice}.`}

@@ -285,21 +285,21 @@ export default function CertificationExamPage() {
       {/* Top Navbar Header */}
       <div className="h-[50px] shrink-0 bg-[#1a1c23] border-b border-[#2a2d35] flex items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <button onClick={() => router.push(`/certifications/${slug}`)} className="text-[#94a3b8] hover:text-white transition-colors">
+          <button onClick={() => router.push(`/certifications/${slug}`)} className="text-[#ababab] hover:text-white transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
           <h2 className="font-bold text-sm">{exam.title}</h2>
         </div>
         
         <div className="flex items-center gap-4">
-          <div className={`font-mono font-bold text-sm flex items-center gap-2 bg-[#0f1115] px-3 py-1.5 rounded-lg border border-[#2a2d35] ${timeLeft < 300 ? 'text-red-500' : 'text-[#00d285]'}`}>
+          <div className={`font-mono font-bold text-sm flex items-center gap-2 bg-[#0f1115] px-3 py-1.5 rounded-md border border-[#2a2d35] ${timeLeft < 300 ? 'text-red-500' : 'text-[#00d285]'}`}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             {formatTime(timeLeft)}
           </div>
           <button
             onClick={() => void handleSubmit()}
             disabled={submitting}
-            className="px-4 py-1.5 bg-[#00d285] text-black font-bold rounded-lg hover:bg-[#00e691] transition-colors disabled:opacity-50 text-xs"
+            className="px-4 py-1.5 bg-[#00d285] text-black font-bold rounded-md hover:bg-[#00e691] transition-colors disabled:opacity-50 text-xs"
           >
             {submitting ? 'Submitting...' : 'Submit Exam'}
           </button>
@@ -320,15 +320,15 @@ export default function CertificationExamPage() {
             </button>
             {isCoding && (
               <>
-                <button className="h-full text-[#94a3b8] hover:text-white transition-colors flex items-center gap-2">
+                <button className="h-full text-[#ababab] hover:text-white transition-colors flex items-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                   Editorial
                 </button>
-                <button className="h-full text-[#94a3b8] hover:text-white transition-colors flex items-center gap-2">
+                <button className="h-full text-[#ababab] hover:text-white transition-colors flex items-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   Solutions
                 </button>
-                <button className="h-full text-[#94a3b8] hover:text-white transition-colors flex items-center gap-2">
+                <button className="h-full text-[#ababab] hover:text-white transition-colors flex items-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                   Submissions
                 </button>
@@ -354,7 +354,7 @@ export default function CertificationExamPage() {
                   const color = colorMap[diff] || '#00d285';
                   return <span style={{ color, backgroundColor: `${color}15` }} className="px-2.5 py-1 rounded-full capitalize">{diff}</span>;
                 })()}
-                <span className="text-[#94a3b8] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
+                <span className="text-[#ababab] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                   Topics
                 </span>
@@ -362,7 +362,7 @@ export default function CertificationExamPage() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                   Companies
                 </span>
-                <span className="text-[#94a3b8] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
+                <span className="text-[#ababab] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                   Hint
                 </span>
@@ -376,7 +376,7 @@ export default function CertificationExamPage() {
                   <button
                     key={key}
                     onClick={() => handleOptionSelect(activeQuestion.id, key)}
-                    className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-all ${
+                    className={`w-full text-left px-4 py-3 rounded-md border-2 transition-all ${
                       answers[activeQuestion.id] === key
                         ? 'border-[#00d285] bg-[#00d285]/10 text-white'
                         : 'border-[#2a2d35] bg-[#1a1c23] text-[#cbd5e1] hover:border-[#00d285]/50'
@@ -397,7 +397,7 @@ export default function CertificationExamPage() {
                   value={answers[activeQuestion.id] || ''}
                   onChange={(event) => handleOptionSelect(activeQuestion.id, event.target.value)}
                   placeholder="Type your answer here..."
-                  className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00d285] text-sm"
+                  className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-md px-4 py-3 text-white focus:outline-none focus:border-[#00d285] text-sm"
                 />
               </div>
             )}
@@ -425,7 +425,7 @@ export default function CertificationExamPage() {
                 {(activeQuestion.problem.sample_input || activeQuestion.problem.sample_output) && (
                   <div>
                     <h3 className="font-bold mb-2">Example 1:</h3>
-                    <div className="bg-[#1a1c23] p-4 rounded-lg border border-[#2a2d35] font-mono text-sm space-y-1">
+                    <div className="bg-[#1a1c23] p-4 rounded-md border border-[#2a2d35] font-mono text-sm space-y-1">
                       {activeQuestion.problem.sample_input && (
                         <p><span className="text-white font-semibold">Input:</span> {activeQuestion.problem.sample_input}</p>
                       )}
@@ -442,7 +442,7 @@ export default function CertificationExamPage() {
                 {activeQuestion.problem.constraints && (
                   <div>
                     <h3 className="font-bold mb-2">Constraints:</h3>
-                    <div className="bg-[#1a1c23] p-4 rounded-lg border border-[#2a2d35] font-mono text-sm text-[#cbd5e1] whitespace-pre-wrap">
+                    <div className="bg-[#1a1c23] p-4 rounded-md border border-[#2a2d35] font-mono text-sm text-[#cbd5e1] whitespace-pre-wrap">
                       {activeQuestion.problem.constraints}
                     </div>
                   </div>
@@ -482,7 +482,7 @@ export default function CertificationExamPage() {
                     </option>
                   ))}
                 </select>
-                <button className="text-[#94a3b8] hover:text-white transition-colors">
+                <button className="text-[#ababab] hover:text-white transition-colors">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 </button>
               </div>
@@ -512,7 +512,7 @@ export default function CertificationExamPage() {
                 <button 
                   onClick={() => setActiveResultTab('testcases')}
                   className={`h-full flex items-center gap-2 transition-colors ${
-                    activeResultTab === 'testcases' ? 'border-b-2 border-[#00d285] text-[#00d285]' : 'text-[#94a3b8] hover:text-white'
+                    activeResultTab === 'testcases' ? 'border-b-2 border-[#00d285] text-[#00d285]' : 'text-[#ababab] hover:text-white'
                   }`}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -521,7 +521,7 @@ export default function CertificationExamPage() {
                 <button 
                   onClick={() => setActiveResultTab('output')}
                   className={`h-full flex items-center gap-2 transition-colors ${
-                    activeResultTab === 'output' ? 'border-b-2 border-[#00d285] text-[#00d285]' : 'text-[#94a3b8] hover:text-white'
+                    activeResultTab === 'output' ? 'border-b-2 border-[#00d285] text-[#00d285]' : 'text-[#ababab] hover:text-white'
                   }`}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
@@ -533,28 +533,28 @@ export default function CertificationExamPage() {
                 {activeResultTab === 'testcases' ? (
                   <>
                     <div className="flex gap-2 mb-4">
-                      <button className="px-3 py-1 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-xs font-semibold">Case 1</button>
+                      <button className="px-3 py-1 bg-[#1a1c23] border border-[#2a2d35] rounded-md text-xs font-semibold">Case 1</button>
                     </div>
 
                     <div className="space-y-3">
                       {activeQuestion.problem?.sample_input && (
                         <div>
-                          <div className="text-xs text-[#94a3b8] font-semibold mb-1">Input =</div>
-                          <div className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-lg px-3 py-2 font-mono text-sm whitespace-pre-wrap">
+                          <div className="text-xs text-[#ababab] font-semibold mb-1">Input =</div>
+                          <div className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-md px-3 py-2 font-mono text-sm whitespace-pre-wrap">
                             {activeQuestion.problem.sample_input}
                           </div>
                         </div>
                       )}
                       {activeQuestion.problem?.sample_output && (
                         <div>
-                          <div className="text-xs text-[#94a3b8] font-semibold mb-1">Expected Output =</div>
-                          <div className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-lg px-3 py-2 font-mono text-sm whitespace-pre-wrap">
+                          <div className="text-xs text-[#ababab] font-semibold mb-1">Expected Output =</div>
+                          <div className="w-full bg-[#1a1c23] border border-[#2a2d35] rounded-md px-3 py-2 font-mono text-sm whitespace-pre-wrap">
                             {activeQuestion.problem.sample_output}
                           </div>
                         </div>
                       )}
                       {!activeQuestion.problem?.sample_input && !activeQuestion.problem?.sample_output && (
-                        <div className="text-xs text-[#475569] italic">No test cases available for this question.</div>
+                        <div className="text-xs text-[#ababab] italic">No test cases available for this question.</div>
                       )}
                     </div>
                   </>
@@ -563,7 +563,7 @@ export default function CertificationExamPage() {
                     {runResult ? (
                       <div className="font-mono text-sm whitespace-pre-wrap text-[#cbd5e1]">{runResult}</div>
                     ) : (
-                      <div className="flex-1 flex items-center justify-center text-sm text-[#64748b] italic">
+                      <div className="flex-1 flex items-center justify-center text-sm text-[#ababab] italic">
                         Run your code to see the output here.
                       </div>
                     )}
@@ -574,7 +574,7 @@ export default function CertificationExamPage() {
               <div className="h-[44px] shrink-0 border-t border-[#2a2d35] bg-[#1a1c23] flex items-center justify-between px-4">
                 <button 
                   onClick={() => setActiveResultTab(prev => prev === 'output' ? 'testcases' : 'output')}
-                  className="text-[#94a3b8] hover:text-white text-xs font-semibold flex items-center gap-2"
+                  className="text-[#ababab] hover:text-white text-xs font-semibold flex items-center gap-2"
                 >
                   Console
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transform transition-transform ${activeResultTab === 'output' ? 'rotate-180' : ''}`}><polyline points="18 15 12 9 6 15"/></svg>
@@ -583,7 +583,7 @@ export default function CertificationExamPage() {
                   <button 
                     onClick={() => void handleRun()} 
                     disabled={isRunning}
-                    className="px-4 py-1.5 bg-[#2a2d35] hover:bg-[#3b3e46] disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-2"
+                    className="px-4 py-1.5 bg-[#2a2d35] hover:bg-[#3b3e46] disabled:opacity-50 text-white text-xs font-bold rounded-md transition-colors flex items-center gap-2"
                   >
                     {isRunning ? (
                       <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -593,7 +593,7 @@ export default function CertificationExamPage() {
                   <button 
                     onClick={() => void handleCodeSubmit()} 
                     disabled={isRunning}
-                    className="px-4 py-1.5 bg-[#00d285] hover:bg-[#00e691] disabled:opacity-50 text-black text-xs font-bold rounded-lg transition-colors flex items-center gap-2"
+                    className="px-4 py-1.5 bg-[#00d285] hover:bg-[#00e691] disabled:opacity-50 text-black text-xs font-bold rounded-md transition-colors flex items-center gap-2"
                   >
                     Submit Code
                   </button>
@@ -609,7 +609,7 @@ export default function CertificationExamPage() {
         <button
           onClick={() => setActiveQuestionIndex(Math.max(0, activeQuestionIndex - 1))}
           disabled={activeQuestionIndex === 0}
-          className="px-4 py-2 text-xs font-semibold text-[#f8fafc] bg-[#2a2d35] hover:bg-[#3b3e46] rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold text-[#f8fafc] bg-[#2a2d35] hover:bg-[#3b3e46] rounded-md transition-colors disabled:opacity-50 flex items-center gap-2"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
           Previous
@@ -628,7 +628,7 @@ export default function CertificationExamPage() {
                     ? 'border-2 border-[#00d285] text-white bg-[#00d285]/10' 
                     : isAnswered 
                       ? 'bg-[#2a2d35] text-[#00d285]' 
-                      : 'bg-[#1a1c23] text-[#64748b] hover:bg-[#2a2d35]'
+                      : 'bg-[#1a1c23] text-[#ababab] hover:bg-[#2a2d35]'
                 }`}
               >
                 {idx + 1}
@@ -645,7 +645,7 @@ export default function CertificationExamPage() {
               setActiveQuestionIndex(Math.min(exam.questions.length - 1, activeQuestionIndex + 1));
             }
           }}
-          className="px-4 py-2 text-xs font-semibold text-[#f8fafc] bg-[#2a2d35] hover:bg-[#3b3e46] rounded-lg transition-colors flex items-center gap-2"
+          className="px-4 py-2 text-xs font-semibold text-[#f8fafc] bg-[#2a2d35] hover:bg-[#3b3e46] rounded-md transition-colors flex items-center gap-2"
         >
           {activeQuestionIndex === exam.questions.length - 1 ? 'Finish' : 'Next'}
           {activeQuestionIndex !== exam.questions.length - 1 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>}

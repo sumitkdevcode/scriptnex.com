@@ -165,11 +165,11 @@ export default function ProblemWorkspace({
       {/* Top Header */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2a2d35] bg-[#16181d] shrink-0">
         <div className="flex items-center gap-2 overflow-hidden">
-          <Link href={backHref} className="text-[#94a3b8] hover:text-white transition-colors p-1 shrink-0">
+          <Link href={backHref} className="text-[#ababab] hover:text-white transition-colors p-1 shrink-0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           </Link>
           <div className="flex items-center gap-2 truncate">
-            {headerPrefix && <span className="hidden sm:inline font-semibold text-xs uppercase tracking-wider text-[#64748b]">{headerPrefix} | </span>}
+            {headerPrefix && <span className="hidden sm:inline font-semibold text-xs uppercase tracking-wider text-[#ababab]">{headerPrefix} | </span>}
             <span className="font-semibold text-sm truncate">{problem.title}</span>
             <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-semibold capitalize bg-white/5" style={{ color: diffConfig[problem.difficulty]?.color }}>
               {problem.difficulty}
@@ -191,23 +191,23 @@ export default function ProblemWorkspace({
 
       {/* Mobile Tab Switcher */}
       <div className="flex md:hidden border-b border-[#2a2d35] bg-[#0f1115] shrink-0">
-        <button onClick={() => setMobileTab('description')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Info</button>
-        <button onClick={() => setMobileTab('code')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'code' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Code</button>
-        <button onClick={() => setMobileTab('results')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'results' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b]'}`}>Results</button>
+        <button onClick={() => setMobileTab('description')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#ababab]'}`}>Info</button>
+        <button onClick={() => setMobileTab('code')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'code' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#ababab]'}`}>Code</button>
+        <button onClick={() => setMobileTab('results')} className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-widest ${mobileTab === 'results' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#ababab]'}`}>Results</button>
       </div>
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel: Description / Editorial */}
         <div className={`w-full md:w-[40%] lg:w-[45%] border-r border-[#2a2d35] flex flex-col overflow-hidden ${mobileTab !== 'description' ? 'hidden md:flex' : 'flex'}`}>
           <div className="flex border-b border-[#2a2d35] shrink-0">
-            <button onClick={() => setActiveTab('description')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Description</button>
-            <button onClick={() => setActiveTab('editorial')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'editorial' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#64748b] hover:text-white'}`}>Editorial</button>
+            <button onClick={() => setActiveTab('description')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'description' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#ababab] hover:text-white'}`}>Description</button>
+            <button onClick={() => setActiveTab('editorial')} className={`px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${activeTab === 'editorial' ? 'text-[#00d285] border-b-2 border-[#00d285]' : 'text-[#ababab] hover:text-white'}`}>Editorial</button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-5">
             {activeTab === 'description' ? (
               <>
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#94a3b8]">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#ababab]">
                   {problem.category && <span className="px-2 py-0.5 bg-white/5 rounded">{problem.category.name}</span>}
                   <span>⏱ {problem.time_limit_ms}ms</span>
                   <span>💾 {Math.round(problem.memory_limit_kb / 1024)}MB</span>
@@ -219,35 +219,35 @@ export default function ProblemWorkspace({
 
                 {problem.input_format && (
                   <div>
-                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Input Format</h3>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Input Format</h3>
                     <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.input_format}</p>
                   </div>
                 )}
 
                 {problem.output_format && (
                   <div>
-                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Output Format</h3>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Output Format</h3>
                     <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.output_format}</p>
                   </div>
                 )}
 
                 {problem.constraints && (
                   <div>
-                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold mb-2">Constraints</h3>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Constraints</h3>
                     <pre className="text-xs text-[#cbd5e1] bg-[#1a1c23] rounded-lg p-3 border border-[#2a2d35] whitespace-pre-wrap">{problem.constraints}</pre>
                   </div>
                 )}
 
                 {sampleCases.map((sampleCase, index) => (
                   <div key={sampleCase.id} className="space-y-2">
-                    <h3 className="text-[10px] uppercase tracking-wider text-[#64748b] font-bold">Example {index + 1}</h3>
+                    <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold">Example {index + 1}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <div className="text-[9px] uppercase tracking-wider text-[#475569] mb-1 font-bold">Input</div>
+                        <div className="text-[9px] uppercase tracking-wider text-[#ababab] mb-1 font-bold">Input</div>
                         <pre className="text-xs bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono overflow-x-auto">{sampleCase.input}</pre>
                       </div>
                       <div>
-                        <div className="text-[9px] uppercase tracking-wider text-[#475569] mb-1 font-bold">Output</div>
+                        <div className="text-[9px] uppercase tracking-wider text-[#ababab] mb-1 font-bold">Output</div>
                         <pre className="text-xs bg-[#1a1c23] border border-[#2a2d35] rounded-lg p-3 text-[#00d285] font-mono overflow-x-auto">{sampleCase.expected_output}</pre>
                       </div>
                     </div>
@@ -259,7 +259,7 @@ export default function ProblemWorkspace({
                 {problem.editorial ? (
                   <div className="whitespace-pre-wrap leading-relaxed">{problem.editorial}</div>
                 ) : (
-                  <p className="text-[#64748b] italic">{editorialFallbackMessage}</p>
+                  <p className="text-[#ababab] italic">{editorialFallbackMessage}</p>
                 )}
               </div>
             )}
@@ -292,8 +292,8 @@ export default function ProblemWorkspace({
           <div className={`h-[220px] md:h-[180px] border-t border-[#2a2d35] flex flex-col shrink-0 ${mobileTab === 'code' ? 'hidden md:flex' : 'flex'}`}>
             <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#2a2d35] bg-[#16181d]">
               <div className="flex gap-4">
-                <button onClick={() => setResultTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'testcases' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Test Cases</button>
-                <button onClick={() => setResultTab('output')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'output' ? 'text-[#00d285]' : 'text-[#64748b]'}`}>Output</button>
+                <button onClick={() => setResultTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'testcases' ? 'text-[#00d285]' : 'text-[#ababab]'}`}>Test Cases</button>
+                <button onClick={() => setResultTab('output')} className={`text-[10px] font-bold uppercase tracking-widest ${resultTab === 'output' ? 'text-[#00d285]' : 'text-[#ababab]'}`}>Output</button>
               </div>
               <div className="flex gap-2">
                 <button
@@ -318,10 +318,10 @@ export default function ProblemWorkspace({
                 <div className="space-y-2">
                   {sampleCases.map((sampleCase, index) => (
                     <div key={sampleCase.id} className="bg-[#16181d] border border-[#2a2d35] rounded-lg p-2.5">
-                      <div className="text-[9px] uppercase tracking-wider text-[#64748b] font-bold mb-1.5">Case {index + 1}</div>
+                      <div className="text-[9px] uppercase tracking-wider text-[#ababab] font-bold mb-1.5">Case {index + 1}</div>
                       <div className="flex flex-col sm:flex-row sm:gap-4 text-[11px] font-mono">
-                        <div className="flex gap-2"><span className="text-[#475569]">In:</span> <span className="text-[#cbd5e1] truncate">{sampleCase.input}</span></div>
-                        <div className="flex gap-2"><span className="text-[#475569]">Out:</span> <span className="text-[#00d285] truncate">{sampleCase.expected_output}</span></div>
+                        <div className="flex gap-2"><span className="text-[#ababab]">In:</span> <span className="text-[#cbd5e1] truncate">{sampleCase.input}</span></div>
+                        <div className="flex gap-2"><span className="text-[#ababab]">Out:</span> <span className="text-[#00d285] truncate">{sampleCase.expected_output}</span></div>
                       </div>
                     </div>
                   ))}
@@ -331,7 +331,7 @@ export default function ProblemWorkspace({
                   {runResult ? (
                     <pre className="text-[#cbd5e1] whitespace-pre-wrap break-all">{runResult}</pre>
                   ) : (
-                    <p className="text-[#64748b] italic">Run or submit your code to see results.</p>
+                    <p className="text-[#ababab] italic">Run or submit your code to see results.</p>
                   )}
                 </div>
               )}

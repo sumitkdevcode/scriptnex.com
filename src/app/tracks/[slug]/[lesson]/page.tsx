@@ -102,7 +102,7 @@ export default function LessonPage() {
         <aside className="hidden lg:block w-72 shrink-0">
           <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden sticky top-20">
             <div className="px-3 py-2 border-b border-[#2a2d35]">
-              <Link href={`/tracks/${trackSlug}`} className="text-[10px] text-[#64748b] hover:text-[#00d285] transition-colors">
+              <Link href={`/tracks/${trackSlug}`} className="text-[10px] text-[#ababab] hover:text-[#00d285] transition-colors">
                 ← {track?.title}
               </Link>
             </div>
@@ -110,7 +110,7 @@ export default function LessonPage() {
               {modules.map((mod, mi) => (
                 <div key={mod.id}>
                   <div className="px-4 py-1.5 bg-[#0f1115]/60">
-                    <span className="text-[9px] uppercase tracking-widest text-[#64748b] font-semibold">
+                    <span className="text-[9px] uppercase tracking-widest text-[#ababab] font-semibold">
                       Module {mi + 1}: {mod.title}
                     </span>
                   </div>
@@ -121,12 +121,12 @@ export default function LessonPage() {
                       className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors border-l-2 ${
                         l.slug === lessonSlug
                           ? 'border-[#00d285] bg-[#00d285]/5 text-[#00d285]'
-                          : 'border-transparent text-[#94a3b8] hover:text-white hover:bg-white/[0.02]'
+                          : 'border-transparent text-[#ababab] hover:text-white hover:bg-white/[0.02]'
                       }`}
                     >
                       <span className="text-xs">{TYPE_ICON[l.type] || '📄'}</span>
                       <span className="flex-1 truncate text-xs">{l.title}</span>
-                      <span className="text-[9px] text-[#475569] shrink-0">{l.duration_minutes}m</span>
+                      <span className="text-[9px] text-[#ababab] shrink-0">{l.duration_minutes}m</span>
                     </Link>
                   ))}
                 </div>
@@ -143,11 +143,11 @@ export default function LessonPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <span
                     className="text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
-                    style={{ color: TYPE_COLOR[lesson.type] || '#64748b', background: `${TYPE_COLOR[lesson.type]}15` }}
+                    style={{ color: TYPE_COLOR[lesson.type] || '#ababab', background: `${TYPE_COLOR[lesson.type]}15` }}
                   >
                     {TYPE_ICON[lesson.type]} {lesson.type}
                   </span>
-                  <span className="text-[10px] text-[#64748b]">{lesson.duration_minutes} min read</span>
+                  <span className="text-[10px] text-[#ababab]">{lesson.duration_minutes} min read</span>
                 </div>
                 <h1 className="text-xl font-bold mb-1.5">{lesson.title}</h1>
               </div>
@@ -171,7 +171,7 @@ export default function LessonPage() {
                 </div>
               ) : lesson.problem ? (
                 <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6 mb-4">
-                  <div className="text-xs text-[#94a3b8] mb-3">This lesson is a guided coding exercise.</div>
+                  <div className="text-xs text-[#ababab] mb-3">This lesson is a guided coding exercise.</div>
                   <Link
                     href={`/problems/${lesson.problem.slug}`}
                     className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#00d285] text-black font-bold rounded-xl text-xs hover:bg-[#00e691] transition-colors"
@@ -182,7 +182,7 @@ export default function LessonPage() {
               ) : !lesson.video_url ? (
                 <div className="bg-[#16181d] border border-[#2a2d35] border-dashed rounded-xl p-8 text-center mb-4">
                   <div className="text-4xl mb-3">{TYPE_ICON[lesson.type] || '📄'}</div>
-                  <p className="text-[#64748b] text-xs">Content for this lesson is being prepared.</p>
+                  <p className="text-[#ababab] text-xs">Content for this lesson is being prepared.</p>
                 </div>
               ) : null}
 
@@ -191,9 +191,9 @@ export default function LessonPage() {
                 {prevLesson ? (
                   <Link href={`/tracks/${trackSlug}/${prevLesson.slug}`}
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#16181d] border border-[#2a2d35] rounded-xl text-xs sm:text-sm hover:border-[#00d285]/30 transition-colors group min-w-0">
-                    <span className="text-[#64748b] group-hover:text-white shrink-0">←</span>
+                    <span className="text-[#ababab] group-hover:text-white shrink-0">←</span>
                     <div className="min-w-0">
-                      <div className="text-[9px] sm:text-[10px] text-[#64748b] uppercase tracking-wider">Prev</div>
+                      <div className="text-[9px] sm:text-[10px] text-[#ababab] uppercase tracking-wider">Prev</div>
                       <div className="font-medium text-[10px] sm:text-xs truncate max-w-[80px] sm:max-w-[180px]">{prevLesson.title}</div>
                     </div>
                   </Link>
@@ -216,7 +216,7 @@ export default function LessonPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-20 text-[#64748b]">Lesson not found.</div>
+            <div className="text-center py-20 text-[#ababab]">Lesson not found.</div>
           )}
         </main>
       </div>

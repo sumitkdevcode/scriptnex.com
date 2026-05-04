@@ -12,7 +12,7 @@ import type { Discussion } from '@/types/discussion';
 const TYPE_CONFIG: Record<string, { label: string; color: string }> = {
   question: { label: 'Question', color: '#3b82f6' },
   editorial: { label: 'Editorial', color: '#a855f7' },
-  general: { label: 'General', color: '#64748b' },
+  general: { label: 'General', color: '#ababab' },
 };
 
 export default function DiscussionsPage() {
@@ -50,7 +50,7 @@ export default function DiscussionsPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold mb-1">Discussions</h1>
-            <p className="text-[#94a3b8] text-sm">Ask questions, share knowledge, connect with the community</p>
+            <p className="text-[#ababab] text-sm">Ask questions, share knowledge, connect with the community</p>
           </div>
           {isAuthenticated && (
             <button onClick={() => setShowNew(!showNew)} className="px-4 py-2.5 bg-[#00d285] rounded-xl text-xs font-bold text-black hover:bg-[#00e691] transition-colors">
@@ -73,7 +73,7 @@ export default function DiscussionsPage() {
               <button onClick={handlePost} disabled={posting} className="px-5 py-2 bg-[#00d285] rounded-lg text-xs font-bold text-black hover:bg-[#00e691] disabled:opacity-50">
                 {posting ? 'Posting...' : 'Post'}
               </button>
-              <button onClick={() => setShowNew(false)} className="px-4 py-2 text-xs text-[#64748b] hover:text-white">Cancel</button>
+              <button onClick={() => setShowNew(false)} className="px-4 py-2 text-xs text-[#ababab] hover:text-white">Cancel</button>
             </div>
           </div>
         )}
@@ -82,7 +82,7 @@ export default function DiscussionsPage() {
         {loading ? (
           <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#00d285]" /></div>
         ) : discussions.length === 0 ? (
-          <div className="text-center py-20 text-[#64748b]">
+          <div className="text-center py-20 text-[#ababab]">
             <div className="text-5xl mb-3">💬</div>
             <p>No discussions yet. Start the conversation!</p>
           </div>
@@ -102,7 +102,7 @@ export default function DiscussionsPage() {
                         {d.is_pinned && <span className="text-[9px] text-amber-400">📌 Pinned</span>}
                       </div>
                       <h3 className="font-semibold truncate group-hover:text-[#00d285] transition-colors">{d.title}</h3>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-[#64748b]">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-[#ababab]">
                         <span>@{d.user.username}</span>
                         <span>{formatShortTimestamp(d.created_at)}</span>
                         <span>💬 {d.reply_count}</span>

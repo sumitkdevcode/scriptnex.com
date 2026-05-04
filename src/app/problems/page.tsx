@@ -120,23 +120,23 @@ export default function ProblemsPage() {
         <div className="flex items-end justify-between mb-2">
           <div>
             <h1 className="text-2xl font-bold mb-0.5">Practice</h1>
-            <p className="text-[#94a3b8] text-[10px]">Sharpen your skills with {totalCount.toLocaleString()} coding challenges</p>
+            <p className="text-[#ababab] text-[10px]">Sharpen your skills with {totalCount.toLocaleString()} coding challenges</p>
           </div>
-          <div className="flex bg-[#16181d] p-1 rounded-lg border border-[#2a2d35]">
+          <div className="flex bg-[#16181d] p-1 rounded-md border border-[#2a2d35]">
             <Link href="/problems" className="px-4 py-1.5 bg-[#00d285] text-black text-xs font-bold rounded-md transition-all">Problems</Link>
-            <Link href="/tracks" className="px-4 py-1.5 text-[#94a3b8] hover:text-white text-xs font-bold rounded-md transition-all">Learning Tracks</Link>
+            <Link href="/tracks" className="px-4 py-1.5 text-[#ababab] hover:text-white text-xs font-bold rounded-md transition-all">Learning Tracks</Link>
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-3 mb-3">
           <div className="flex-1 relative">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748b]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-[#ababab]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input
               type="text"
               placeholder="Search problems..."
               value={search}
               onChange={(event) => { setSearch(event.target.value); }}
-              className="w-full pl-9 pr-4 py-2 bg-[#1a1c23] border border-[#2a2d35] rounded-lg text-sm text-white placeholder:text-[#64748b] focus:outline-none focus:border-[#00d285] focus:ring-1 focus:ring-[rgba(0,210,133,0.2)] transition-all"
+              className="w-full pl-9 pr-4 py-2 bg-[#1a1c23] border border-[#2a2d35] rounded-md text-sm text-white placeholder:text-[#ababab] focus:outline-none focus:border-[#00d285] focus:ring-1 focus:ring-[rgba(0,210,133,0.2)] transition-all"
             />
           </div>
 
@@ -145,10 +145,10 @@ export default function ProblemsPage() {
               <button
                 key={difficulty}
                 onClick={() => { setActiveDifficulty(difficulty); }}
-                className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                className={`px-3 py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${
                   activeDifficulty === difficulty
                     ? 'bg-[#00d285] text-black'
-                    : 'bg-[#1a1c23] border border-[#2a2d35] text-[#94a3b8] hover:border-[#00d285]/30'
+                    : 'bg-[#1a1c23] border border-[#2a2d35] text-[#ababab] hover:border-[#00d285]/30'
                 }`}
               >
                 {difficulty === 'all' ? 'All' : difficulty}
@@ -160,8 +160,8 @@ export default function ProblemsPage() {
         <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1.5 scrollbar-hide">
           <button
             onClick={() => { setActiveCategory('all'); }}
-            className={`px-4 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeCategory === 'all' ? 'bg-[#00d285]/10 text-[#00d285] border border-[#00d285]/30' : 'bg-[#1a1c23] text-[#94a3b8] border border-transparent hover:border-[#2a2d35]'
+            className={`px-4 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
+              activeCategory === 'all' ? 'bg-[#00d285]/10 text-[#00d285] border border-[#00d285]/30' : 'bg-[#1a1c23] text-[#ababab] border border-transparent hover:border-[#2a2d35]'
             }`}
           >
             All Categories
@@ -170,18 +170,18 @@ export default function ProblemsPage() {
             <button
               key={category.slug}
               onClick={() => { setActiveCategory(category.slug); }}
-              className={`px-4 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                activeCategory === category.slug ? 'bg-[#00d285]/10 text-[#00d285] border border-[#00d285]/30' : 'bg-[#1a1c23] text-[#94a3b8] border border-transparent hover:border-[#2a2d35]'
+              className={`px-4 py-2 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
+                activeCategory === category.slug ? 'bg-[#00d285]/10 text-[#00d285] border border-[#00d285]/30' : 'bg-[#1a1c23] text-[#ababab] border border-transparent hover:border-[#2a2d35]'
               }`}
             >
               {category.icon} {category.name}
-              <span className="ml-1.5 text-[#64748b]">{category.problem_count}</span>
+              <span className="ml-1.5 text-[#ababab]">{category.problem_count}</span>
             </button>
           ))}
         </div>
 
-        <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden mb-4">
-          <div className="grid grid-cols-[1fr_80px] md:grid-cols-[1fr_100px_120px_100px] gap-2 md:gap-4 px-4 md:px-6 py-3 border-b border-[#2a2d35] text-[9px] md:text-[10px] uppercase tracking-widest text-[#64748b] font-semibold">
+        <div className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden mb-4">
+          <div className="grid grid-cols-[1fr_80px] md:grid-cols-[1fr_100px_120px_100px] gap-2 md:gap-4 px-4 md:px-6 py-3 border-b border-[#2a2d35] text-[9px] md:text-[10px] uppercase tracking-widest text-[#ababab] font-semibold">
             <span>Problem</span>
             <span className="text-center">Difficulty</span>
             <span className="hidden md:block text-center">Acceptance</span>
@@ -193,7 +193,7 @@ export default function ProblemsPage() {
               <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#00d285]"></div>
             </div>
           ) : problems.length === 0 ? (
-            <div className="text-center py-20 text-[#64748b]">No problems found matching your filters.</div>
+            <div className="text-center py-20 text-[#ababab]">No problems found matching your filters.</div>
           ) : (
             problems.map((problem, index) => {
               const difficulty = DIFFICULTY_CONFIG[problem.difficulty];
@@ -215,7 +215,7 @@ export default function ProblemsPage() {
                     </div>
                     <div className="flex flex-wrap gap-1 md:gap-1.5">
                       {problem.tags.slice(0, 2).map((tag) => (
-                        <span key={tag.slug} className="px-1.5 py-0.5 text-[9px] md:text-[10px] bg-white/5 text-[#94a3b8] rounded whitespace-nowrap">{tag.name}</span>
+                        <span key={tag.slug} className="px-1.5 py-0.5 text-[9px] md:text-[10px] bg-white/5 text-[#ababab] rounded whitespace-nowrap">{tag.name}</span>
                       ))}
                     </div>
                   </div>
@@ -224,10 +224,10 @@ export default function ProblemsPage() {
                       {difficulty.label}
                     </span>
                   </div>
-                  <div className="hidden md:block text-center text-sm text-[#94a3b8]">
+                  <div className="hidden md:block text-center text-sm text-[#ababab]">
                     {problem.success_rate > 0 ? `${problem.success_rate}%` : '—'}
                   </div>
-                  <div className="hidden md:block text-right text-sm text-[#94a3b8]">
+                  <div className="hidden md:block text-right text-sm text-[#ababab]">
                     {problem.solve_count.toLocaleString()}
                   </div>
                 </Link>

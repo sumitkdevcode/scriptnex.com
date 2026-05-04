@@ -46,7 +46,7 @@ export default function DiscussionDetailPage() {
 
   if (!discussion) return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]"><Navbar />
-      <div className="text-center py-32 text-[#64748b]">Discussion not found.</div><Footer />
+      <div className="text-center py-32 text-[#ababab]">Discussion not found.</div><Footer />
     </div>
   );
 
@@ -55,12 +55,12 @@ export default function DiscussionDetailPage() {
       <Navbar />
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* Back */}
-        <Link href="/discuss" className="text-xs text-[#64748b] hover:text-[#00d285] transition-colors mb-4 inline-block">← Back to Discussions</Link>
+        <Link href="/discuss" className="text-xs text-[#ababab] hover:text-[#00d285] transition-colors mb-4 inline-block">← Back to Discussions</Link>
 
         {/* Post */}
         <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6 mb-6">
           <h1 className="text-xl font-bold mb-3">{discussion.title}</h1>
-          <div className="flex items-center gap-3 mb-4 text-xs text-[#64748b]">
+          <div className="flex items-center gap-3 mb-4 text-xs text-[#ababab]">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#00d285]/20 to-transparent flex items-center justify-center text-xs font-bold text-[#00d285]">
               {discussion.user.name.charAt(0)}
             </div>
@@ -79,12 +79,12 @@ export default function DiscussionDetailPage() {
         </div>
 
         {/* Replies */}
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-[#64748b] mb-4">{replies.length} Replies</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-[#ababab] mb-4">{replies.length} Replies</h2>
         <div className="space-y-3 mb-6">
           {replies.map(r => (
             <div key={r.id} className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-5">
-              <div className="flex items-center gap-3 mb-3 text-xs text-[#64748b]">
-                <div className="w-6 h-6 rounded bg-[#1a1c23] flex items-center justify-center text-[10px] font-bold text-[#94a3b8]">
+              <div className="flex items-center gap-3 mb-3 text-xs text-[#ababab]">
+                <div className="w-6 h-6 rounded bg-[#1a1c23] flex items-center justify-center text-[10px] font-bold text-[#ababab]">
                   {r.user.name.charAt(0)}
                 </div>
                 <span className="font-semibold text-[#cbd5e1]">@{r.user.username}</span>
@@ -105,7 +105,7 @@ export default function DiscussionDetailPage() {
             </button>
           </div>
         ) : (
-          <div className="text-center py-6 text-[#64748b] text-sm">
+          <div className="text-center py-6 text-[#ababab] text-sm">
             <Link href="/login" className="text-[#00d285] font-semibold hover:underline">Sign in</Link> to reply
           </div>
         )}

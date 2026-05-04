@@ -11,6 +11,7 @@ interface AuthContextType {
   login: (payload: LoginPayload) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (data: Partial<User>) => void;
   error: string | null;
   fieldErrors: Record<string, string[]> | null;
   clearErrors: () => void;
@@ -115,6 +116,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const updateUser = useCallback((data: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...data } : null);
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -124,6 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        updateUser,
         error,
         fieldErrors,
         clearErrors,

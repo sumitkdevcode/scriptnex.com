@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
                 </svg>
               </div>
               <h1 className="text-2xl font-bold mb-2">Forgot Password?</h1>
-              <p className="text-sm text-[#94a3b8]">
+              <p className="text-sm text-[#ababab]">
                 {success
                   ? 'Check your email for the reset link.'
                   : 'Enter your email and we\'ll send you a reset link.'}
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
                     <polyline points="22 4 12 14.01 9 11.01"/>
                   </svg>
                   <p className="text-sm text-[#00d285] font-medium">Reset link sent to <span className="font-bold">{email}</span></p>
-                  <p className="text-xs text-[#94a3b8] mt-1">Didn&apos;t get it? Check your spam folder.</p>
+                  <p className="text-xs text-[#ababab] mt-1">Didn&apos;t get it? Check your spam folder.</p>
                 </div>
                 <Link href="/login" className="block w-full text-center py-3 rounded-xl bg-[#1a1c23] border border-[#2a2d35] text-sm font-semibold hover:border-[#00d285]/30 transition-colors">
                   Back to Login
@@ -72,14 +72,14 @@ export default function ForgotPasswordPage() {
                   <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-sm text-red-400">{error}</div>
                 )}
                 <div>
-                  <label htmlFor="email" className="block text-xs uppercase tracking-wider text-[#64748b] font-semibold mb-2">Email Address</label>
+                  <label htmlFor="email" className="block text-xs uppercase tracking-wider text-[#ababab] font-semibold mb-2">Email Address</label>
                   <input
                     id="email"
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#0f1115] border border-[#2a2d35] rounded-xl text-sm text-white placeholder:text-[#475569] focus:outline-none focus:border-[#00d285]/50 transition-colors"
+                    className="w-full px-4 py-3 bg-[#0f1115] border border-[#2a2d35] rounded-xl text-sm text-white placeholder:text-[#ababab] focus:outline-none focus:border-[#00d285]/50 transition-colors"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
                 >
                   {isLoading ? 'Sending...' : 'Send Reset Link'}
                 </button>
-                <p className="text-center text-sm text-[#64748b]">
+                <p className="text-center text-sm text-[#ababab]">
                   Remember your password?{' '}
                   <Link href="/login" className="text-[#00d285] font-semibold hover:underline">Sign in</Link>
                 </p>

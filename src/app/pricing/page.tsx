@@ -104,7 +104,7 @@ const PLANS = [
     price: 0,
     period: '/forever',
     description: 'Start your journey at no cost',
-    color: '#94a3b8',
+    color: '#ababab',
     features: [
       '50+ free problems',
       'Beginner learning tracks',
@@ -236,16 +236,16 @@ export default function PricingPage() {
     <div className="min-h-screen flex flex-col bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
 
-      <main className="flex-1 pt-2 pb-10 px-4">
+      <main className="flex-1 pt-10 pb-16 px-4">
         {/* Header */}
-        <div className="text-center mb-4">
-          <span className="inline-block text-[10px] uppercase tracking-widest text-[#00d285] font-bold bg-[#00d285]/10 px-3 py-1 rounded-full mb-1">
+        <div className="text-center mb-10">
+          <span className="inline-block text-[10px] uppercase tracking-widest text-[#00d285] font-bold bg-[#00d285]/10 px-3 py-1 rounded-full mb-3">
             Membership
           </span>
-          <h1 className="text-2xl md:text-3xl font-black mb-1">
+          <h1 className="text-3xl md:text-5xl font-black mb-3">
             Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00d285] to-[#3b82f6]">Plan</span>
           </h1>
-          <p className="text-[#94a3b8] text-[12px] max-w-lg mx-auto">
+          <p className="text-[#ababab] text-sm md:text-base max-w-lg mx-auto">
             Upgrade your skills with premium access to problems and certifications.
           </p>
         </div>
@@ -255,7 +255,7 @@ export default function PricingPage() {
           {PLANS.map(plan => (
             <div
               key={plan.id}
-              className="relative rounded-xl p-6 flex flex-col transition-all hover:translate-y-[-4px]"
+              className="relative rounded-md p-6 flex flex-col transition-all hover:translate-y-[-4px]"
               style={{
                 background: plan.id === 'pro' ? 'linear-gradient(135deg, #16181d 0%, #1a1f1e 100%)' : '#16181d',
                 border: plan.id === 'pro' ? `1px solid ${plan.color}50` : '1px solid #2a2d35',
@@ -273,12 +273,12 @@ export default function PricingPage() {
 
               <div className="mb-4">
                 <h2 className="text-lg font-bold mb-0.5" style={{ color: plan.id === 'pro' ? plan.color : '#fff' }}>{plan.name}</h2>
-                <p className="text-[#64748b] text-[11px]">{plan.description}</p>
+                <p className="text-[#ababab] text-[11px]">{plan.description}</p>
               </div>
 
               <div className="mb-6">
                 <span className="text-4xl font-black text-white">₹{plan.price}</span>
-                <span className="text-[#64748b] text-xs ml-1">{plan.period}</span>
+                <span className="text-[#ababab] text-xs ml-1">{plan.period}</span>
               </div>
 
               <ul className="space-y-2 flex-1 mb-6">
@@ -289,8 +289,8 @@ export default function PricingPage() {
                   </li>
                 ))}
                 {plan.missing.map(f => (
-                  <li key={f} className="flex items-center gap-2 text-[11px] text-[#475569]">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  <li key={f} className="flex items-center gap-2 text-[11px] text-[#ababab]">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ababab" strokeWidth="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     {f}
                   </li>
                 ))}
@@ -299,10 +299,10 @@ export default function PricingPage() {
               <button
                 onClick={() => handleCheckout(plan.id)}
                 disabled={!!loading}
-                className="w-full py-2.5 px-4 rounded-lg font-bold text-xs transition-all active:scale-[0.98] disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-md font-bold text-xs transition-all active:scale-[0.98] disabled:opacity-50"
                 style={{
                   background: plan.id === 'pro' ? plan.color : (plan.id === 'free' ? 'transparent' : 'rgba(255,255,255,0.03)'),
-                  color: plan.id === 'pro' ? '#000' : (plan.id === 'free' ? '#94a3b8' : plan.color),
+                  color: plan.id === 'pro' ? '#000' : (plan.id === 'free' ? '#ababab' : plan.color),
                   border: plan.id === 'pro' ? 'none' : `1px solid ${plan.id === 'free' ? '#2a2d35' : plan.color}`,
                 }}
               >
@@ -322,9 +322,9 @@ export default function PricingPage() {
               { q: 'Do certifications expire?', a: 'ScriptNex certificates are issued for lifetime by default. Some advanced certifications may have optional renewal periods.' },
               { q: 'Can I switch plans?', a: 'Yes, you can upgrade or downgrade your plan at any time. Prorated billing applies when upgrading.' },
             ].map(({ q, a }) => (
-              <div key={q} className="bg-[#16181d] border border-[#2a2d35] rounded-xl p-6">
+              <div key={q} className="bg-[#16181d] border border-[#2a2d35] rounded-md p-6">
                 <h3 className="font-semibold text-sm mb-2">{q}</h3>
-                <p className="text-[#94a3b8] text-sm leading-relaxed">{a}</p>
+                <p className="text-[#ababab] text-sm leading-relaxed">{a}</p>
               </div>
             ))}
           </div>

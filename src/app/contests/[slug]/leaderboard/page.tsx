@@ -47,7 +47,7 @@ export default function ContestLeaderboardPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Link href={`/contests/${slug}`} className="text-[#94a3b8] hover:text-white transition-colors">
+              <Link href={`/contests/${slug}`} className="text-[#ababab] hover:text-white transition-colors">
                 ← Back to Contest
               </Link>
             </div>
@@ -61,18 +61,18 @@ export default function ContestLeaderboardPage() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[#1a1c23] border-b border-[#2a2d35]">
-                    <th className="px-6 py-4 text-xs font-semibold text-[#64748b] uppercase tracking-wider">Rank</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#64748b] uppercase tracking-wider">Participant</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#64748b] uppercase tracking-wider">Score</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#64748b] uppercase tracking-wider">Solved</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#64748b] uppercase tracking-wider text-right">Penalty</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#ababab] uppercase tracking-wider">Rank</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#ababab] uppercase tracking-wider">Participant</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#ababab] uppercase tracking-wider">Score</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#ababab] uppercase tracking-wider">Solved</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-[#ababab] uppercase tracking-wider text-right">Penalty</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#2a2d35]">
                   {leaderboard.map((entry, idx) => (
                     <tr key={entry.user_id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-4">
-                        <span className={`font-bold ${idx === 0 ? 'text-yellow-400' : idx === 1 ? 'text-gray-300' : idx === 2 ? 'text-amber-600' : 'text-[#94a3b8]'}`}>
+                        <span className={`font-bold ${idx === 0 ? 'text-yellow-400' : idx === 1 ? 'text-gray-300' : idx === 2 ? 'text-amber-600' : 'text-[#ababab]'}`}>
                           #{entry.rank || idx + 1}
                         </span>
                       </td>
@@ -83,13 +83,13 @@ export default function ContestLeaderboardPage() {
                           </div>
                           <div>
                             <div className="font-semibold">{entry.name || 'Unknown User'}</div>
-                            <div className="text-xs text-[#64748b]">@{entry.username || `user${entry.user_id}`}</div>
+                            <div className="text-xs text-[#ababab]">@{entry.username || `user${entry.user_id}`}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 font-bold text-[#00d285]">{entry.total_score}</td>
                       <td className="px-6 py-4 text-[#cbd5e1]">{entry.problems_solved}</td>
-                      <td className="px-6 py-4 text-right text-[#94a3b8]">{entry.total_penalty}m</td>
+                      <td className="px-6 py-4 text-right text-[#ababab]">{entry.total_penalty}m</td>
                     </tr>
                   ))}
                 </tbody>
@@ -99,7 +99,7 @@ export default function ContestLeaderboardPage() {
             <div className="py-20 text-center">
               <div className="text-4xl mb-4">🏆</div>
               <h3 className="text-lg font-bold mb-2">No results yet</h3>
-              <p className="text-[#64748b] text-sm">The leaderboard will update as participants submit solutions.</p>
+              <p className="text-[#ababab] text-sm">The leaderboard will update as participants submit solutions.</p>
             </div>
           )}
         </div>

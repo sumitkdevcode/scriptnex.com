@@ -102,7 +102,7 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      <footer className="py-6 text-center text-[#475569] text-sm mt-auto">
+      <footer className="py-6 text-center text-[#ababab] text-sm mt-auto">
         &copy; {new Date().getFullYear()} ScriptNex. All rights reserved.
       </footer>
     </div>

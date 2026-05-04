@@ -40,7 +40,7 @@ export default function InfiniteScrollTrigger({ onIntersect, isLoading, hasMore 
   return (
     <div ref={triggerRef} className="py-8 flex justify-center">
       {isLoading && (
-        <div className="flex items-center gap-3 text-[#64748b] text-sm animate-pulse">
+        <div className="flex items-center gap-3 text-[#ababab] text-sm animate-pulse">
           <div className="w-5 h-5 border-2 border-[#00d285]/30 border-t-[#00d285] rounded-full animate-spin" />
           Loading more...
         </div>

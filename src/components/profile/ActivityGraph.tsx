@@ -74,7 +74,7 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
     <div className="flex flex-col select-none">
       <div className="flex gap-2">
         {/* Day labels (Sun, Tue, Thu, Sat) */}
-        <div className="flex flex-col gap-[3px] text-[10px] text-[#64748b] pt-[20px] shrink-0">
+        <div className="flex flex-col gap-[3px] text-[10px] text-[#ababab] pt-[20px] shrink-0">
           <div className="h-[11px] flex items-center">Sun</div>
           <div className="h-[11px]" />
           <div className="h-[11px] flex items-center">Tue</div>
@@ -88,7 +88,7 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
         <div className="flex-1 overflow-x-auto pb-2 custom-scrollbar">
           <div className="inline-flex flex-col">
             {/* Month Labels */}
-            <div className="flex text-[10px] text-[#64748b] h-5 relative mb-1">
+            <div className="flex text-[10px] text-[#ababab] h-5 relative mb-1">
               {monthLabels.map((m, i) => (
                 <div 
                   key={i} 
@@ -129,7 +129,7 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
       </div>
       
       {/* Legend */}
-      <div className="flex items-center justify-end gap-2 mt-4 text-[10px] text-[#64748b]">
+      <div className="flex items-center justify-end gap-2 mt-4 text-[10px] text-[#ababab]">
         <span>Less</span>
         <div className="flex gap-[3px]">
           {levelColors.map((color, i) => (

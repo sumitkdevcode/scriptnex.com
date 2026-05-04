@@ -39,9 +39,9 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
-        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5">
+        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-2.5 md:py-1">
           <Link href="/" className="flex items-center z-10 shrink-0">
-            <Image src={logoNav} alt="ScriptNex Logo" className="h-[50px] md:h-[60px] w-auto object-contain" priority />
+            <Image src={logoNav} alt="ScriptNex Logo" className="h-[52px] md:h-[54px] w-auto object-contain" priority />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -52,7 +52,7 @@ export default function Navbar() {
                 className={
                   isActive(link.href)
                     ? 'text-[#00d285] font-semibold'
-                    : 'text-[#94a3b8] hover:text-white transition-colors'
+                    : 'text-[#ababab] hover:text-white transition-colors'
                 }
               >
                 {link.name}
@@ -67,15 +67,15 @@ export default function Navbar() {
             {!isAuthenticated ? (
               !isAuthPage && (
                 <>
-                  <Link href="/login" className="hidden sm:block px-3 md:px-4 py-2 rounded-lg border border-[#2a2d35] text-xs md:text-sm text-[#94a3b8] hover:text-white hover:border-[#94a3b8]/50 transition-all font-medium whitespace-nowrap">Log In</Link>
-                  <Link href="/register" className="hidden sm:block px-3 md:px-4 py-2 rounded-lg bg-[#00d285] text-black text-xs md:text-sm font-semibold hover:bg-[#00e691] transition-colors whitespace-nowrap">Sign Up</Link>
+                  <Link href="/login" className="hidden sm:block px-3 md:px-4 py-2 rounded-md border border-[#2a2d35] text-xs md:text-sm text-[#ababab] hover:text-white hover:border-[#ababab]/50 transition-all font-medium whitespace-nowrap">Log In</Link>
+                  <Link href="/register" className="hidden sm:block px-3 md:px-4 py-2 rounded-md bg-[#00d285] text-black text-xs md:text-sm font-semibold hover:bg-[#00e691] transition-colors whitespace-nowrap">Sign Up</Link>
                 </>
               )
             ) : (
               <div className="flex items-center gap-2 md:gap-3">
-                <Link href="/pricing" className="hidden sm:flex px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-lg text-xs font-bold transition-colors items-center gap-1">Premium</Link>
+                <Link href="/pricing" className="hidden sm:flex px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-md text-xs font-bold transition-colors items-center gap-1">Premium</Link>
                 
-                <div className="flex items-center gap-3 text-[#94a3b8] mx-1">
+                <div className="flex items-center gap-3 text-[#ababab] mx-1">
                   <button className="hover:text-[#f59e0b] transition-colors flex items-center gap-1" title="0 Day Streak">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
                     <span className="text-xs font-bold text-white">0</span>
@@ -98,7 +98,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden text-[#94a3b8] hover:text-white z-10 p-2 -mr-2"
+              className="md:hidden text-[#ababab] hover:text-white z-10 p-2 -mr-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -147,14 +147,14 @@ export default function Navbar() {
               {!isAuthenticated ? (
                 !isAuthPage && (
                   <>
-                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-[#94a3b8] hover:text-white transition-colors text-lg font-medium">Log In</Link>
+                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-[#ababab] hover:text-white transition-colors text-lg font-medium">Log In</Link>
                     <Link href="/register" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Sign Up</Link>
                   </>
                 )
               ) : (
                 <button 
                   onClick={() => { logout(); setIsMobileMenuOpen(false); }}
-                  className="text-[#94a3b8] hover:text-white text-left text-lg font-medium"
+                  className="text-[#ababab] hover:text-white text-left text-lg font-medium"
                 >
                   Log Out
                 </button>
@@ -164,7 +164,7 @@ export default function Navbar() {
         )}
       </div>
       {/* Spacer to prevent content from hiding behind fixed navbar */}
-      <div className="h-[65px]" aria-hidden="true"></div>
+      <div className="h-[75px] md:h-[62px]" aria-hidden="true"></div>
     </>
   );
 }

@@ -68,10 +68,10 @@ export default function LeaderboardPage() {
 
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
         <h1 className="text-2xl font-bold mb-1">Leaderboard</h1>
-        <p className="text-[#94a3b8] text-sm mb-4">Top performers on ScriptNex</p>
+        <p className="text-[#ababab] text-sm mb-4">Top performers on ScriptNex</p>
 
-        <div className="bg-[#16181d] border border-[#2a2d35] rounded-xl overflow-hidden mb-4">
-          <div className="grid grid-cols-[50px_1fr_80px] md:grid-cols-[80px_1fr_120px_120px] gap-2 md:gap-4 px-4 md:px-6 py-3 border-b border-[#2a2d35] text-[9px] md:text-[10px] uppercase tracking-widest text-[#64748b] font-semibold">
+        <div className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden mb-4">
+          <div className="grid grid-cols-[50px_1fr_80px] md:grid-cols-[80px_1fr_120px_120px] gap-2 md:gap-4 px-4 md:px-6 py-3 border-b border-[#2a2d35] text-[9px] md:text-[10px] uppercase tracking-widest text-[#ababab] font-semibold">
             <span>Rank</span><span>Developer</span><span className="hidden md:block text-center">Solved</span><span className="text-right">Rating</span>
           </div>
           
@@ -89,7 +89,7 @@ export default function LeaderboardPage() {
                 return (
                   <div key={l.id} className={`grid grid-cols-[50px_1fr_80px] md:grid-cols-[80px_1fr_120px_120px] gap-2 md:gap-4 px-4 md:px-6 py-4 items-center border-b border-[#2a2d35]/50 last:border-none hover:bg-white/[0.02] transition-colors ${rank <= 3 ? 'bg-gradient-to-r from-[#00d285]/[0.03] to-transparent' : ''}`}>
                     <div className="flex items-center gap-1 md:gap-2">
-                      <span className={`font-bold text-base md:text-lg ${rank <= 3 ? 'text-[#00d285]' : 'text-[#64748b]'}`}>{rank}</span>
+                      <span className={`font-bold text-base md:text-lg ${rank <= 3 ? 'text-[#00d285]' : 'text-[#ababab]'}`}>{rank}</span>
                       {badge && <span className="text-base md:text-lg hidden sm:inline">{badge}</span>}
                     </div>
                     <div className="flex items-center gap-2 md:gap-3">
@@ -98,15 +98,15 @@ export default function LeaderboardPage() {
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs md:text-sm font-medium truncate">{l.name}</div>
-                        <div className="text-[9px] md:text-[10px] text-[#64748b] truncate">@{l.username}</div>
+                        <div className="text-[9px] md:text-[10px] text-[#ababab] truncate">@{l.username}</div>
                       </div>
                     </div>
-                    <div className="hidden md:block text-center text-sm text-[#94a3b8]">{l.solved_count}</div>
+                    <div className="hidden md:block text-center text-sm text-[#ababab]">{l.solved_count}</div>
                     <div className="text-right text-sm font-bold text-[#00d285]">{l.rating}</div>
                   </div>
                 );
               })}
-              {leaders.length === 0 && <div className="text-center py-20 text-[#64748b]">No developers on the leaderboard yet.</div>}
+              {leaders.length === 0 && <div className="text-center py-20 text-[#ababab]">No developers on the leaderboard yet.</div>}
             </>
           )}
         </div>
