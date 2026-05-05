@@ -9,9 +9,6 @@ export default function NotFound() {
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         <div className="relative mb-8">
           <h1 className="text-[150px] font-black leading-none opacity-10 select-none">404</h1>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-4xl font-bold tracking-tight">PAGE NOT FOUND</span>
-          </div>
         </div>
         
         <h2 className="text-xl text-[#ababab] mb-8 max-w-md mx-auto">
