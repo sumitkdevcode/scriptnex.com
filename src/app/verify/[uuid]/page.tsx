@@ -155,8 +155,8 @@ export default function VerifyCertPage() {
     }
   }, [isAuthenticated, uuid]);
 
-  const handleDownloadPdf = useCallback(async () => {
-    if (!certificateRef.current || !cert || !ownedCertificate?.download_paid) {
+  const handleDownloadPdf = useCallback(async (forceAccess = false) => {
+    if (!certificateRef.current || !cert || (!forceAccess && !ownedCertificate?.download_paid)) {
       return;
     }
 
@@ -261,6 +261,7 @@ export default function VerifyCertPage() {
             if (verifyResponse.data.paid) {
               await loadOwnedCertificate();
               alert('Payment successful. Your certificate PDF is now unlocked.');
+              void handleDownloadPdf(true);
               return;
             }
 
@@ -389,7 +390,7 @@ export default function VerifyCertPage() {
           <div className="max-w-lg w-full">
             <div
               ref={certificateRef}
-              className="relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg"
+              className={`relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg ${!canDownload && ownedCertificate ? 'blur-[8px]' : ''}`}
               style={{
                 backgroundImage: 'url(/certificate.png)',
                 backgroundSize: 'cover',
@@ -433,6 +434,17 @@ export default function VerifyCertPage() {
                   ID: {cert.uuid}
                 </div>
               </div>
+              
+              {/* Lock Overlay for Unpaid Certificates */}
+              {!canDownload && ownedCertificate && (
+                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white z-20">
+                  <div className="bg-[#1a1c23] p-4 rounded-full mb-3 shadow-2xl border border-white/20">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00d285" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#00d285]">PDF Download Locked</span>
+                  <p className="text-[10px] text-white/70 mt-2">Pay to unlock high-resolution PDF</p>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">

@@ -36,11 +36,6 @@ export default function CertificationResultPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!attemptId) {
-      router.push(`/certifications/${slug}`);
-      return;
-    }
-
     async function loadResult() {
       try {
         const res = await api.get<{ result: AttemptResult }>(`/certifications/${slug}/result?attempt_id=${attemptId}`);
@@ -51,8 +46,23 @@ export default function CertificationResultPage() {
         setLoading(false);
       }
     }
+
+    if (!attemptId) {
+      router.push(`/certifications/${slug}`);
+      return;
+    }
+
     loadResult();
   }, [slug, attemptId, router]);
+
+  const refreshResult = async () => {
+    try {
+      const res = await api.get<{ result: AttemptResult }>(`/certifications/${slug}/result?attempt_id=${attemptId}`);
+      setResult(res.data.result);
+    } catch (err) {
+      console.error('Failed to refresh result:', err);
+    }
+  };
 
   if (loading) {
     return (
@@ -156,7 +166,6 @@ export default function CertificationResultPage() {
                 </span>
               </div>
             </div>
-
             <div className="flex items-center justify-center gap-3">
               {isPassed && result.certificate_url ? (
                 <DownloadButton 
@@ -167,8 +176,9 @@ export default function CertificationResultPage() {
                     percentage: percentage
                   }}
                   userName={user?.name || ''}
+                  onSuccess={refreshResult}
                   className="min-w-[140px] py-3 bg-[#00d285] text-black font-black rounded-lg hover:bg-[#00e691] transition-all text-sm shadow-lg hover:scale-[1.02] uppercase tracking-wide"
-                  label={result.download_paid ? 'Download' : 'Unlock PDF'}
+                  label={result.download_paid ? 'Download PDF' : 'Unlock PDF'}
                 />
               ) : (
                 <Link 

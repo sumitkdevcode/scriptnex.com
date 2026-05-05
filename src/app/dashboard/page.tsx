@@ -193,6 +193,11 @@ export default function DashboardPage() {
                         <DownloadButton 
                           cert={cert}
                           userName={user?.name || ''}
+                          onSuccess={() => {
+                            api.get<{ certificates: any[] }>('/my-certificates')
+                              .then(res => setCertificates(res.data.certificates))
+                              .catch(() => {});
+                          }}
                           className="flex-1 py-2 text-center bg-[#00d285] text-[#0a0a0a] text-[11px] font-bold rounded hover:bg-[#00b371] transition-colors"
                           label={cert.download_paid ? 'Download PDF' : 'Unlock PDF Download'}
                         />

@@ -17,6 +17,7 @@ interface DownloadButtonProps {
   userName: string;
   className?: string;
   label?: string;
+  onSuccess?: () => void | Promise<void>;
 }
 
 const RAZORPAY_SCRIPT_ID = 'razorpay-checkout-js';
@@ -35,7 +36,7 @@ const loadRazorpay = async (): Promise<boolean> => {
   });
 };
 
-export default function DownloadButton({ cert, userName, className, label = 'Download PDF' }: DownloadButtonProps) {
+export default function DownloadButton({ cert, userName, className, label = 'Download PDF', onSuccess }: DownloadButtonProps) {
   const [status, setStatus] = useState<'idle' | 'checking' | 'paying' | 'generating'>('idle');
 
   const performDownload = async () => {
@@ -98,15 +99,16 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
       
       if (ownedCert.download_paid) {
         await performDownload();
+        if (onSuccess) await onSuccess();
         return;
       }
 
       // 2. If not paid, start payment flow
       setStatus('paying');
       const checkoutOrder = await api.post<any>(`/my-certificates/${cert.uuid}/download/checkout`);
-      // ... same as before
       
       if (checkoutOrder.data.unlocked) {
+        if (onSuccess) await onSuccess();
         await performDownload();
         return;
       }
@@ -124,6 +126,7 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
             setStatus('checking');
             const verify = await api.post<any>('/payment/verify', paymentResponse);
             if (verify.data.paid) {
+              if (onSuccess) await onSuccess();
               await performDownload();
             } else {
               alert('Payment verification pending. Please try again in a moment.');
