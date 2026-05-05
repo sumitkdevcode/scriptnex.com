@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import Link from 'next/link';
 import ActivityGraph from '@/components/profile/ActivityGraph';
+import DownloadButton from '@/components/certificate/DownloadButton';
 
 interface UserStats {
   problems_solved: number;
@@ -150,25 +151,55 @@ export default function DashboardPage() {
                 </span>
               </div>
               <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {certificates.map((cert) => (
-                  <div key={cert.uuid} className="bg-[#16181d] border border-[#2a2d35] rounded-md p-4 flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded bg-[#a855f7]/10 flex items-center justify-center text-xl">📜</div>
+                {certificates.map((cert) => {
+                  const isPaid = cert.download_paid;
+                  return (
+                  <div key={cert.uuid} className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden flex flex-col group hover:border-[#00d285]/30 transition-all">
+                    {/* Mini Certificate Preview */}
+                    <div className="relative aspect-[1.414] w-full bg-white overflow-hidden">
+                      <img 
+                        src="/certificate.png" 
+                        alt="Template" 
+                        className={`absolute inset-0 w-full h-full object-cover ${!isPaid ? 'blur-[6px]' : ''}`} 
+                      />
+                      <div className={`absolute inset-0 flex flex-col items-center justify-center p-[6%] text-center scale-[0.3] origin-center whitespace-nowrap ${!isPaid ? 'blur-[6px]' : ''}`}>
+                        <div className="flex-1"></div>
+                        <h1 className="text-4xl font-bold text-gray-800 font-serif mb-2 uppercase">{user?.name}</h1>
+                        <p className="text-lg text-gray-600 mb-4">has completed</p>
+                        <h2 className="text-3xl font-bold text-[#00d285]">{cert.certification?.title}</h2>
+                        <div className="mt-auto"></div>
+                      </div>
+                      
+                      {/* Lock Overlay for Unpaid Certificates */}
+                      {!isPaid && (
+                        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
+                          <div className="bg-[#1a1c23] p-3 rounded-full mb-2 shadow-2xl border border-white/20">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d285" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                          </div>
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d285]">PDF Locked</span>
+                        </div>
+                      )}
+                      
+                      {/* Overlay gradient for depth */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                    </div>
+                    
+                    <div className="p-4 flex flex-col gap-3">
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-semibold truncate">{cert.certification?.title}</h4>
                         <p className="text-[10px] text-[#ababab]">Earned on {new Date(cert.created_at).toLocaleDateString()}</p>
                       </div>
-                    </div>
-                    <div className="flex">
-                      <Link 
-                        href={`/certifications/verify/${cert.uuid}`}
-                        className="flex-1 text-center py-2 rounded bg-[#00d285] text-[#0a0a0a] text-[11px] font-bold hover:bg-[#00b371] transition-colors"
-                      >
-                        View Certificate
-                      </Link>
+                      <div className="flex gap-2">
+                        <DownloadButton 
+                          cert={cert}
+                          userName={user?.name || ''}
+                          className="flex-1 py-2 text-center bg-[#00d285] text-[#0a0a0a] text-[11px] font-bold rounded hover:bg-[#00b371] transition-colors"
+                          label={cert.download_paid ? 'Download PDF' : 'Unlock PDF Download'}
+                        />
+                      </div>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           )}

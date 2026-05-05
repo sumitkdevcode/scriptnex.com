@@ -72,74 +72,58 @@ export default function VerifyPage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-white flex flex-col">
       <Navbar />
-      <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-12">
-        <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-2xl overflow-hidden shadow-2xl">
-          <div className="bg-[#00d285] h-2 w-full" />
-          <div className="p-8 md:p-12">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-              <div>
-                <span className="inline-block px-3 py-1 bg-[#00d285]/10 text-[#00d285] text-xs font-bold rounded-full mb-4 uppercase tracking-wider">
-                  Verified Credential
-                </span>
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Certificate of Completion</h1>
-                <p className="text-[#ababab]">Issued by ScriptNex E-Learning</p>
+      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-12 flex flex-col items-center">
+        <div className="w-full mb-8 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Certificate Verification</h1>
+          <button 
+            onClick={() => window.print()}
+            className="px-6 py-2 bg-[#00d285] text-black text-sm font-bold rounded-lg hover:bg-[#00b371] transition-colors"
+          >
+            Print Page
+          </button>
+        </div>
+
+        <div className="w-full relative aspect-[1.414] bg-white overflow-hidden rounded-md shadow-2xl"
+             style={{
+               backgroundImage: 'url(/certificate.png)',
+               backgroundSize: 'cover',
+               backgroundPosition: 'center',
+             }}>
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-[8%] text-center font-sans">
+            {/* Spacer for top margin in case the template has header text */}
+            <div className="flex-1"></div>
+            
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-serif mb-2 uppercase tracking-wider">
+              {data.user.name}
+            </h1>
+            
+            <div className="text-sm sm:text-base md:text-xl text-gray-600 mb-6 font-medium max-w-[80%]">
+              has successfully completed the certification exam for
+            </div>
+            
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[#00d285] mb-8 drop-shadow-sm">
+              {data.certification.title}
+            </h2>
+            
+            <div className="w-full flex justify-between px-[10%] mt-auto pb-4">
+              <div className="text-center">
+                <div className="text-sm sm:text-base md:text-xl font-bold text-gray-800 border-b border-gray-400 pb-1 mb-1 px-4">
+                  {new Date(data.issued_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </div>
+                <div className="text-[10px] sm:text-sm text-gray-500 uppercase tracking-widest font-bold">Date</div>
               </div>
-              <div className="text-right">
-                <div className="text-4xl">🏅</div>
+              
+              <div className="text-center">
+                <div className="text-sm sm:text-base md:text-xl font-bold text-gray-800 border-b border-gray-400 pb-1 mb-1 px-4">
+                  {Math.round(data.percentage)}%
+                </div>
+                <div className="text-[10px] sm:text-sm text-gray-500 uppercase tracking-widest font-bold">Score</div>
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-xs font-semibold text-[#ababab] uppercase tracking-widest mb-2">Recipient</h3>
-                  <div className="text-xl font-bold">{data.user.name}</div>
-                  <div className="text-sm text-[#00d285]">@{data.user.username}</div>
-                </div>
-
-                <div>
-                  <h3 className="text-xs font-semibold text-[#ababab] uppercase tracking-widest mb-2">Certification</h3>
-                  <div className="text-xl font-bold">{data.certification.title}</div>
-                  <div className="text-sm text-[#ababab]">{data.certification.difficulty_level} Level</div>
-                </div>
-
-                <div>
-                  <h3 className="text-xs font-semibold text-[#ababab] uppercase tracking-widest mb-2">Issue Date</h3>
-                  <div className="text-lg font-bold">{new Date(data.issued_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                </div>
-              </div>
-
-              <div className="bg-[#16181d] rounded-xl p-6 border border-[#2a2d35] flex flex-col items-center justify-center text-center">
-                <div className="relative w-32 h-32 mb-4">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="transparent" stroke="#2a2d35" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="45" fill="transparent" stroke="#00d285" strokeWidth="8"
-                      strokeDasharray={2 * Math.PI * 45} strokeDashoffset={2 * Math.PI * 45 * (1 - data.percentage / 100)} 
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold">{Math.round(data.percentage)}%</span>
-                  </div>
-                </div>
-                <h4 className="font-bold mb-1">Assessment Score</h4>
-                <p className="text-xs text-[#ababab]">Successfully passed the certification exam</p>
-              </div>
-            </div>
-
-            <div className="mt-12 pt-12 border-t border-[#2a2d35] flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="text-center md:text-left">
-                <h3 className="text-xs font-semibold text-[#ababab] uppercase tracking-widest mb-2">Verification ID</h3>
-                <code className="text-sm text-[#00d285] bg-[#00d285]/5 px-3 py-1 rounded-md">{data.uuid}</code>
-              </div>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => window.print()}
-                  className="px-6 py-2 bg-[#2a2d35] text-white text-sm font-bold rounded-lg hover:bg-[#353942] transition-colors"
-                >
-                  Print Page
-                </button>
-              </div>
+            
+            <div className="absolute bottom-4 right-6 text-[8px] sm:text-xs text-gray-400 font-mono text-right">
+              Verify at: scriptnex.com/verify/{data.uuid}<br/>
+              ID: {data.uuid}
             </div>
           </div>
         </div>

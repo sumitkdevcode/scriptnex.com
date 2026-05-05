@@ -169,7 +169,7 @@ export default function VerifyCertPage() {
 
       const canvas = await html2canvas(element, {
         scale: 2,
-        backgroundColor: '#16181d',
+        backgroundColor: '#ffffff',
         useCORS: true,
         logging: false,
         allowTaint: true,
@@ -305,6 +305,22 @@ export default function VerifyCertPage() {
       .finally(() => setLoading(false));
   }, [uuid]);
 
+  // Handle automatic download if requested via query param
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('download') === 'true' && cert && ownedCertificate?.download_paid && !loading && !isDownloading) {
+      void handleDownloadPdf();
+      // Remove the param from URL to prevent re-downloading on refresh
+      const newUrl = window.location.pathname;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
+    } else if (searchParams.get('download') === 'true' && cert && ownedCertificate && !ownedCertificate.download_paid && !loading) {
+      // If download requested but not paid, trigger unlock/payment
+      void handleUnlockDownload();
+      const newUrl = window.location.pathname;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
+    }
+  }, [cert, ownedCertificate, loading, handleDownloadPdf, handleUnlockDownload, isDownloading]);
+
   useEffect(() => {
     if (authLoading) {
       return;
@@ -334,7 +350,26 @@ export default function VerifyCertPage() {
   const canDownload = !!ownedCertificate?.download_paid;
 
   return (
-    <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col">
+    <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col relative">
+      {/* Downloading Overlay */}
+      {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('download') === 'true' && !loading && (
+        <div className="fixed inset-0 z-[100] bg-[#0f1115] flex flex-col items-center justify-center text-center p-6">
+          <div className="relative mb-8">
+            <div className="w-20 h-20 rounded-full border-4 border-[#00d285]/20 border-t-[#00d285] animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center text-2xl">📄</div>
+          </div>
+          <h2 className="text-2xl font-bold mb-2">Preparing your certificate...</h2>
+          <p className="text-[#ababab] max-w-sm">
+            Please wait while we generate your high-resolution PDF. Your download will start automatically.
+          </p>
+          {!ownedCertificate?.download_paid && !loading && (
+            <div className="mt-8 animate-pulse text-[#00d285] font-semibold">
+              Redirecting to secure payment...
+            </div>
+          )}
+        </div>
+      )}
+
       <Navbar />
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         {loading ? (
@@ -354,48 +389,49 @@ export default function VerifyCertPage() {
           <div className="max-w-lg w-full">
             <div
               ref={certificateRef}
-              className="relative bg-[#16181d] border border-[#2a2d35] rounded-2xl p-10 text-center overflow-hidden mb-6"
+              className="relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg"
+              style={{
+                backgroundImage: 'url(/certificate.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
             >
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00d285] via-[#00a669] to-[#00d285]" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,210,133,0.04),transparent_60%)]" />
-
-              <div className="relative z-10">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#00d285]/10 border border-[#00d285]/20 flex items-center justify-center text-4xl">
-                  🏆
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-[8%] text-center font-sans">
+                {/* Spacer for top margin in case the template has header text */}
+                <div className="flex-1"></div>
+                
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 font-serif mb-2 uppercase tracking-wider">
+                  {cert.user.name}
+                </h1>
+                
+                <div className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 font-medium max-w-[80%]">
+                  has successfully completed the certification exam for
                 </div>
-                <div className="inline-flex items-center gap-2 bg-[#00d285]/10 border border-[#00d285]/20 rounded-full px-4 py-1.5 mb-6">
-                  <span className="w-2 h-2 rounded-full bg-[#00d285] animate-pulse" />
-                  <span className="text-xs font-semibold text-[#00d285] uppercase tracking-wider">Verified Certificate</span>
-                </div>
-
-                <h1 className="text-2xl font-bold mb-1">{cert.certification.title}</h1>
-                <p className="text-[#ababab] text-sm mb-6 capitalize">{cert.certification.difficulty_level} Level</p>
-
-                <div className="bg-[#0f1115] rounded-xl p-5 mb-6 text-left">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00d285] to-[#00a669] flex items-center justify-center text-lg font-bold text-black">
-                      {cert.user.name.charAt(0).toUpperCase()}
+                
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#00d285] mb-8 drop-shadow-sm">
+                  {cert.certification.title}
+                </h2>
+                
+                <div className="w-full flex justify-between px-[10%] mt-auto pb-4">
+                  <div className="text-center">
+                    <div className="text-sm sm:text-base md:text-lg font-bold text-gray-800 border-b border-gray-400 pb-1 mb-1 px-4">
+                      {new Date(cert.issued_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </div>
-                    <div>
-                      <div className="font-semibold">{cert.user.name}</div>
-                      <div className="text-xs text-[#ababab]">@{cert.user.username}</div>
-                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold">Date</div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-[#ababab] font-semibold mb-1">Score</div>
-                      <div className="font-bold text-[#00d285]">{cert.percentage}%</div>
+                  
+                  <div className="text-center">
+                    <div className="text-sm sm:text-base md:text-lg font-bold text-gray-800 border-b border-gray-400 pb-1 mb-1 px-4">
+                      {cert.percentage}%
                     </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-[#ababab] font-semibold mb-1">Issued On</div>
-                      <div className="font-medium text-xs">
-                        {new Date(cert.issued_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </div>
-                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest font-bold">Score</div>
                   </div>
                 </div>
-
-                <div className="text-[10px] text-[#ababab] font-mono break-all">ID: {cert.uuid}</div>
+                
+                <div className="absolute bottom-4 right-6 text-[8px] sm:text-[10px] text-gray-400 font-mono text-right">
+                  Verify at: scriptnex.com/verify/{cert.uuid}<br/>
+                  ID: {cert.uuid}
+                </div>
               </div>
             </div>
 
