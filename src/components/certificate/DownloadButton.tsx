@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { api } from '@/lib/api';
+import { api, ApiError } from '@/lib/api';
+import { downloadCertificatePdf } from '@/lib/certificates';
 
 interface DownloadButtonProps {
   cert: {
@@ -42,50 +43,16 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
   const performDownload = async () => {
     try {
       setStatus('generating');
-      
-      // Create a hidden iframe
-      const iframe = document.createElement('iframe');
-      
-      // visibility: hidden allows the iframe to render properly unlike display: none
-      iframe.style.position = 'fixed';
-      iframe.style.left = '-9999px';
-      iframe.style.top = '0';
-      iframe.style.width = '1200px';
-      iframe.style.height = '900px';
-      iframe.style.visibility = 'hidden';
-      iframe.src = `/certifications/download/${cert.uuid}`;
-      
-      const cleanup = (event: MessageEvent) => {
-        if (event.data?.type === 'DOWNLOAD_COMPLETE' && event.data?.uuid === cert.uuid) {
-          document.body.removeChild(iframe);
-          window.removeEventListener('message', cleanup);
-          setStatus('idle');
-        } else if (event.data?.type === 'DOWNLOAD_ERROR') {
-          console.error('Iframe Download Error:', event.data.error);
-          document.body.removeChild(iframe);
-          window.removeEventListener('message', cleanup);
-          setStatus('idle');
-          alert('Failed to generate PDF. Opening manual download link...');
-          window.open(`/certifications/download/${cert.uuid}`, '_blank');
-        }
-      };
-
-      window.addEventListener('message', cleanup);
-      document.body.appendChild(iframe);
-
-      // Timeout as a safety measure
-      setTimeout(() => {
-        if (document.body.contains(iframe)) {
-          document.body.removeChild(iframe);
-          window.removeEventListener('message', cleanup);
-          setStatus('idle');
-        }
-      }, 15000);
-
-    } catch (err: any) {
+      const fallbackFileName = `ScriptNex-Certificate-${(userName || 'Certificate').replace(/\s+/g, '-')}.pdf`;
+      await downloadCertificatePdf(cert.uuid, fallbackFileName);
+    } catch (err) {
+      const message = err instanceof ApiError
+        ? err.message
+        : 'Failed to download the certificate PDF. Please try again.';
+      alert(message);
       console.error('Download setup failed:', err);
+    } finally {
       setStatus('idle');
-      window.open(`/certifications/download/${cert.uuid}`, '_blank');
     }
   };
 
@@ -94,7 +61,7 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
       setStatus('checking');
 
       // 1. Check access via API
-      const response = await api.get<{ certificate: any }>(`/my-certificates/${cert.uuid}`);
+      const response = await api.get<{ certificate: any }>(`/my-certificates/${cert.uuid}`, { force: true });
       const ownedCert = response.data.certificate;
       
       if (ownedCert.download_paid) {
@@ -147,8 +114,10 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
     } catch (err) {
       console.error('Action failed:', err);
       setStatus('idle');
-      // If everything fails, then and only then redirect as a last resort
-      window.location.href = `/certifications/verify/${cert.uuid}?download=true`;
+      const message = err instanceof ApiError
+        ? err.message
+        : 'Could not start the certificate download flow. Please try again.';
+      alert(message);
     }
   };
 

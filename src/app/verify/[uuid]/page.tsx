@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { api, ApiError } from '@/lib/api';
+import { downloadCertificatePdf } from '@/lib/certificates';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -135,7 +136,6 @@ export default function VerifyCertPage() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isUnlockingDownload, setIsUnlockingDownload] = useState(false);
   const [ownerStatusLoading, setOwnerStatusLoading] = useState(false);
-  const certificateRef = useRef<HTMLDivElement>(null);
 
   const loadOwnedCertificate = useCallback(async () => {
     if (!isAuthenticated) {
@@ -146,7 +146,7 @@ export default function VerifyCertPage() {
     setOwnerStatusLoading(true);
 
     try {
-      const response = await api.get<{ certificate: OwnedCertificate }>(`/my-certificates/${uuid}`);
+      const response = await api.get<{ certificate: OwnedCertificate }>(`/my-certificates/${uuid}`, { force: true });
       setOwnedCertificate(response.data.certificate);
     } catch {
       setOwnedCertificate(null);
@@ -156,53 +156,19 @@ export default function VerifyCertPage() {
   }, [isAuthenticated, uuid]);
 
   const handleDownloadPdf = useCallback(async (forceAccess = false) => {
-    if (!certificateRef.current || !cert || (!forceAccess && !ownedCertificate?.download_paid)) {
+    if (!cert || (!forceAccess && !ownedCertificate?.download_paid)) {
       return;
     }
 
     try {
       setIsDownloading(true);
-
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
-      const element = certificateRef.current;
-
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        logging: false,
-        allowTaint: true,
-        removeContainer: true,
-        ignoreElements: (el) => {
-          return el.classList?.contains('animate-pulse') || false;
-        },
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdfWidth = 297;
-      const pdfHeight = 210;
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const scaledWidth = imgWidth * ratio;
-      const scaledHeight = imgHeight * ratio;
-      const offsetX = (pdfWidth - scaledWidth) / 2;
-      const offsetY = (pdfHeight - scaledHeight) / 2;
-
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      pdf.setFillColor(22, 24, 29);
-      pdf.rect(0, 0, pdfWidth, pdfHeight, 'F');
-      pdf.addImage(imgData, 'PNG', offsetX, offsetY, scaledWidth, scaledHeight);
-      pdf.save(`ScriptNex-Certificate-${cert.user.name.replace(/\s+/g, '-')}.pdf`);
+      await downloadCertificatePdf(cert.uuid, `ScriptNex-Certificate-${cert.user.name.replace(/\s+/g, '-')}.pdf`);
     } catch (err) {
       console.error('Failed to generate PDF:', err);
-      alert('Failed to generate PDF. Please try again.');
+      const message = err instanceof ApiError
+        ? err.message
+        : 'Failed to download the certificate PDF. Please try again.';
+      alert(message);
     } finally {
       setIsDownloading(false);
     }
@@ -389,7 +355,6 @@ export default function VerifyCertPage() {
         ) : (
           <div className="max-w-lg w-full">
             <div
-              ref={certificateRef}
               className={`relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg ${!canDownload && ownedCertificate ? 'blur-[8px]' : ''}`}
               style={{
                 backgroundImage: 'url(/certificate.png)',

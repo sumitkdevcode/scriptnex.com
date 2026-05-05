@@ -38,7 +38,10 @@ export default function CertificationResultPage() {
   useEffect(() => {
     async function loadResult() {
       try {
-        const res = await api.get<{ result: AttemptResult }>(`/certifications/${slug}/result?attempt_id=${attemptId}`);
+        const res = await api.get<{ result: AttemptResult }>(
+          `/certifications/${slug}/result?attempt_id=${attemptId}`,
+          { force: true },
+        );
         setResult(res.data.result);
       } catch {
         // handle error
@@ -57,7 +60,10 @@ export default function CertificationResultPage() {
 
   const refreshResult = async () => {
     try {
-      const res = await api.get<{ result: AttemptResult }>(`/certifications/${slug}/result?attempt_id=${attemptId}`);
+      const res = await api.get<{ result: AttemptResult }>(
+        `/certifications/${slug}/result?attempt_id=${attemptId}`,
+        { force: true },
+      );
       setResult(res.data.result);
     } catch (err) {
       console.error('Failed to refresh result:', err);

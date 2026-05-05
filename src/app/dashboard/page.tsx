@@ -29,7 +29,7 @@ export default function DashboardPage() {
         .then(res => setStats(res.data.stats))
         .catch(() => {});
         
-      api.get<{ certificates: any[] }>('/my-certificates')
+      api.get<{ certificates: any[] }>('/my-certificates', { force: true })
         .then(res => setCertificates(res.data.certificates))
         .catch(() => {});
     }
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                           cert={cert}
                           userName={user?.name || ''}
                           onSuccess={() => {
-                            api.get<{ certificates: any[] }>('/my-certificates')
+                            api.get<{ certificates: any[] }>('/my-certificates', { force: true })
                               .then(res => setCertificates(res.data.certificates))
                               .catch(() => {});
                           }}

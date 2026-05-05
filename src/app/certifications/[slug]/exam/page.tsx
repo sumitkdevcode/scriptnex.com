@@ -76,6 +76,20 @@ export default function CertificationExamPage() {
   const [activeResultTab, setActiveResultTab] = useState<'testcases' | 'output'>('testcases');
   
   const hasAutoSubmitted = useRef(false);
+  const draftSaveTimer = useRef<number | null>(null);
+  const lastSavedAnswers = useRef<string>('{}');
+
+  const saveDraftAnswers = useCallback(async (nextAnswers: Record<string, string>) => {
+    if (!attemptId || submitting) {
+      return;
+    }
+
+    await api.put(`/certifications/attempts/${attemptId}/draft`, {
+      answers: nextAnswers,
+    });
+
+    lastSavedAnswers.current = JSON.stringify(nextAnswers);
+  }, [attemptId, submitting]);
 
   const handleSubmit = useCallback(async () => {
     if (!attemptId || submitting) {
@@ -90,6 +104,18 @@ export default function CertificationExamPage() {
     setSubmitting(true);
 
     try {
+      if (draftSaveTimer.current) {
+        window.clearTimeout(draftSaveTimer.current);
+        draftSaveTimer.current = null;
+      }
+
+      try {
+        await saveDraftAnswers(answers);
+      } catch {
+        // If the attempt has already expired, the server will fall back to the
+        // most recent on-time draft snapshot during final grading.
+      }
+
       // Send answers as-is, backend will handle validation
       const payload = { answers };
       console.log('Submitting payload:', JSON.stringify(payload, null, 2));
@@ -103,7 +129,7 @@ export default function CertificationExamPage() {
       alert(message);
       setSubmitting(false);
     }
-  }, [answers, attemptId, exam, router, slug, submitting]);
+  }, [answers, attemptId, exam, router, saveDraftAnswers, slug, submitting]);
 
   useEffect(() => {
     if (authLoading) {
@@ -121,7 +147,7 @@ export default function CertificationExamPage() {
       try {
         const [detailResponse, startResponse, languagesResponse] = await Promise.all([
           api.get<{ certification: CertificationDetail }>(`/certifications/${slug}`),
-          api.post<{ attempt: { id: number }; questions: Question[]; remaining_seconds: number }>(`/certifications/${slug}/start`, {}),
+          api.post<{ attempt: { id: number; answers?: Record<string, string> }; questions: Question[]; remaining_seconds: number }>(`/certifications/${slug}/start`, {}),
           api.get<{ languages: SupportedLanguage[] }>('/languages'),
         ]);
 
@@ -135,6 +161,9 @@ export default function CertificationExamPage() {
         });
         setAttemptId(startResponse.data.attempt.id);
         setTimeLeft(normalizeTimeLeft(startResponse.data.remaining_seconds));
+        const restoredAnswers = startResponse.data.attempt.answers || {};
+        setAnswers(restoredAnswers);
+        lastSavedAnswers.current = JSON.stringify(restoredAnswers);
 
         const availableLanguages = languagesResponse.data.languages;
         setLanguages(availableLanguages);
@@ -189,6 +218,34 @@ export default function CertificationExamPage() {
       void handleSubmit();
     }
   }, [attemptId, handleSubmit, timeLeft]);
+
+  useEffect(() => {
+    if (!attemptId || submitting || timeLeft <= 0) {
+      return;
+    }
+
+    const serializedAnswers = JSON.stringify(answers);
+    if (serializedAnswers === lastSavedAnswers.current) {
+      return;
+    }
+
+    if (draftSaveTimer.current) {
+      window.clearTimeout(draftSaveTimer.current);
+    }
+
+    draftSaveTimer.current = window.setTimeout(() => {
+      void saveDraftAnswers(answers).catch(() => {
+        // Ignore transient draft-save failures while the user is still typing.
+      });
+    }, 700);
+
+    return () => {
+      if (draftSaveTimer.current) {
+        window.clearTimeout(draftSaveTimer.current);
+        draftSaveTimer.current = null;
+      }
+    };
+  }, [answers, attemptId, saveDraftAnswers, submitting, timeLeft]);
 
   const handleOptionSelect = (questionId: number, value: string) => {
     setAnswers((current) => ({ ...current, [questionId]: value }));

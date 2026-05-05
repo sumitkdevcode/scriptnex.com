@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
 
 interface ApiResponse<T = unknown> {
   success: boolean;
@@ -6,6 +6,10 @@ interface ApiResponse<T = unknown> {
   data: T;
   errors?: Record<string, string[]>;
   meta?: Record<string, unknown>;
+}
+
+interface GetOptions {
+  force?: boolean;
 }
 
 class ApiClient {
@@ -67,10 +71,12 @@ class ApiClient {
     }
   }
 
-  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-    const cached = this.cache.get(endpoint);
-    if (cached && cached.expiry > Date.now()) {
-      return cached.data;
+  async get<T>(endpoint: string, options: GetOptions = {}): Promise<ApiResponse<T>> {
+    if (!options.force) {
+      const cached = this.cache.get(endpoint);
+      if (cached && cached.expiry > Date.now()) {
+        return cached.data;
+      }
     }
 
     const data = await this.request<T>(endpoint, { method: 'GET' });
