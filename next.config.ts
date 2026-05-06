@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
     memoryBasedWorkersCount: false,
     staticGenerationMaxConcurrency: 1, // Prevent parallel ISR spikes
   },
+  async redirects() {
+    return [
+      {
+        source: "/profile/:username",
+        destination: "/:username",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

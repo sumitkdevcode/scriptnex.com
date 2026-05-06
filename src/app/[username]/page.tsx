@@ -7,7 +7,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
+import Image from 'next/image';
 import ActivityGraph from '@/components/profile/ActivityGraph';
+import DownloadButton from '@/components/certificate/DownloadButton';
 
 interface PublicProfile {
   id: number; name: string; username: string; avatar: string | null;
@@ -22,20 +24,97 @@ interface UserStats {
   submission_calendar: Record<string, number>;
 }
 
+interface Certificate {
+  uuid: string;
+  created_at: string;
+  issued_at?: string;
+  verification_url?: string;
+  download_paid?: boolean;
+  download_price_paise?: number;
+  certification?: {
+    title: string;
+    slug?: string;
+    badge_image_url?: string;
+    difficulty_level?: string;
+  };
+}
+
+interface OwnedCertificatesResponse {
+  certificates: Certificate[];
+}
+
+interface PublicCertificatesResponse {
+  certificates: Certificate[];
+}
+
 export default function ProfilePage() {
   const params = useParams();
   const username = params.username as string;
   const { user: currentUser } = useAuth();
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get<{ user: PublicProfile; stats: UserStats }>(`/users/${username}`)
-      .then(res => { setProfile(res.data.user); setStats(res.data.stats); })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [username]);
+    if (!username) return;
+
+    let cancelled = false;
+
+    const fetchProfile = async () => {
+      setLoading(true);
+
+      try {
+        const [profileRes, publicCertificatesRes] = await Promise.all([
+          api.get<{ user: PublicProfile; stats: UserStats; certificates?: Certificate[] }>(
+            `/users/${username}`,
+            { force: true }
+          ),
+          api.get<PublicCertificatesResponse>(`/certificates/user/${username}`, { force: true }).catch(() => null),
+        ]);
+
+        if (cancelled) return;
+
+        const embeddedCertificates = Array.isArray(profileRes.data.certificates) ? profileRes.data.certificates : [];
+        const publicCertificates = publicCertificatesRes?.data.certificates ?? embeddedCertificates;
+        const visiblePublicCertificates = Array.isArray(publicCertificates)
+          ? publicCertificates.filter((certificate) => certificate.download_paid === true)
+          : [];
+
+        setProfile(profileRes.data.user);
+        setStats(profileRes.data.stats);
+        setCertificates(visiblePublicCertificates);
+
+        if (currentUser?.username === username) {
+          try {
+            const ownerRes = await api.get<OwnedCertificatesResponse>('/my-certificates', { force: true });
+            if (cancelled) return;
+
+            const ownerCerts = Array.isArray(ownerRes.data.certificates) ? ownerRes.data.certificates : [];
+            setCertificates(ownerCerts);
+          } catch {
+            // Keep public certificate data if the owner-specific request fails.
+          }
+        }
+      } catch {
+        if (cancelled) return;
+
+        setProfile(null);
+        setStats(null);
+        setCertificates([]);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [username, currentUser?.username]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]"><Navbar />
@@ -58,6 +137,7 @@ export default function ProfilePage() {
   const easy = stats?.easy_solved || 0;
   const medium = stats?.medium_solved || 0;
   const hard = stats?.hard_solved || 0;
+  const visibleCertificateCount = certificates.length;
   const totalProblems = 3920; // Hardcoded max like in screenshot
 
   const radius = 40;
@@ -69,10 +149,10 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 pt-8 pb-12 flex flex-col md:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-10 flex flex-col md:flex-row gap-6">
         
         {/* Left Sidebar */}
-        <div className="w-full md:w-[280px] shrink-0 flex flex-col gap-8">
+        <div className="w-full md:w-[260px] shrink-0 flex flex-col gap-6">
           
           {/* Main Info Card */}
           <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6">
@@ -109,7 +189,7 @@ export default function ProfilePage() {
               </div>
               {profile.github_url && (
                 <a href={profile.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors truncate">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37(3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
                   GitHub
                 </a>
               )}
@@ -156,9 +236,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Main Area */}
-        <div className="flex-1 flex flex-col gap-8">
+        <div className="flex-1 flex flex-col gap-6">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Solved Problems Chart Widget */}
             <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6 flex items-center justify-between">
               <div className="relative w-[110px] h-[110px] flex items-center justify-center shrink-0">
@@ -197,12 +277,12 @@ export default function ProfilePage() {
             <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6 relative">
               <div className="flex justify-between items-start mb-2">
                 <div className="text-xs text-[#ababab] font-semibold">Certificates</div>
-                <Link href={`/profile/${username}/badges`} className="text-[#ababab] hover:text-white">
+                <Link href={`/${username}/badges`} className="text-[#ababab] hover:text-white">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </Link>
               </div>
-              <div className="text-2xl font-bold mb-4">{stats?.certificates_earned || 0}</div>
-              {stats?.certificates_earned ? (
+              <div className="text-2xl font-bold mb-4">{visibleCertificateCount}</div>
+              {visibleCertificateCount > 0 ? (
                 <div className="absolute bottom-5 right-5 text-4xl opacity-80">📜</div>
               ) : (
                 <div className="text-xs text-[#ababab] absolute bottom-5 left-5">No certificates yet</div>
@@ -227,6 +307,90 @@ export default function ProfilePage() {
             {/* Activity Heatmap Grid */}
             <ActivityGraph calendar={stats?.submission_calendar || {}} />
           </div>
+
+          {/* Certificates Section */}
+          {certificates.length > 0 && (
+            <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md overflow-hidden">
+              <div className="flex border-b border-[#2a2d35] bg-[#16181d] px-5 py-3">
+                <span className="text-xs font-semibold text-white flex items-center gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  {isOwn ? 'My Certificates' : 'Certificates'}
+                </span>
+              </div>
+              <div className="p-2 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+                {certificates.map((cert) => {
+                  const isPaid = cert.download_paid;
+                  return (
+                    <div key={cert.uuid} className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden flex flex-col group hover:border-[#00d285]/30 transition-all">
+                      {/* Mini Certificate Preview */}
+                      <div className="relative aspect-[1.414] w-full bg-white overflow-hidden">
+                        <Image
+                          src="/certificate.png?v=2" 
+                          alt="Template" 
+                          fill
+                          unoptimized
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          className={`absolute inset-0 w-full h-full object-cover ${isOwn && !isPaid ? 'blur-[6px]' : ''}`}
+                        />
+                        <div className={`absolute inset-0 flex flex-col items-center justify-center p-[6%] text-center scale-[0.3] origin-center whitespace-nowrap ${isOwn && !isPaid ? 'blur-[6px]' : ''}`}>
+                          <div className="flex-1"></div>
+                          <h1 className="text-4xl font-bold text-gray-800 font-serif mb-2 uppercase">{profile?.name}</h1>
+                          <p className="text-lg text-gray-600 mb-4">has completed</p>
+                          <h2 className="text-3xl font-bold text-[#00d285]">{cert.certification?.title}</h2>
+                          <div className="mt-auto"></div>
+                        </div>
+                        
+                        {/* Lock Overlay for Unpaid Certificates (Owner view) */}
+                        {isOwn && !isPaid && (
+                          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
+                            <div className="bg-[#1a1c23] p-3 rounded-full mb-2 shadow-2xl border border-white/20">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d285" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d285]">PDF Locked</span>
+                          </div>
+                        )}
+
+                        {/* Overlay gradient for depth */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                      </div>
+                      
+                      <div className="p-2 flex flex-col gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-[11px] font-semibold truncate leading-tight">{cert.certification?.title}</h4>
+                          <p className="text-[9px] text-[#ababab]">Earned on {new Date(cert.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          {isOwn ? (
+                            <DownloadButton 
+                              cert={cert}
+                              userName={profile?.name || ''}
+                              onSuccess={() => {
+                                api.get<OwnedCertificatesResponse>('/my-certificates', { force: true })
+                                  .then(res => {
+                                    const certs = Array.isArray(res.data.certificates) ? res.data.certificates : [];
+                                    setCertificates(certs);
+                                  })
+                                  .catch(() => {});
+                              }}
+                              className="flex-1 py-1.5 text-center bg-[#00d285] text-[#0a0a0a] text-[10px] font-bold rounded hover:bg-[#00b371] transition-colors"
+                              label={isPaid ? 'Download' : 'Unlock'}
+                            />
+                          ) : (
+                            <DownloadButton 
+                              cert={cert}
+                              userName={profile?.name || ''}
+                              className="flex-1 py-1.5 text-center bg-[#2a2d35] text-white text-[10px] font-bold rounded hover:bg-[#363a45] transition-colors"
+                              label="Download PDF"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Recent Submissions */}
           <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md overflow-hidden flex flex-col min-h-[300px]">

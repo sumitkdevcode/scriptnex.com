@@ -58,9 +58,14 @@ export default function DownloadButton({ cert, userName, className, label = 'Dow
 
   const handleDownloadClick = async () => {
     try {
-      setStatus('checking');
+      if (cert.download_paid) {
+        await performDownload();
+        if (onSuccess) await onSuccess();
+        return;
+      }
 
-      // 1. Check access via API
+      setStatus('checking');
+      // 1. Check access via API (for cases where download_paid might be outdated or we need to verify ownership)
       const response = await api.get<{ certificate: any }>(`/my-certificates/${cert.uuid}`, { force: true });
       const ownedCert = response.data.certificate;
       

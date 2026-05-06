@@ -151,7 +151,7 @@ export default function GlobalSearch() {
                 <div className="px-2 py-2 border-t border-[#1a1c23]">
                   <div className="px-3 py-1.5 text-[10px] uppercase tracking-widest text-[#ababab] font-semibold">Users</div>
                   {results.users.map((user) => (
-                    <Link key={user.id} href={`/profile/${user.username}`} onClick={close}
+                    <Link key={user.id} href={`/${user.username}`} onClick={close}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-md hover:bg-white/[0.04] transition-colors">
                       <div className="w-7 h-7 rounded-full bg-[#00d285]/10 border border-[#00d285]/20 flex items-center justify-center text-[#00d285] text-xs font-bold">
                         {(user.name || user.username || 'U').charAt(0).toUpperCase()}

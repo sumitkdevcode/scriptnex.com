@@ -39,9 +39,9 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
-        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-2.5 md:py-1">
+        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5">
           <Link href="/" className="flex items-center z-10 shrink-0">
-            <Image src={logoNav} alt="ScriptNex Logo" className="h-[52px] md:h-[54px] w-auto object-contain" priority />
+            <Image src={logoNav} alt="ScriptNex Logo" className="h-[42px] md:h-[46px] w-auto object-contain" priority />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -86,7 +86,7 @@ export default function Navbar() {
                   </button>
                 </div>
 
-                <Link href={user?.username ? `/profile/${user.username}` : '/dashboard'} className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border border-[#2a2d35] hover:border-white transition-all overflow-hidden shrink-0 bg-gradient-to-br from-[#00d285] to-[#00a669] text-black">
+                <Link href={user?.username ? `/${user.username}` : '/dashboard'} className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border border-[#2a2d35] hover:border-white transition-all overflow-hidden shrink-0 bg-gradient-to-br from-[#00d285] to-[#00a669] text-black">
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
@@ -138,7 +138,7 @@ export default function Navbar() {
               {isAuthenticated && (
                 <>
                   <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-[#f59e0b] font-semibold text-lg">Premium</Link>
-                  <Link href={user?.username ? `/profile/${user.username}` : '/dashboard'} onClick={() => setIsMobileMenuOpen(false)} className="text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium">Profile</Link>
+                  <Link href={user?.username ? `/${user.username}` : '/dashboard'} onClick={() => setIsMobileMenuOpen(false)} className="text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium">Profile</Link>
                 </>
               )}
               
@@ -164,7 +164,7 @@ export default function Navbar() {
         )}
       </div>
       {/* Spacer to prevent content from hiding behind fixed navbar */}
-      <div className="h-[75px] md:h-[62px]" aria-hidden="true"></div>
+      <div className="h-[60px] md:h-[54px]" aria-hidden="true"></div>
     </>
   );
 }

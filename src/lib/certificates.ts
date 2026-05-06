@@ -23,17 +23,26 @@ export const downloadCertificatePdf = async (uuid: string, fallbackFileName?: st
     throw new ApiError('Certificate downloads are only available in the browser.', 0);
   }
 
-  const token = localStorage.getItem('auth_token');
-  if (!token) {
-    throw new ApiError('Please sign in to download your certificate PDF.', 401);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+
+  const headers: Record<string, string> = {
+    'Accept': 'application/pdf, application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}/my-certificates/${uuid}/download`, {
+  // Construct URL carefully to avoid double slashes
+  const baseUrl = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+  const downloadUrl = token 
+    ? `${baseUrl}/my-certificates/${uuid}/download?token=${token}`
+    : `${baseUrl}/my-certificates/${uuid}/download`;
+
+  const response = await fetch(downloadUrl, {
     method: 'GET',
-    headers: {
-      Accept: 'application/pdf',
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   });
 
   if (!response.ok) {

@@ -74,14 +74,14 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
     <div className="flex flex-col select-none">
       <div className="flex gap-2">
         {/* Day labels (Sun, Tue, Thu, Sat) */}
-        <div className="flex flex-col gap-[3px] text-[10px] text-[#ababab] pt-[20px] shrink-0">
-          <div className="h-[11px] flex items-center">Sun</div>
-          <div className="h-[11px]" />
-          <div className="h-[11px] flex items-center">Tue</div>
-          <div className="h-[11px]" />
-          <div className="h-[11px] flex items-center">Thu</div>
-          <div className="h-[11px]" />
-          <div className="h-[11px] flex items-center">Sat</div>
+        <div className="flex flex-col gap-[2px] text-[10px] text-[#ababab] pt-[20px] shrink-0">
+          <div className="h-[10px] flex items-center">Sun</div>
+          <div className="h-[10px]" />
+          <div className="h-[10px] flex items-center">Tue</div>
+          <div className="h-[10px]" />
+          <div className="h-[10px] flex items-center">Thu</div>
+          <div className="h-[10px]" />
+          <div className="h-[10px] flex items-center">Sat</div>
         </div>
 
         {/* Scrollable Container for Labels + Grid */}
@@ -101,13 +101,13 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
             </div>
 
             {/* Heatmap Grid */}
-            <div className="flex gap-[3px]">
+            <div className="flex gap-[2px]">
               {weeks.map((week, wIdx) => (
-                <div key={wIdx} className="flex flex-col gap-[3px] shrink-0">
+                <div key={wIdx} className="flex flex-col gap-[2px] shrink-0">
                   {week.map((day, dIdx) => (
                     <div
                       key={dIdx}
-                      className={`w-[11px] h-[11px] rounded-[2px] transition-colors group relative ${
+                      className={`w-[10px] h-[10px] rounded-[2px] transition-colors group relative ${
                         day ? levelColors[day.level] : 'bg-transparent'
                       }`}
                     >
@@ -131,9 +131,9 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
       {/* Legend */}
       <div className="flex items-center justify-end gap-2 mt-4 text-[10px] text-[#ababab]">
         <span>Less</span>
-        <div className="flex gap-[3px]">
+        <div className="flex gap-[2px]">
           {levelColors.map((color, i) => (
-            <div key={i} className={`w-[11px] h-[11px] rounded-[2px] ${color}`} />
+            <div key={i} className={`w-[10px] h-[10px] rounded-[2px] ${color}`} />
           ))}
         </div>
         <span>More</span>
@@ -143,6 +143,6 @@ export default function ActivityGraph({ calendar }: ActivityGraphProps) {
 }
 
 function wIdxToPx(index: number) {
-  // 11px box + 3px gap
-  return index * (11 + 3);
+  // 10px box + 2px gap
+  return index * (10 + 2);
 }

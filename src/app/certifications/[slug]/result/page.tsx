@@ -110,7 +110,7 @@ export default function CertificationResultPage() {
                   return (
                     <>
                       <img 
-                        src="/certificate.png" 
+                        src="/certificate.png?v=2" 
                         alt="Template" 
                         className={`absolute inset-0 w-full h-full object-cover ${!isPaid ? 'blur-[5px]' : ''}`} 
                       />

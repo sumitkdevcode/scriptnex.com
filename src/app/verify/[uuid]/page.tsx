@@ -156,7 +156,7 @@ export default function VerifyCertPage() {
   }, [isAuthenticated, uuid]);
 
   const handleDownloadPdf = useCallback(async (forceAccess = false) => {
-    if (!cert || (!forceAccess && !ownedCertificate?.download_paid)) {
+    if (!cert || (!forceAccess && !cert.download_paid)) {
       return;
     }
 
@@ -172,7 +172,7 @@ export default function VerifyCertPage() {
     } finally {
       setIsDownloading(false);
     }
-  }, [cert, ownedCertificate?.download_paid]);
+  }, [cert]);
 
   const handleUnlockDownload = useCallback(async () => {
     if (!isAuthenticated) {
@@ -275,7 +275,7 @@ export default function VerifyCertPage() {
   // Handle automatic download if requested via query param
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    if (searchParams.get('download') === 'true' && cert && ownedCertificate?.download_paid && !loading && !isDownloading) {
+    if (searchParams.get('download') === 'true' && cert && cert.download_paid && !loading && !isDownloading) {
       void handleDownloadPdf();
       // Remove the param from URL to prevent re-downloading on refresh
       const newUrl = window.location.pathname;
@@ -314,7 +314,7 @@ export default function VerifyCertPage() {
   }, [authLoading, isAuthenticated, loadOwnedCertificate]);
 
   const downloadPrice = Math.round((ownedCertificate?.download_price_paise ?? cert?.download_price_paise ?? 0) / 100);
-  const canDownload = !!ownedCertificate?.download_paid;
+  const canDownload = !!cert?.download_paid;
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col relative">
@@ -329,7 +329,7 @@ export default function VerifyCertPage() {
           <p className="text-[#ababab] max-w-sm">
             Please wait while we generate your high-resolution PDF. Your download will start automatically.
           </p>
-          {!ownedCertificate?.download_paid && !loading && (
+          {!cert?.download_paid && !loading && (
             <div className="mt-8 animate-pulse text-[#00d285] font-semibold">
               Redirecting to secure payment...
             </div>
@@ -357,13 +357,12 @@ export default function VerifyCertPage() {
             <div
               className={`relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg ${!canDownload && ownedCertificate ? 'blur-[8px]' : ''}`}
               style={{
-                backgroundImage: 'url(/certificate.png)',
+                backgroundImage: 'url(/certificate.png?v=2)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
             >
               <div className="absolute inset-0 flex flex-col items-center justify-center p-[8%] text-center font-sans">
-                {/* Spacer for top margin in case the template has header text */}
                 <div className="flex-1"></div>
                 
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 font-serif mb-2 uppercase tracking-wider">
@@ -400,7 +399,6 @@ export default function VerifyCertPage() {
                 </div>
               </div>
               
-              {/* Lock Overlay for Unpaid Certificates */}
               {!canDownload && ownedCertificate && (
                 <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white z-20">
                   <div className="bg-[#1a1c23] p-4 rounded-full mb-3 shadow-2xl border border-white/20">
