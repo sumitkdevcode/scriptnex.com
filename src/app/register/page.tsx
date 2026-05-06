@@ -30,7 +30,7 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       await register(form);
-      router.push('/dashboard');
+      router.push('/certifications');
     } catch {
       // errors handled by context
     }
