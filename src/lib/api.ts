@@ -20,6 +20,14 @@ class ApiClient {
     this.baseUrl = baseUrl;
   }
 
+  clearCache(endpoint?: string) {
+    if (endpoint) {
+      this.cache.delete(endpoint);
+    } else {
+      this.cache.clear();
+    }
+  }
+
   private getToken(): string | null {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('auth_token');
@@ -85,21 +93,27 @@ class ApiClient {
   }
 
   async post<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, {
+    const result = await this.request<T>(endpoint, {
       method: 'POST',
       body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     });
+    this.clearCache();
+    return result;
   }
 
   async put<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, {
+    const result = await this.request<T>(endpoint, {
       method: 'PUT',
       body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     });
+    this.clearCache();
+    return result;
   }
 
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+    const result = await this.request<T>(endpoint, { method: 'DELETE' });
+    this.clearCache();
+    return result;
   }
 }
 

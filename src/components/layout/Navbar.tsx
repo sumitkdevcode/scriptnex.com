@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import logoNav from '../../../public/logo-nav.png';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -41,7 +39,7 @@ export default function Navbar() {
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
         <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5">
           <Link href="/" className="flex items-center z-10 shrink-0">
-            <Image src={logoNav} alt="ScriptNex Logo" className="h-[42px] md:h-[46px] w-auto object-contain" priority />
+            <img src="/logo-nav.png" alt="ScriptNex Logo" className="h-[54px] md:h-[60px] w-auto object-contain" />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">

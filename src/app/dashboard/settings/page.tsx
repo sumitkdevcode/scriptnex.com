@@ -28,8 +28,8 @@ export default function SettingsPage() {
     setSaving(true); setError(null); setMessage(null);
     try {
       const payload = { name, username, bio, github_url: github || null, linkedin_url: linkedin || null };
-      await api.put('/auth/profile', payload);
-      updateUser(payload);
+      const response = await api.put<{ user: { name: string; username: string | null; bio: string | null; avatar: string | null; github_url: string | null; linkedin_url: string | null } }>('/auth/profile', payload);
+      updateUser(response.data.user);
       setMessage('Profile updated successfully!');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to update.');
@@ -58,12 +58,20 @@ export default function SettingsPage() {
 
     setSaving(true); setError(null); setMessage(null);
     try {
-      const response = await api.post<{ avatar_url: string }>('/auth/avatar', formData);
+      const response = await api.post<{ user: { avatar: string | null }; avatar_url: string }>('/auth/avatar', formData);
       setMessage('Avatar updated!');
-      updateUser({ avatar: response.data.avatar_url });
+      if (response.data.user) {
+        updateUser(response.data.user);
+      } else {
+        updateUser({ avatar: response.data.avatar_url });
+      }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Upload failed.');
-    } finally { setSaving(false); }
+    } finally {
+      setSaving(false);
+      // Reset the file input so the same file can be re-selected
+      e.target.value = '';
+    }
   };
 
   const tabs = [
