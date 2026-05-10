@@ -11,6 +11,7 @@ interface AuthContextType {
   login: (payload: LoginPayload) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
+  loginWithToken: (token: string) => Promise<void>;
   updateUser: (data: Partial<User>) => void;
   error: string | null;
   fieldErrors: Record<string, string[]> | null;
@@ -120,6 +121,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(prev => prev ? { ...prev, ...data } : null);
   }, []);
 
+  const loginWithToken = useCallback(async (token: string) => {
+    setIsLoading(true);
+    localStorage.setItem('auth_token', token);
+    try {
+      const res = await api.get<{ user: User }>('/auth/me');
+      setUser(res.data.user);
+    } catch (err) {
+      localStorage.removeItem('auth_token');
+      setError('Session initialization failed.');
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -129,6 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        loginWithToken,
         updateUser,
         error,
         fieldErrors,
