@@ -9,7 +9,9 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<{ email: string }>;
+  verifyRegistrationOtp: (payload: RegisterPayload & { otp: string }) => Promise<void>;
+  resendOtp: (email: string, type: 'registration' | 'password_reset') => Promise<void>;
   logout: () => Promise<void>;
   loginWithToken: (token: string) => Promise<void>;
   updateUser: (data: Partial<User>) => void;
@@ -86,11 +88,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [clearErrors]);
 
-  const register = useCallback(async (payload: RegisterPayload) => {
+  const register = useCallback(async (payload: RegisterPayload): Promise<{ email: string }> => {
     clearErrors();
     setIsLoading(true);
     try {
-      const res = await api.post<AuthData>('/auth/register', payload);
+      const res = await api.post<{ email: string }>('/auth/register', payload);
+      return res.data;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+        setFieldErrors(err.errors || null);
+      } else {
+        setError('An unexpected error occurred.');
+      }
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [clearErrors]);
+
+  const verifyRegistrationOtp = useCallback(async (payload: RegisterPayload & { otp: string }) => {
+    clearErrors();
+    setIsLoading(true);
+    try {
+      const res = await api.post<AuthData>('/auth/register/verify', payload);
       localStorage.setItem('auth_token', res.data.token);
       setUser(res.data.user);
     } catch (err) {
@@ -103,6 +124,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw err;
     } finally {
       setIsLoading(false);
+    }
+  }, [clearErrors]);
+
+  const resendOtp = useCallback(async (email: string, type: 'registration' | 'password_reset') => {
+    clearErrors();
+    try {
+      await api.post('/auth/resend-otp', { email, type });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Failed to resend code.');
+      }
+      throw err;
     }
   }, [clearErrors]);
 
@@ -144,6 +179,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         login,
         register,
+        verifyRegistrationOtp,
+        resendOtp,
         logout,
         loginWithToken,
         updateUser,
