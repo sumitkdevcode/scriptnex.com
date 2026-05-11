@@ -75,6 +75,10 @@ export default function LoginPage() {
               />
             </div>
 
+            <div style={{ textAlign: 'right', marginTop: '-4px', marginBottom: '8px' }}>
+              <Link href="/forgot-password" className="forgot-link">Forgot password?</Link>
+            </div>
+
             <button type="submit" className="btn-submit" disabled={isLoading}>
               {isLoading ? (
                 <span className="spinner" />

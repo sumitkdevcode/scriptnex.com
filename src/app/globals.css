@@ -261,6 +261,16 @@ body {
   flex-shrink: 0;
 }
 
+.forgot-link {
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.forgot-link:hover {
+  color: var(--accent);
+}
+
 .alt-link {
   text-align: center;
   font-size: 13px;
