@@ -14,9 +14,21 @@ interface SeoData {
 export async function getPageMetadata(path: string): Promise<Metadata> {
   try {
     const response = await fetch(`${API_BASE}/seo?path=${encodeURIComponent(path)}`, {
+      headers: {
+        'Accept': 'application/json'
+      },
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
     
+    if (!response.ok) {
+      return {};
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      return {};
+    }
+
     const json = await response.json();
     
     if (!json.success || !json.data.seo) {

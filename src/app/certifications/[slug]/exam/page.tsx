@@ -436,7 +436,7 @@ export default function CertificationExamPage() {
                     className={`w-full text-left px-4 py-3 rounded-md border-2 transition-all ${
                       answers[activeQuestion.id] === key
                         ? 'border-[#00d285] bg-[#00d285]/10 text-white'
-                        : 'border-[#2a2d35] bg-[#1a1c23] text-[#cbd5e1] hover:border-[#00d285]/50'
+                        : 'border-[#2a2d35] bg-[#1a1c23] text-[#ababab] hover:border-[#00d285]/50'
                     }`}
                   >
                     <span className="font-semibold mr-3">{key}.</span>
@@ -461,21 +461,21 @@ export default function CertificationExamPage() {
 
             {isCoding && activeQuestion.problem && (
               <div className="mt-6 space-y-6">
-                <div className="text-sm text-[#cbd5e1] leading-relaxed whitespace-pre-wrap">
+                <div className="text-sm text-[#ababab] leading-relaxed whitespace-pre-wrap">
                   {activeQuestion.problem.description}
                 </div>
 
                 {activeQuestion.problem.input_format && (
                   <div>
                     <h3 className="font-bold mb-2">Input Format:</h3>
-                    <div className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{activeQuestion.problem.input_format}</div>
+                    <div className="text-sm text-[#ababab] whitespace-pre-wrap">{activeQuestion.problem.input_format}</div>
                   </div>
                 )}
 
                 {activeQuestion.problem.output_format && (
                   <div>
                     <h3 className="font-bold mb-2">Output Format:</h3>
-                    <div className="text-sm text-[#cbd5e1] whitespace-pre-wrap">{activeQuestion.problem.output_format}</div>
+                    <div className="text-sm text-[#ababab] whitespace-pre-wrap">{activeQuestion.problem.output_format}</div>
                   </div>
                 )}
 
@@ -499,7 +499,7 @@ export default function CertificationExamPage() {
                 {activeQuestion.problem.constraints && (
                   <div>
                     <h3 className="font-bold mb-2">Constraints:</h3>
-                    <div className="bg-[#1a1c23] p-4 rounded-md border border-[#2a2d35] font-mono text-sm text-[#cbd5e1] whitespace-pre-wrap">
+                    <div className="bg-[#1a1c23] p-4 rounded-md border border-[#2a2d35] font-mono text-sm text-[#ababab] whitespace-pre-wrap">
                       {activeQuestion.problem.constraints}
                     </div>
                   </div>
@@ -509,7 +509,7 @@ export default function CertificationExamPage() {
 
             {isCoding && !activeQuestion.problem && (
               <div className="mt-6">
-                <p className="text-sm text-[#cbd5e1] leading-relaxed">
+                <p className="text-sm text-[#ababab] leading-relaxed">
                   Write your solution in the code editor on the right.
                 </p>
               </div>
@@ -618,7 +618,7 @@ export default function CertificationExamPage() {
                 ) : (
                   <div className="h-full flex flex-col">
                     {runResult ? (
-                      <div className="font-mono text-sm whitespace-pre-wrap text-[#cbd5e1]">{runResult}</div>
+                      <div className="font-mono text-sm whitespace-pre-wrap text-[#ababab]">{runResult}</div>
                     ) : (
                       <div className="flex-1 flex items-center justify-center text-sm text-[#ababab] italic">
                         Run your code to see the output here.

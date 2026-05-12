@@ -214,27 +214,27 @@ export default function ProblemWorkspace({
                 </div>
 
                 <div className="prose prose-invert prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-[#cbd5e1]">{problem.description}</div>
+                  <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-[#ababab]">{problem.description}</div>
                 </div>
 
                 {problem.input_format && (
                   <div>
                     <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Input Format</h3>
-                    <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.input_format}</p>
+                    <p className="text-[13px] text-[#ababab] whitespace-pre-wrap">{problem.input_format}</p>
                   </div>
                 )}
 
                 {problem.output_format && (
                   <div>
                     <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Output Format</h3>
-                    <p className="text-[13px] text-[#cbd5e1] whitespace-pre-wrap">{problem.output_format}</p>
+                    <p className="text-[13px] text-[#ababab] whitespace-pre-wrap">{problem.output_format}</p>
                   </div>
                 )}
 
                 {problem.constraints && (
                   <div>
                     <h3 className="text-[10px] uppercase tracking-wider text-[#ababab] font-bold mb-2">Constraints</h3>
-                    <pre className="text-xs text-[#cbd5e1] bg-[#1a1c23] rounded-lg p-3 border border-[#2a2d35] whitespace-pre-wrap">{problem.constraints}</pre>
+                    <pre className="text-xs text-[#ababab] bg-[#1a1c23] rounded-lg p-3 border border-[#2a2d35] whitespace-pre-wrap">{problem.constraints}</pre>
                   </div>
                 )}
 
@@ -255,7 +255,7 @@ export default function ProblemWorkspace({
                 ))}
               </>
             ) : (
-              <div className="text-sm text-[#cbd5e1]">
+              <div className="text-sm text-[#ababab]">
                 {problem.editorial ? (
                   <div className="whitespace-pre-wrap leading-relaxed">{problem.editorial}</div>
                 ) : (
@@ -320,7 +320,7 @@ export default function ProblemWorkspace({
                     <div key={sampleCase.id} className="bg-[#16181d] border border-[#2a2d35] rounded-lg p-2.5">
                       <div className="text-[9px] uppercase tracking-wider text-[#ababab] font-bold mb-1.5">Case {index + 1}</div>
                       <div className="flex flex-col sm:flex-row sm:gap-4 text-[11px] font-mono">
-                        <div className="flex gap-2"><span className="text-[#ababab]">In:</span> <span className="text-[#cbd5e1] truncate">{sampleCase.input}</span></div>
+                        <div className="flex gap-2"><span className="text-[#ababab]">In:</span> <span className="text-[#ababab] truncate">{sampleCase.input}</span></div>
                         <div className="flex gap-2"><span className="text-[#ababab]">Out:</span> <span className="text-[#00d285] truncate">{sampleCase.expected_output}</span></div>
                       </div>
                     </div>
@@ -329,7 +329,7 @@ export default function ProblemWorkspace({
               ) : (
                 <div className="text-xs font-mono">
                   {runResult ? (
-                    <pre className="text-[#cbd5e1] whitespace-pre-wrap break-all">{runResult}</pre>
+                    <pre className="text-[#ababab] whitespace-pre-wrap break-all">{runResult}</pre>
                   ) : (
                     <p className="text-[#ababab] italic">Run or submit your code to see results.</p>
                   )}

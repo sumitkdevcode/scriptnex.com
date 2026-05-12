@@ -10,8 +10,14 @@ interface PageProps {
 async function getContest(slug: string) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contests/${slug}`, {
+        headers: { 'Accept': 'application/json' },
         next: { revalidate: 3600 }
     });
+    
+    if (!res.ok) return null;
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) return null;
+    
     return await res.json();
   } catch (e) {
     return null;

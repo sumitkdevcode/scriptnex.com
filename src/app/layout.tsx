@@ -11,35 +11,37 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "ScriptNex — Code. Certify. Excel.",
+    default: "ScriptNex — Programming & Learning Education Platform for Certifications",
     template: "%s | ScriptNex",
   },
   description:
-    "Practice coding challenges, earn certifications, and compete in programming contests on ScriptNex — India's premier competitive programming platform.",
+    "Master programming with ScriptNex. Enhance your learning education through interactive coding challenges, structured tracks, and earn a verified ScriptNex certificate.",
   keywords: [
-    "competitive programming",
-    "coding challenges",
-    "programming contests",
+    "learning education",
+    "learning",
+    "programming",
+    "certificate scriptnex",
+    "scriptnex",
     "coding certifications",
+    "programming courses",
     "learn to code",
-    "ScriptNex",
-    "HackerRank alternative",
-    "coding practice",
+    "tech education",
+    "competitive programming",
   ],
   authors: [{ name: "ScriptNex" }],
   openGraph: {
     type: "website",
     siteName: "ScriptNex",
-    title: "ScriptNex — Code. Certify. Excel.",
+    title: "ScriptNex — Programming & Learning Education Platform",
     description:
-      "Practice coding challenges, earn certifications, and compete in programming contests.",
+      "Master programming with ScriptNex. Enhance your learning education and earn a verified ScriptNex certificate.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ScriptNex — Code. Certify. Excel.",
+    title: "ScriptNex — Programming & Learning Education Platform",
     description:
-      "Practice coding challenges, earn certifications, and compete in programming contests.",
+      "Master programming with ScriptNex. Enhance your learning education and earn a verified ScriptNex certificate.",
   },
   robots: {
     index: true,
