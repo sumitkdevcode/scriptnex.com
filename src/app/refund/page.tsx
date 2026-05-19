@@ -1,11 +1,16 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
+import { getPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Refund Policy | ScriptNex',
-  description: 'Review our policy regarding refunds and subscription cancellations.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageMetadata('/refund');
+  return {
+    title: seo.title || 'Refund Policy | ScriptNex',
+    description: seo.description || 'Review our policy regarding refunds and subscription cancellations.',
+    ...seo,
+  };
+}
 
 export default function RefundPage() {
   return (

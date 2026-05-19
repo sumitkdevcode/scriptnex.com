@@ -51,9 +51,34 @@ export default async function ProblemDetailPage({ params }: PageProps) {
   const { slug } = await params;
   
   return (
-    <ProblemWorkspace
-      backHref="/problems"
-      problemSlug={slug}
-    />
+    <>
+      <ProblemWorkspace
+        backHref="/problems"
+        problemSlug={slug}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Problems',
+                item: 'https://scriptnex.com/problems',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                item: `https://scriptnex.com/problems/${slug}`,
+              },
+            ],
+          }),
+        }}
+      />
+    </>
   );
 }

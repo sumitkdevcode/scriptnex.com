@@ -66,6 +66,44 @@ export default function TrackDetailPage() {
         </div>
       </div>
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Tracks',
+                    item: 'https://scriptnex.com/tracks',
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: track.title,
+                    item: `https://scriptnex.com/tracks/${track.slug}`,
+                  },
+                ],
+              },
+              {
+                '@type': 'Course',
+                name: track.title,
+                description: track.description,
+                provider: {
+                  '@type': 'Organization',
+                  name: 'ScriptNex',
+                  sameAs: 'https://scriptnex.com',
+                },
+                timeRequired: `PT${track.estimated_hours}H`,
+              },
+            ],
+          }),
+        }}
+      />
     </div>
   );
 }

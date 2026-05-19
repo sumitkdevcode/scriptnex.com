@@ -1,11 +1,16 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
+import { getPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Terms and Conditions | ScriptNex',
-  description: 'Read the terms and conditions for using the ScriptNex platform.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageMetadata('/terms');
+  return {
+    title: seo.title || 'Terms and Conditions | ScriptNex',
+    description: seo.description || 'Read the terms and conditions for using the ScriptNex platform.',
+    ...seo,
+  };
+}
 
 export default function TermsPage() {
   return (

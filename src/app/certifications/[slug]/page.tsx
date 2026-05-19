@@ -116,6 +116,45 @@ export default function CertDetailPage() {
         </p>
       </div>
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  {
+                    '@type': 'ListItem',
+                    position: 1,
+                    name: 'Certifications',
+                    item: 'https://scriptnex.com/certifications',
+                  },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: cert.title,
+                    item: `https://scriptnex.com/certifications/${cert.slug}`,
+                  },
+                ],
+              },
+              {
+                '@type': 'Course',
+                name: cert.title,
+                description: cert.description,
+                provider: {
+                  '@type': 'Organization',
+                  name: 'ScriptNex',
+                  sameAs: 'https://scriptnex.com',
+                },
+                educationalCredentialAwarded: 'Certificate',
+                timeRequired: `PT${cert.duration_minutes}M`,
+              },
+            ],
+          }),
+        }}
+      />
     </div>
   );
 }

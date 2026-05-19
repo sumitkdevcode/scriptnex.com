@@ -1,11 +1,16 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Metadata } from 'next';
+import { getPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | ScriptNex',
-  description: 'Understand how ScriptNex collects, uses, and protects your personal information.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageMetadata('/privacy');
+  return {
+    title: seo.title || 'Privacy Policy | ScriptNex',
+    description: seo.description || 'Understand how ScriptNex collects, uses, and protects your personal information.',
+    ...seo,
+  };
+}
 
 export default function PrivacyPage() {
   return (

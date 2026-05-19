@@ -9,6 +9,9 @@ interface SeoData {
   og_title: string | null;
   og_description: string | null;
   og_image: string | null;
+  canonical_url: string | null;
+  robots_index: boolean;
+  robots_follow: boolean;
 }
 
 export async function getPageMetadata(path: string): Promise<Metadata> {
@@ -37,6 +40,15 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
 
     const seo: SeoData = json.data.seo;
 
+    // Build robots directive
+    const robotsParts: string[] = [];
+    if (seo.robots_index !== undefined) {
+      robotsParts.push(seo.robots_index ? 'index' : 'noindex');
+    }
+    if (seo.robots_follow !== undefined) {
+      robotsParts.push(seo.robots_follow ? 'follow' : 'nofollow');
+    }
+
     return {
       title: seo.title || undefined,
       description: seo.meta_description || undefined,
@@ -46,6 +58,13 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
         description: seo.og_description || seo.meta_description || undefined,
         images: seo.og_image ? [{ url: seo.og_image }] : undefined,
       },
+      ...(seo.canonical_url ? { alternates: { canonical: seo.canonical_url } } : {}),
+      ...(robotsParts.length > 0 ? {
+        robots: {
+          index: seo.robots_index ?? true,
+          follow: seo.robots_follow ?? true,
+        }
+      } : {}),
     };
   } catch (error) {
     console.error('Failed to fetch SEO metadata:', error);

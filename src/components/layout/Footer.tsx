@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-8">
           <div className="col-span-2 lg:col-span-2 flex flex-col items-start">
             <Link href="/" className="mb-6">
-              <img src="/logo-nav.png" alt="ScriptNex Logo" className="h-[54px] md:h-[60px] w-auto object-contain" />
+              <img src="/logo-nav.png" alt="ScriptNex — Learn Programming Online" className="h-[54px] md:h-[60px] w-auto object-contain" />
             </Link>
             
             <div className="flex flex-wrap gap-5 mb-8">
@@ -16,7 +16,6 @@ export default function Footer() {
                 { label: 'Instagram', href: 'https://www.instagram.com/scriptnex', icon: <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/> },
                 { label: 'GitHub', href: 'https://github.com/ScriptNex-Learning', icon: <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z" /> },
                 { label: 'YouTube', href: 'https://www.youtube.com/@scriptnex', icon: <path d="M21.582 6.186a2.63 2.63 0 0 0-1.846-1.868C18.106 3.882 12 3.882 12 3.882s-6.106 0-7.736.436a2.63 2.63 0 0 0-1.846 1.868C2 7.838 2 12 2 12s0 4.162.418 5.814a2.63 2.63 0 0 0 1.846 1.868c1.63.436 7.736.436 7.736.436s6.106 0 7.736-.436a2.63 2.63 0 0 0 1.846-1.868C22 16.162 22 12 22 12s0-4.162-.418-5.814zM9.912 15.176V8.824L15.38 12l-5.468 3.176z" /> },
-                { label: 'X', href: '#', icon: <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" /> },
               ].map((social) => (
                 <a 
                   key={social.label} 
@@ -50,46 +49,35 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="col-span-1">
+          <nav className="col-span-1" aria-label="Platform navigation">
             <h3 className="text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-3">
               <li><Link href="/problems" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Practice Problems</Link></li>
-              <li><Link href="/contests" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Contests</Link></li>
+              <li><Link href="/contests" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Coding Contests</Link></li>
               <li><Link href="/leaderboard" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Leaderboard</Link></li>
-              <li><Link href="/certifications" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Certifications</Link></li>
+              <li><Link href="/certifications" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Coding Certifications</Link></li>
             </ul>
-          </div>
+          </nav>
 
-          <div className="col-span-1">
+          <nav className="col-span-1" aria-label="Resources navigation">
             <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
               <li><Link href="/tracks" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Learning Tracks</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Documentation</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Discuss</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Blog</Link></li>
+              <li><Link href="/discuss" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Discuss</Link></li>
+              <li><Link href="/pricing" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Pricing</Link></li>
+              <li><a href="https://github.com/ScriptNex-Learning" target="_blank" rel="noopener noreferrer" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">GitHub</a></li>
             </ul>
-          </div>
+          </nav>
 
-          <div className="col-span-1">
-            <h3 className="text-white font-semibold mb-4">Developers</h3>
-            <ul className="space-y-3">
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">API Reference</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Open Source</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">GitHub</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Status</Link></li>
-            </ul>
-          </div>
-
-          <div className="col-span-2 sm:col-span-1">
+          <nav className="col-span-2 sm:col-span-1" aria-label="Company navigation">
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-3">
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">About Us</Link></li>
-              <li><Link href="#" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Contact</Link></li>
               <li><Link href="/privacy" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Terms of Service</Link></li>
               <li><Link href="/refund" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Refund Policy</Link></li>
+              <li><a href="mailto:support@scriptnex.com" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Contact Us</a></li>
             </ul>
-          </div>
+          </nav>
         </div>
 
         <div className="pt-8 border-t border-[#2a2d35] flex flex-col md:flex-row items-center justify-center">

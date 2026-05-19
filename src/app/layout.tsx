@@ -11,42 +11,71 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://scriptnex.com'),
   title: {
-    default: "ScriptNex — Programming & Learning Education Platform for Certifications",
+    default: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
     template: "%s | ScriptNex",
   },
   description:
-    "Master programming with ScriptNex. Enhance your learning education through interactive coding challenges, structured tracks, and earn a verified ScriptNex certificate.",
+    "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
   keywords: [
-    "learning education",
-    "learning",
-    "programming",
-    "certificate scriptnex",
-    "scriptnex",
+    "learn programming online",
+    "learn coding for free",
+    "coding certificate online",
+    "programming challenges",
+    "online coding platform",
     "coding certifications",
-    "programming courses",
     "learn to code",
-    "tech education",
     "competitive programming",
+    "programming courses",
+    "coding practice",
+    "scriptnex",
+    "programming education",
+    "software engineering",
+    "coding contests",
   ],
-  authors: [{ name: "ScriptNex" }],
+  authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
+  creator: "ScriptNex",
+  publisher: "ScriptNex",
+  alternates: {
+    canonical: "https://scriptnex.com",
+  },
   openGraph: {
     type: "website",
     siteName: "ScriptNex",
-    title: "ScriptNex — Programming & Learning Education Platform",
+    title: "ScriptNex — Learn Programming Online | Free Coding & Certifications",
     description:
-      "Master programming with ScriptNex. Enhance your learning education and earn a verified ScriptNex certificate.",
+      "Learn programming online for free. Practice coding challenges, follow structured tracks, and earn verified certificates with ScriptNex.",
     locale: "en_US",
+    url: "https://scriptnex.com",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ScriptNex - Master Programming",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ScriptNex — Programming & Learning Education Platform",
+    site: "@scriptnex",
+    creator: "@scriptnex",
+    title: "ScriptNex — Learn Programming Online | Free Coding & Certifications",
     description:
-      "Master programming with ScriptNex. Enhance your learning education and earn a verified ScriptNex certificate.",
+      "Learn programming online for free. Practice coding challenges, follow structured tracks, and earn verified certificates with ScriptNex.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -73,6 +102,65 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-full flex flex-col font-[family-name:var(--font-inter)]">
+        {/* Organization + WebSite JSON-LD for Google Knowledge Panel & Sitelinks */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': 'https://scriptnex.com/#organization',
+                  name: 'ScriptNex',
+                  url: 'https://scriptnex.com',
+                  logo: {
+                    '@type': 'ImageObject',
+                    url: 'https://scriptnex.com/logo.png',
+                    width: 512,
+                    height: 512,
+                  },
+                  sameAs: [
+                    'https://www.linkedin.com/company/scriptnex/',
+                    'https://www.instagram.com/scriptnex',
+                    'https://github.com/ScriptNex-Learning',
+                    'https://www.youtube.com/@scriptnex',
+                  ],
+                  description: 'ScriptNex is a free online programming education platform offering coding challenges, structured learning tracks, live contests, and verified coding certifications.',
+                  foundingDate: '2024',
+                  contactPoint: {
+                    '@type': 'ContactPoint',
+                    contactType: 'customer support',
+                    email: 'support@scriptnex.com',
+                  },
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://scriptnex.com/#website',
+                  url: 'https://scriptnex.com',
+                  name: 'ScriptNex',
+                  publisher: { '@id': 'https://scriptnex.com/#organization' },
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: {
+                      '@type': 'EntryPoint',
+                      urlTemplate: 'https://scriptnex.com/problems?search={search_term_string}',
+                    },
+                    'query-input': 'required name=search_term_string',
+                  },
+                },
+                {
+                  '@type': 'EducationalOrganization',
+                  '@id': 'https://scriptnex.com/#edu',
+                  name: 'ScriptNex',
+                  url: 'https://scriptnex.com',
+                  sameAs: 'https://scriptnex.com',
+                  description: 'Online coding education platform with certifications, learning tracks, and programming contests.',
+                },
+              ],
+            }),
+          }}
+        />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
