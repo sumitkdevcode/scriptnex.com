@@ -10,74 +10,82 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://scriptnex.com'),
-  title: {
-    default: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
-    template: "%s | ScriptNex",
-  },
-  description:
-    "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
-  keywords: [
-    "learn programming online",
-    "learn coding for free",
-    "coding certificate online",
-    "programming challenges",
-    "online coding platform",
-    "coding certifications",
-    "learn to code",
-    "competitive programming",
-    "programming courses",
-    "coding practice",
-    "scriptnex",
-    "programming education",
-    "software engineering",
-    "coding contests",
-  ],
-  authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
-  creator: "ScriptNex",
-  publisher: "ScriptNex",
-  alternates: {
-    canonical: "https://scriptnex.com",
-  },
-  openGraph: {
-    type: "website",
-    siteName: "ScriptNex",
-    title: "ScriptNex — Learn Programming Online | Free Coding & Certifications",
-    description:
-      "Learn programming online for free. Practice coding challenges, follow structured tracks, and earn verified certificates with ScriptNex.",
-    locale: "en_US",
-    url: "https://scriptnex.com",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "ScriptNex - Master Programming",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@scriptnex",
-    creator: "@scriptnex",
-    title: "ScriptNex — Learn Programming Online | Free Coding & Certifications",
-    description:
-      "Learn programming online for free. Practice coding challenges, follow structured tracks, and earn verified certificates with ScriptNex.",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+export async function generateMetadata(): Promise<Metadata> {
+  let title = "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications";
+  let description = "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.";
+  let keywords = "learn programming online, learn coding for free, coding certificate online, programming challenges, online coding platform";
+  let ogImage = "/og-image.png";
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seo?page=home`, {
+      next: { revalidate: 60 }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.data) {
+        title = data.data.title || title;
+        description = data.data.description || description;
+        keywords = data.data.keywords || keywords;
+        if (data.data.og_image) {
+          ogImage = data.data.og_image;
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch SEO metadata', error);
+  }
+
+  return {
+    metadataBase: new URL('https://scriptnex.com'),
+    title: {
+      default: title,
+      template: "%s | ScriptNex",
+    },
+    description: description,
+    keywords: keywords.split(',').map((k: string) => k.trim()),
+    authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
+    creator: "ScriptNex",
+    publisher: "ScriptNex",
+    alternates: {
+      canonical: "https://scriptnex.com",
+    },
+    openGraph: {
+      type: "website",
+      siteName: "ScriptNex",
+      title: title,
+      description: description,
+      locale: "en_US",
+      url: "https://scriptnex.com",
+      images: [
+        {
+          url: ogImage.startsWith('http') ? ogImage : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '')}/storage/${ogImage}`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@scriptnex",
+      creator: "@scriptnex",
+      title: title,
+      description: description,
+      images: [ogImage.startsWith('http') ? ogImage : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '')}/storage/${ogImage}`],
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-};
+  };
+}
 
 export default function RootLayout({
   children,
