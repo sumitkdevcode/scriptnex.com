@@ -321,7 +321,7 @@ export default function CertificationExamPage() {
     } finally {
       setIsRunning(false);
     }
-  }, [activeQuestion, answers, attemptId, exam, selectedLangId, submitting]);
+  }, [activeQuestion, answers, attemptId, exam, isRunning, selectedLangId, submitting]);
 
   if (loading) {
     return (
