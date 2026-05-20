@@ -49,8 +49,8 @@ export default function DiscussionsPage() {
       <div className="max-w-3xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Discussions</h1>
-            <p className="text-[#ababab] text-sm">Ask questions, share knowledge, connect with the community</p>
+            <h1 className="text-3xl font-bold mb-1">Coding Discussion Forum</h1>
+            <p className="text-[#ababab] text-sm">Ask questions, share solutions, and connect with the developer community</p>
           </div>
           {isAuthenticated && (
             <button onClick={() => setShowNew(!showNew)} className="px-4 py-2.5 bg-[#00d285] rounded-xl text-xs font-bold text-black hover:bg-[#00e691] transition-colors">

@@ -1,424 +1,70 @@
-'use client';
+import { Metadata } from 'next';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { api } from '@/lib/api';
-import { useAuth } from '@/contexts/AuthContext';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import Link from 'next/link';
-import Image from 'next/image';
-import ActivityGraph from '@/components/profile/ActivityGraph';
-import DownloadButton from '@/components/certificate/DownloadButton';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://admin.scriptnex.com/api/v1';
 
-interface PublicProfile {
-  id: number; name: string; username: string; avatar: string | null;
-  bio: string | null; github_url: string | null; linkedin_url: string | null;
-  created_at: string;
-}
-
-interface UserStats {
-  problems_solved: number; acceptance_rate: number;
-  easy_solved: number; medium_solved: number; hard_solved: number;
-  current_streak: number; certificates_earned: number;
-  submission_calendar: Record<string, number>;
-}
-
-interface Certificate {
-  uuid: string;
-  created_at: string;
-  issued_at?: string;
-  verification_url?: string;
-  download_paid?: boolean;
-  download_price_paise?: number;
-  certification?: {
-    title: string;
-    slug?: string;
-    badge_image_url?: string;
-    difficulty_level?: string;
+interface PageProps {
+  params: {
+    username: string;
   };
 }
 
-interface OwnedCertificatesResponse {
-  certificates: Certificate[];
+async function getUser(username: string) {
+  try {
+    const res = await fetch(`${API_BASE}/users/${username}`, {
+      headers: { 'Accept': 'application/json' },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
-interface PublicCertificatesResponse {
-  certificates: Certificate[];
-}
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { username } = await params;
+  const data = await getUser(username);
+  const user = data?.data?.user;
+  const stats = data?.data?.stats;
 
-export default function ProfilePage() {
-  const params = useParams();
-  const username = params.username as string;
-  const { user: currentUser } = useAuth();
-  const [profile, setProfile] = useState<PublicProfile | null>(null);
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!username) return;
-
-    let cancelled = false;
-
-    const fetchProfile = async () => {
-      setLoading(true);
-
-      try {
-        const [profileRes, publicCertificatesRes] = await Promise.all([
-          api.get<{ user: PublicProfile; stats: UserStats; certificates?: Certificate[] }>(
-            `/users/${username}`,
-            { force: true }
-          ),
-          api.get<PublicCertificatesResponse>(`/certificates/user/${username}`, { force: true }).catch(() => null),
-        ]);
-
-        if (cancelled) return;
-
-        const embeddedCertificates = Array.isArray(profileRes.data.certificates) ? profileRes.data.certificates : [];
-        const publicCertificates = publicCertificatesRes?.data.certificates ?? embeddedCertificates;
-        const visiblePublicCertificates = Array.isArray(publicCertificates)
-          ? publicCertificates.filter((certificate) => certificate.download_paid === true)
-          : [];
-
-        setProfile(profileRes.data.user);
-        setStats(profileRes.data.stats);
-        setCertificates(visiblePublicCertificates);
-
-        if (currentUser?.username === username) {
-          try {
-            const ownerRes = await api.get<OwnedCertificatesResponse>('/my-certificates', { force: true });
-            if (cancelled) return;
-
-            const ownerCerts = Array.isArray(ownerRes.data.certificates) ? ownerRes.data.certificates : [];
-            setCertificates(ownerCerts);
-          } catch {
-            // Keep public certificate data if the owner-specific request fails.
-          }
-        }
-      } catch {
-        if (cancelled) return;
-
-        setProfile(null);
-        setStats(null);
-        setCertificates([]);
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
+  if (!user) {
+    return {
+      title: 'User Not Found',
+      description: 'The requested user profile could not be found on ScriptNex.',
+      robots: { index: false, follow: false },
     };
+  }
 
-    void fetchProfile();
+  const solvedText = stats?.problems_solved ? `${stats.problems_solved} problems solved` : '';
+  const certsText = stats?.certificates_earned ? `${stats.certificates_earned} certificates earned` : '';
+  const statsText = [solvedText, certsText].filter(Boolean).join(', ');
 
-    return () => {
-      cancelled = true;
-    };
-  }, [username, currentUser?.username]);
+  const title = `${user.name} (@${user.username}) — Developer Profile`;
+  const description = user.bio
+    ? `${user.bio.substring(0, 120)}${statsText ? ` — ${statsText}` : ''} on ScriptNex.`
+    : `${user.name} on ScriptNex.${statsText ? ` ${statsText}.` : ''} View their coding profile, certifications, and activity.`;
 
-  if (loading) return (
-    <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]"><Navbar />
-      <div className="flex justify-center py-32"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#00d285]" /></div>
-    </div>
-  );
-
-  if (!profile) return (
-    <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]"><Navbar />
-      <div className="flex flex-col items-center py-32 gap-4">
-        <div className="text-6xl">🔍</div>
-        <h1 className="text-2xl font-bold">User not found</h1>
-        <p className="text-[#ababab]">@{username} doesn&apos;t exist.</p>
-      </div><Footer />
-    </div>
-  );
-
-  const isOwn = currentUser?.username === username;
-  const totalSolved = stats?.problems_solved || 0;
-  const easy = stats?.easy_solved || 0;
-  const medium = stats?.medium_solved || 0;
-  const hard = stats?.hard_solved || 0;
-  const visibleCertificateCount = certificates.length;
-  const totalProblems = 3920; // Hardcoded max like in screenshot
-
-  const radius = 40;
-  const circumference = 2 * Math.PI * radius;
-  const easyOffset = circumference - (easy / totalProblems) * circumference;
-  const mediumOffset = circumference - (medium / totalProblems) * circumference;
-  const hardOffset = circumference - (hard / totalProblems) * circumference;
-
-  return (
-    <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 pt-4 pb-10 flex flex-col md:flex-row gap-6">
-        
-        {/* Left Sidebar */}
-        <div className="w-full md:w-[260px] shrink-0 flex flex-col gap-6">
-          
-          {/* Main Info Card */}
-          <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6">
-            <div className="flex gap-4 items-center mb-4">
-              {profile.avatar ? (
-                <div
-                  className="w-16 h-16 rounded-full bg-cover bg-center shrink-0 border border-[#2a2d35]"
-                  style={{ backgroundImage: `url(${profile.avatar})` }}
-                  aria-hidden="true"
-                />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00d285] to-[#00a669] flex items-center justify-center text-2xl font-bold text-black shrink-0">
-                  {profile.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div>
-                <h1 className="text-sm font-bold truncate">{profile.name}</h1>
-                <p className="text-xs text-[#ababab]">@{profile.username}</p>
-              </div>
-            </div>
-            
-            {profile.bio && <p className="text-xs text-[#cbd5e1] mb-4 leading-relaxed">{profile.bio}</p>}
-            
-            {isOwn && (
-              <Link href="/dashboard/settings" className="block w-full text-center py-2 bg-[#00d285]/10 text-[#00d285] hover:bg-[#00d285]/20 rounded-md text-xs font-semibold transition-colors mb-4">
-                Edit Profile
-              </Link>
-            )}
-
-            <div className="flex flex-col gap-2 text-xs text-[#ababab]">
-              <div className="flex items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>Member since {new Date(profile.created_at).getFullYear()}</span>
-              </div>
-              {profile.github_url && (
-                <a href={profile.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors truncate">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37(3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                  GitHub
-                </a>
-              )}
-              {profile.linkedin_url && (
-                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors truncate">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                  LinkedIn
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Community Stats */}
-          <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6">
-            <h2 className="text-xs font-semibold text-[#f8fafc] mb-3">Community Stats</h2>
-            <div className="flex flex-col gap-3 text-xs">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#ababab]">
-                  <span className="text-blue-400">👁</span> Views
-                </div>
-                <span className="font-semibold">0</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#ababab]">
-                  <span className="text-[#00d285]">✓</span> Solution
-                </div>
-                <span className="font-semibold">0</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#ababab]">
-                  <span className="text-[#00d285]">💬</span> Discuss
-                </div>
-                <span className="font-semibold">0</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#ababab]">
-                  <span className="text-yellow-500">⭐</span> Reputation
-                </div>
-                <span className="font-semibold">0</span>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-
-        {/* Right Main Area */}
-        <div className="flex-1 flex flex-col gap-6">
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Solved Problems Chart Widget */}
-            <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6 flex items-center justify-between">
-              <div className="relative w-[110px] h-[110px] flex items-center justify-center shrink-0">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#2a2d35" strokeWidth="4" />
-                  {/* Hard */}
-                  <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#ef4444" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={hardOffset} strokeLinecap="round" />
-                  {/* Medium */}
-                  <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#f59e0b" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={mediumOffset} strokeLinecap="round" />
-                  {/* Easy */}
-                  <circle cx="50" cy="50" r={radius} fill="transparent" stroke="#00d285" strokeWidth="4" strokeDasharray={circumference} strokeDashoffset={easyOffset} strokeLinecap="round" />
-                </svg>
-                <div className="absolute flex flex-col items-center justify-center text-center">
-                  <div className="text-xl font-bold text-[#f8fafc] leading-none">{totalSolved}</div>
-                  <div className="text-[10px] text-[#ababab] mt-1">Solved</div>
-                </div>
-              </div>
-              
-              <div className="flex-1 ml-6 flex flex-col gap-3">
-                <div className="bg-[#16181d] rounded-md p-2 flex justify-between items-center border border-[#2a2d35]">
-                  <div className="text-[11px] text-[#00d285] font-semibold">Easy</div>
-                  <div className="text-xs font-bold">{easy}<span className="text-[#ababab] text-[10px] font-normal"> / 941</span></div>
-                </div>
-                <div className="bg-[#16181d] rounded-md p-2 flex justify-between items-center border border-[#2a2d35]">
-                  <div className="text-[11px] text-[#f59e0b] font-semibold">Med.</div>
-                  <div className="text-xs font-bold">{medium}<span className="text-[#ababab] text-[10px] font-normal"> / 2050</span></div>
-                </div>
-                <div className="bg-[#16181d] rounded-md p-2 flex justify-between items-center border border-[#2a2d35]">
-                  <div className="text-[11px] text-[#ef4444] font-semibold">Hard</div>
-                  <div className="text-xs font-bold">{hard}<span className="text-[#ababab] text-[10px] font-normal"> / 929</span></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Badges Widget */}
-            <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6 relative">
-              <div className="flex justify-between items-start mb-2">
-                <div className="text-xs text-[#ababab] font-semibold">Certificates</div>
-                <Link href={`/${username}/badges`} className="text-[#ababab] hover:text-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </Link>
-              </div>
-              <div className="text-2xl font-bold mb-4">{visibleCertificateCount}</div>
-              {visibleCertificateCount > 0 ? (
-                <div className="absolute bottom-5 right-5 text-4xl opacity-80">📜</div>
-              ) : (
-                <div className="text-xs text-[#ababab] absolute bottom-5 left-5">No certificates yet</div>
-              )}
-            </div>
-          </div>
-
-          {/* Activity Heatmap */}
-          <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md p-6">
-            <div className="flex justify-between text-xs text-[#ababab] mb-4">
-              <span>
-                <strong className="text-white">
-                  {Object.values(stats?.submission_calendar || {}).reduce((a, b) => a + b, 0)} submissions
-                </strong> in the past one year
-              </span>
-              <div className="flex gap-4">
-                <span>Total active days: <strong>{stats?.current_streak || 0}</strong></span>
-                <span>Max streak: <strong>{stats?.current_streak || 0}</strong></span>
-              </div>
-            </div>
-            
-            {/* Activity Heatmap Grid */}
-            <ActivityGraph calendar={stats?.submission_calendar || {}} />
-          </div>
-
-          {/* Certificates Section */}
-          {certificates.length > 0 && (
-            <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md overflow-hidden">
-              <div className="flex border-b border-[#2a2d35] bg-[#16181d] px-5 py-3">
-                <span className="text-xs font-semibold text-white flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  {isOwn ? 'My Certificates' : 'Certificates'}
-                </span>
-              </div>
-              <div className="p-2 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
-                {certificates.map((cert) => {
-                  const isPaid = cert.download_paid;
-                  return (
-                    <div key={cert.uuid} className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden flex flex-col group hover:border-[#00d285]/30 transition-all">
-                      {/* Mini Certificate Preview */}
-                      <div className="relative aspect-[1.414] w-full bg-white overflow-hidden">
-                        <Image
-                          src="/certificate.png?v=2" 
-                          alt="Template" 
-                          fill
-                          unoptimized
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className={`absolute inset-0 w-full h-full object-cover ${isOwn && !isPaid ? 'blur-[6px]' : ''}`}
-                        />
-                        <div className={`absolute inset-0 flex flex-col items-center justify-center p-[6%] text-center scale-[0.3] origin-center whitespace-nowrap ${isOwn && !isPaid ? 'blur-[6px]' : ''}`}>
-                          <div className="flex-1"></div>
-                          <h1 className="text-4xl font-bold text-gray-800 font-serif mb-2 uppercase">{profile?.name}</h1>
-                          <p className="text-lg text-gray-600 mb-4">has completed</p>
-                          <h2 className="text-3xl font-bold text-[#00d285]">{cert.certification?.title}</h2>
-                          <div className="mt-auto"></div>
-                        </div>
-                        
-                        {/* Lock Overlay for Unpaid Certificates (Owner view) */}
-                        {isOwn && !isPaid && (
-                          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
-                            <div className="bg-[#1a1c23] p-3 rounded-full mb-2 shadow-2xl border border-white/20">
-                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d285" strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                            </div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d285]">PDF Locked</span>
-                          </div>
-                        )}
-
-                        {/* Overlay gradient for depth */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-                      </div>
-                      
-                      <div className="p-2 flex flex-col gap-2">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-[11px] font-semibold truncate leading-tight">{cert.certification?.title}</h4>
-                          <p className="text-[9px] text-[#ababab]">Earned on {new Date(cert.created_at).toLocaleDateString()}</p>
-                        </div>
-                        <div className="flex gap-2">
-                          {isOwn ? (
-                            <DownloadButton 
-                              cert={cert}
-                              userName={profile?.name || ''}
-                              onSuccess={() => {
-                                api.get<OwnedCertificatesResponse>('/my-certificates', { force: true })
-                                  .then(res => {
-                                    const certs = Array.isArray(res.data.certificates) ? res.data.certificates : [];
-                                    setCertificates(certs);
-                                  })
-                                  .catch(() => {});
-                              }}
-                              className="flex-1 py-1.5 text-center bg-[#00d285] text-[#0a0a0a] text-[10px] font-bold rounded hover:bg-[#00b371] transition-colors"
-                              label={isPaid ? 'Download' : 'Unlock'}
-                            />
-                          ) : (
-                            <DownloadButton 
-                              cert={cert}
-                              userName={profile?.name || ''}
-                              className="flex-1 py-1.5 text-center bg-[#2a2d35] text-white text-[10px] font-bold rounded hover:bg-[#363a45] transition-colors"
-                              label="Download PDF"
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Recent Submissions */}
-          <div className="bg-[#1a1c23] border border-[#2a2d35] rounded-md overflow-hidden flex flex-col min-h-[300px]">
-            <div className="flex border-b border-[#2a2d35] bg-[#16181d] px-2 py-2 gap-2">
-              <button className="px-4 py-1.5 text-xs font-semibold text-[#f8fafc] bg-[#2a2d35] rounded-md flex items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Recent AC
-              </button>
-              <button className="px-4 py-1.5 text-xs font-semibold text-[#ababab] hover:bg-[#2a2d35]/50 rounded-md">
-                Solutions
-              </button>
-            </div>
-            <div className="flex-1 p-4 flex flex-col">
-              {totalSolved > 0 ? (
-                <div className="text-sm text-[#ababab] text-center mt-10">
-                  Recent submissions will appear here.
-                </div>
-              ) : (
-                <div className="flex-1 flex items-center justify-center text-sm text-[#ababab]">
-                  No recent submissions.
-                </div>
-              )}
-            </div>
-          </div>
-          
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://scriptnex.com/${username}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://scriptnex.com/${username}`,
+      type: 'profile',
+      ...(user.avatar ? { images: [{ url: user.avatar, alt: `${user.name} profile picture` }] } : {}),
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
 }
+
+export { default } from './ProfileClient';

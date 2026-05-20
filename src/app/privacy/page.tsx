@@ -4,12 +4,7 @@ import { Metadata } from 'next';
 import { getPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getPageMetadata('/privacy');
-  return {
-    title: seo.title || 'Privacy Policy | ScriptNex',
-    description: seo.description || 'Understand how ScriptNex collects, uses, and protects your personal information.',
-    ...seo,
-  };
+  return await getPageMetadata('/privacy');
 }
 
 export default function PrivacyPage() {

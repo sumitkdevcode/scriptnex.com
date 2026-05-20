@@ -119,8 +119,8 @@ export default function ProblemsPage() {
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
         <div className="flex items-end justify-between mb-2">
           <div>
-            <h1 className="text-2xl font-bold mb-0.5">Practice</h1>
-            <p className="text-[#ababab] text-[10px]">Sharpen your skills with {totalCount.toLocaleString()} coding challenges</p>
+            <h1 className="text-2xl font-bold mb-0.5">Practice Coding Problems</h1>
+            <p className="text-[#ababab] text-[10px]">Sharpen your programming skills with {totalCount.toLocaleString()} coding challenges across algorithms, data structures, and more</p>
           </div>
           <div className="flex bg-[#16181d] p-1 rounded-md border border-[#2a2d35]">
             <Link href="/problems" className="px-4 py-1.5 bg-[#00d285] text-black text-xs font-bold rounded-md transition-all">Problems</Link>

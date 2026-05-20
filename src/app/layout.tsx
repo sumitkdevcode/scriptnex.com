@@ -10,82 +10,67 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  let title = "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications";
-  let description = "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.";
-  let keywords = "learn programming online, learn coding for free, coding certificate online, programming challenges, online coding platform";
-  let ogImage = "/og-image.png";
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/seo?page=home`, {
-      next: { revalidate: 60 }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && data.data) {
-        title = data.data.title || title;
-        description = data.data.description || description;
-        keywords = data.data.keywords || keywords;
-        if (data.data.og_image) {
-          ogImage = data.data.og_image;
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch SEO metadata', error);
-  }
-
-  return {
-    metadataBase: new URL('https://scriptnex.com'),
-    title: {
-      default: title,
-      template: "%s | ScriptNex",
-    },
-    description: description,
-    keywords: keywords.split(',').map((k: string) => k.trim()),
-    authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
-    creator: "ScriptNex",
-    publisher: "ScriptNex",
-    alternates: {
-      canonical: "https://scriptnex.com",
-    },
-    openGraph: {
-      type: "website",
-      siteName: "ScriptNex",
-      title: title,
-      description: description,
-      locale: "en_US",
-      url: "https://scriptnex.com",
-      images: [
-        {
-          url: ogImage.startsWith('http') ? ogImage : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '')}/storage/${ogImage}`,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      site: "@scriptnex",
-      creator: "@scriptnex",
-      title: title,
-      description: description,
-      images: [ogImage.startsWith('http') ? ogImage : `${process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '')}/storage/${ogImage}`],
-    },
-    robots: {
+export const metadata: Metadata = {
+  metadataBase: new URL('https://scriptnex.com'),
+  title: {
+    default: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
+    template: "%s | ScriptNex",
+  },
+  description: "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
+  keywords: [
+    "learn programming online",
+    "learn coding for free",
+    "coding certificate online",
+    "programming challenges",
+    "online coding platform",
+    "free coding courses",
+    "competitive programming",
+    "coding practice",
+    "programming contests",
+    "verified coding certificate",
+  ],
+  authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
+  creator: "ScriptNex",
+  publisher: "ScriptNex",
+  alternates: {
+    canonical: "https://scriptnex.com",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "ScriptNex",
+    title: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
+    description: "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
+    locale: "en_US",
+    url: "https://scriptnex.com",
+    images: [
+      {
+        url: "https://scriptnex.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ScriptNex — Learn Programming Online",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@scriptnex",
+    creator: "@scriptnex",
+    title: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
+    description: "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
+    images: ["https://scriptnex.com/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
-  };
-}
+  },
+};
 
 export default function RootLayout({
   children,
@@ -94,7 +79,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <head>
+      <body className="min-h-full flex flex-col font-[family-name:var(--font-inter)]">
+        {/* Google Analytics — placed in body, not head, per Next.js App Router best practice */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-W2BD0W4NLP"
           strategy="afterInteractive"
@@ -104,13 +90,11 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-W2BD0W4NLP');
           `}
         </Script>
-      </head>
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-inter)]">
-        {/* Organization + WebSite JSON-LD for Google Knowledge Panel & Sitelinks */}
+
+        {/* Organization + WebSite + EducationalOrganization JSON-LD for Google Knowledge Panel & Sitelinks */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -134,7 +118,7 @@ export default function RootLayout({
                     'https://github.com/ScriptNex-Learning',
                     'https://www.youtube.com/@scriptnex',
                   ],
-                  description: 'ScriptNex is a free online programming education platform offering coding challenges, structured learning tracks, live contests, and verified coding certifications.',
+                  description: 'ScriptNex is a free online programming platform offering coding challenges, structured learning tracks, live contests, and verified coding certifications.',
                   foundingDate: '2024',
                   contactPoint: {
                     '@type': 'ContactPoint',
@@ -163,7 +147,7 @@ export default function RootLayout({
                   name: 'ScriptNex',
                   url: 'https://scriptnex.com',
                   sameAs: 'https://scriptnex.com',
-                  description: 'Online coding education platform with certifications, learning tracks, and programming contests.',
+                  description: 'Online coding platform with certifications, learning tracks, and programming contests.',
                 },
               ],
             }),

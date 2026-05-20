@@ -67,8 +67,8 @@ export default function LeaderboardPage() {
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
-        <h1 className="text-2xl font-bold mb-1">Leaderboard</h1>
-        <p className="text-[#ababab] text-sm mb-4">Top performers on ScriptNex</p>
+        <h1 className="text-2xl font-bold mb-1">Global Coding Leaderboard</h1>
+        <p className="text-[#ababab] text-sm mb-4">Top performers ranked by problems solved and coding rating on ScriptNex</p>
 
         <div className="bg-[#16181d] border border-[#2a2d35] rounded-md overflow-hidden mb-4">
           <div className="grid grid-cols-[50px_1fr_80px] md:grid-cols-[80px_1fr_120px_120px] gap-2 md:gap-4 px-4 md:px-6 py-3 border-b border-[#2a2d35] text-[9px] md:text-[10px] uppercase tracking-widest text-[#ababab] font-semibold">

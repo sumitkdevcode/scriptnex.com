@@ -1,13 +1,40 @@
+'use client';
+
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState, FormEvent } from 'react';
+import { api } from '@/lib/api';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email || status === 'loading') return;
+
+    setStatus('loading');
+    try {
+      const res = await api.post<{ message: string }>('/newsletter/subscribe', { email });
+      setStatus('success');
+      setMessage(res.data.message || 'Successfully subscribed! 🎉');
+      setEmail('');
+      setTimeout(() => { setStatus('idle'); setMessage(''); }, 5000);
+    } catch (err: unknown) {
+      setStatus('error');
+      setMessage(err instanceof Error ? err.message : 'Something went wrong');
+      setTimeout(() => { setStatus('idle'); setMessage(''); }, 4000);
+    }
+  };
+
   return (
     <footer className="bg-[#0f1115] border-t border-[#2a2d35] pt-16 pb-4 relative z-10 mt-auto">
       <div className="w-full px-6 md:px-12 lg:px-24">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-8">
           <div className="col-span-2 lg:col-span-2 flex flex-col items-start">
             <Link href="/" className="mb-6">
-              <img src="/logo-nav.png" alt="ScriptNex — Learn Programming Online" className="h-[54px] md:h-[60px] w-auto object-contain" />
+              <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[54px] md:h-[60px] w-auto object-contain" />
             </Link>
             
             <div className="flex flex-wrap gap-5 mb-8">
@@ -36,18 +63,31 @@ export default function Footer() {
               <p className="text-[#ababab] text-[15px] mb-3">
                 Get product updates and news from ScriptNex.
               </p>
-              <div className="flex flex-col gap-2.5">
+              <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5">
                 <input 
                   type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email" 
+                  required
                   className="bg-[#121212] border border-[#2a2d35] text-white text-[13px] rounded px-3 py-1.5 focus:outline-none focus:border-[#4a4d55] transition-colors w-full"
                 />
-                <button className="bg-[#00d285] hover:bg-[#00e691] text-black font-bold text-[12px] rounded px-3.5 py-[5px] transition-colors self-start">
-                  Subscribe
+                <button 
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="bg-[#00d285] hover:bg-[#00e691] text-black font-bold text-[12px] rounded px-3.5 py-[5px] transition-colors self-start disabled:opacity-50"
+                >
+                  {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
                 </button>
-              </div>
+                {message && (
+                  <p className={`text-[11px] font-medium ${status === 'success' ? 'text-[#00d285]' : status === 'error' ? 'text-[#ef4444]' : 'text-[#ababab]'}`}>
+                    {message}
+                  </p>
+                )}
+              </form>
             </div>
           </div>
+
 
           <nav className="col-span-1" aria-label="Platform navigation">
             <h3 className="text-white font-semibold mb-4">Platform</h3>
@@ -69,7 +109,17 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <nav className="col-span-2 sm:col-span-1" aria-label="Company navigation">
+          <nav className="col-span-1" aria-label="Developers navigation">
+            <h3 className="text-white font-semibold mb-4">Developers</h3>
+            <ul className="space-y-3">
+              <li><Link href="/blog" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Blog</Link></li>
+              <li><Link href="/changelog" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Changelog</Link></li>
+              <li><Link href="/open-source" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Open Source</Link></li>
+              <li><Link href="/careers" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Careers</Link></li>
+            </ul>
+          </nav>
+
+          <nav className="col-span-1" aria-label="Company navigation">
             <h3 className="text-white font-semibold mb-4">Company</h3>
             <ul className="space-y-3">
               <li><Link href="/privacy" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Privacy Policy</Link></li>

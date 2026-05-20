@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { api, ApiError } from '@/lib/api';
@@ -181,8 +181,16 @@ export default function PricingPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
+  const [config, setConfig] = useState<{ active_gateway: string } | null>(null);
+  const [gatewayModal, setGatewayModal] = useState<string | null>(null); // stores planId
 
-  const handleCheckout = async (planId: string) => {
+  useEffect(() => {
+    api.get<{ active_gateway: string }>('/payment/config')
+      .then(res => setConfig(res.data))
+      .catch(() => {});
+  }, []);
+
+  const handleCheckout = async (planId: string, selectedGateway?: 'razorpay' | 'cashfree') => {
     if (planId === 'free') {
       router.push('/register');
       return;
@@ -191,6 +199,11 @@ export default function PricingPage() {
       router.push('/login?redirect=/pricing');
       return;
     }
+    if (config?.active_gateway === 'both' && !selectedGateway) {
+      setGatewayModal(planId);
+      return;
+    }
+
     setLoading(planId);
     let openedCheckout = false;
 
@@ -215,7 +228,10 @@ export default function PricingPage() {
     };
 
     try {
-      const res = await api.post<CheckoutOrder>('/checkout/premium', { plan: planId });
+      const res = await api.post<CheckoutOrder>('/checkout/premium', { 
+        plan: planId,
+        ...(selectedGateway && { gateway: selectedGateway })
+      });
 
       if (res.data.gateway === 'cashfree') {
         const checkoutLoaded = await loadCashfreeCheckout();
@@ -311,6 +327,26 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0f1115] text-[#f8fafc]">
+      {gatewayModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#16181d] border border-[#2a2d35] rounded-2xl p-6 w-full max-w-sm shadow-2xl relative">
+            <button onClick={() => setGatewayModal(null)} className="absolute top-4 right-4 text-[#ababab] hover:text-white">✕</button>
+            <h3 className="text-xl font-bold mb-2">Select Payment Method</h3>
+            <p className="text-sm text-[#ababab] mb-6">Choose your preferred secure payment gateway to complete the transaction.</p>
+            <div className="flex flex-col gap-3">
+              <button onClick={() => { setGatewayModal(null); void handleCheckout(gatewayModal, 'razorpay'); }} className="flex items-center justify-between p-4 rounded-xl border border-[#2a2d35] bg-[#0f1115] hover:border-[#00d285] transition-colors">
+                <span className="font-bold text-[#f8fafc]">Razorpay</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#00d285] bg-[#00d285]/10 px-2 py-1 rounded">Popular</span>
+              </button>
+              <button onClick={() => { setGatewayModal(null); void handleCheckout(gatewayModal, 'cashfree'); }} className="flex items-center justify-between p-4 rounded-xl border border-[#2a2d35] bg-[#0f1115] hover:border-[#3b82f6] transition-colors">
+                <span className="font-bold text-[#f8fafc]">Cashfree</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#3b82f6] bg-[#3b82f6]/10 px-2 py-1 rounded">Fast</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Navbar />
 
       <main className="flex-1 pt-10 pb-16 px-4">

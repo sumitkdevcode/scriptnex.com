@@ -65,8 +65,8 @@ export default function CertificationsPage() {
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc]">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
-        <h1 className="text-2xl font-bold mb-0.5">Certifications</h1>
-        <p className="text-[#ababab] text-sm mb-4">Earn verified certificates and prove your skills to employers</p>
+        <h1 className="text-2xl font-bold mb-0.5">Earn Free Coding Certificates Online</h1>
+        <p className="text-[#ababab] text-sm mb-4">Take timed exams and earn verified digital certificates in Python, JavaScript, DSA, and more</p>
         {loading ? (
           <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#00d285]"></div></div>
         ) : (

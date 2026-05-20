@@ -163,6 +163,14 @@ export default function VerifyCertPage() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isUnlockingDownload, setIsUnlockingDownload] = useState(false);
   const [ownerStatusLoading, setOwnerStatusLoading] = useState(false);
+  const [config, setConfig] = useState<{ active_gateway: string } | null>(null);
+  const [showGatewayModal, setShowGatewayModal] = useState(false);
+
+  useEffect(() => {
+    api.get<{ active_gateway: string }>('/payment/config')
+      .then(res => setConfig(res.data))
+      .catch(() => {});
+  }, []);
 
   const loadOwnedCertificate = useCallback(async () => {
     if (!isAuthenticated) {
@@ -201,7 +209,7 @@ export default function VerifyCertPage() {
     }
   }, [cert]);
 
-  const handleUnlockDownload = useCallback(async () => {
+  const handleUnlockDownload = useCallback(async (selectedGateway?: 'razorpay' | 'cashfree') => {
     if (!isAuthenticated) {
       router.push(`/login?redirect=${encodeURIComponent(verifyPath)}`);
       return;
@@ -217,11 +225,18 @@ export default function VerifyCertPage() {
       return;
     }
 
+    if (config?.active_gateway === 'both' && !selectedGateway) {
+      setShowGatewayModal(true);
+      return;
+    }
+
     setIsUnlockingDownload(true);
     let openedCheckout = false;
 
     try {
-      const response = await api.post<CheckoutOrder>(`/my-certificates/${uuid}/download/checkout`);
+      const response = await api.post<CheckoutOrder>(`/my-certificates/${uuid}/download/checkout`, {
+        ...(selectedGateway && { gateway: selectedGateway })
+      });
 
       if (response.data.unlocked) {
         await loadOwnedCertificate();
@@ -334,7 +349,7 @@ export default function VerifyCertPage() {
         setIsUnlockingDownload(false);
       }
     }
-  }, [handleDownloadPdf, isAuthenticated, loadOwnedCertificate, ownedCertificate, router, uuid, verifyPath]);
+  }, [config, handleDownloadPdf, isAuthenticated, loadOwnedCertificate, ownedCertificate, router, uuid, verifyPath]);
 
   useEffect(() => {
     api.get<{ certificate: Certificate }>(`/certifications/verify/${uuid}`)
@@ -389,6 +404,26 @@ export default function VerifyCertPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col relative">
+      {showGatewayModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#16181d] border border-[#2a2d35] rounded-2xl p-6 w-full max-w-sm shadow-2xl relative">
+            <button onClick={() => setShowGatewayModal(false)} className="absolute top-4 right-4 text-[#ababab] hover:text-white">✕</button>
+            <h3 className="text-xl font-bold mb-2">Select Payment Method</h3>
+            <p className="text-sm text-[#ababab] mb-6">Choose your preferred secure payment gateway to complete the transaction.</p>
+            <div className="flex flex-col gap-3">
+              <button onClick={() => { setShowGatewayModal(false); void handleUnlockDownload('razorpay'); }} className="flex items-center justify-between p-4 rounded-xl border border-[#2a2d35] bg-[#0f1115] hover:border-[#00d285] transition-colors">
+                <span className="font-bold text-[#f8fafc]">Razorpay</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#00d285] bg-[#00d285]/10 px-2 py-1 rounded">Popular</span>
+              </button>
+              <button onClick={() => { setShowGatewayModal(false); void handleUnlockDownload('cashfree'); }} className="flex items-center justify-between p-4 rounded-xl border border-[#2a2d35] bg-[#0f1115] hover:border-[#3b82f6] transition-colors">
+                <span className="font-bold text-[#f8fafc]">Cashfree</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#3b82f6] bg-[#3b82f6]/10 px-2 py-1 rounded">Fast</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Downloading Overlay */}
       {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('download') === 'true' && !loading && (
         <div className="fixed inset-0 z-[100] bg-[#0f1115] flex flex-col items-center justify-center text-center p-6">
