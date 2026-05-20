@@ -68,13 +68,16 @@ interface CheckoutOrder {
   order_id: string;
   amount: number;
   currency: string;
-  key: string;
-  name: string;
-  description: string;
-  prefill: {
+  key?: string;
+  name?: string;
+  description?: string;
+  prefill?: {
     name: string;
     email: string;
   };
+  gateway?: 'razorpay' | 'cashfree';
+  payment_session_id?: string;
+  environment?: string;
   unlocked?: boolean;
   verification_url?: string;
 }
@@ -116,6 +119,30 @@ const loadRazorpayCheckout = async (): Promise<boolean> => {
     const script = document.createElement('script');
     script.id = RAZORPAY_SCRIPT_ID;
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
+const CASHFREE_SCRIPT_ID = 'cashfree-checkout-js';
+
+const loadCashfreeCheckout = async (): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+  if ((window as any).Cashfree) return true;
+
+  const existingScript = document.getElementById(CASHFREE_SCRIPT_ID) as HTMLScriptElement | null;
+  if (existingScript) {
+    return new Promise((resolve) => {
+      existingScript.addEventListener('load', () => resolve(true), { once: true });
+      existingScript.addEventListener('error', () => resolve(false), { once: true });
+    });
+  }
+
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.id = CASHFREE_SCRIPT_ID;
+    script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
@@ -199,6 +226,50 @@ export default function VerifyCertPage() {
       if (response.data.unlocked) {
         await loadOwnedCertificate();
         alert('Certificate download unlocked.');
+        return;
+      }
+
+      if (response.data.gateway === 'cashfree') {
+        const checkoutLoaded = await loadCashfreeCheckout();
+        if (!checkoutLoaded || !(window as any).Cashfree) {
+          throw new Error('Could not load Cashfree Checkout.');
+        }
+
+        const cashfree = (window as any).Cashfree({
+          mode: response.data.environment === 'production' ? 'production' : 'sandbox'
+        });
+
+        cashfree.checkout({
+          paymentSessionId: response.data.payment_session_id,
+          redirectTarget: "_modal",
+        }).then(async (result: any) => {
+          if (result.error) {
+            setIsUnlockingDownload(false);
+            alert(result.error.message || 'Payment failed. Please try again.');
+          } else if (result.redirect) {
+            console.log('Cashfree is redirecting...');
+          } else if (result.paymentDetails) {
+            // Modal completed, verify payment
+            setIsUnlockingDownload(true);
+            try {
+              const verifyRes = await api.post<VerifyPaymentResult>('/payment/verify', { gateway: 'cashfree', order_id: response.data.order_id });
+              if (verifyRes.data.paid) {
+                await loadOwnedCertificate();
+                alert('Payment successful. Your certificate PDF is now unlocked.');
+                void handleDownloadPdf(true);
+              } else {
+                alert('Payment is processing. Please refresh in a moment to check the download status.');
+              }
+            } catch (err) {
+              const message = err instanceof ApiError ? err.message : 'Verification failed.';
+              alert(message);
+            } finally {
+              setIsUnlockingDownload(false);
+            }
+          }
+        });
+
+        openedCheckout = true;
         return;
       }
 
