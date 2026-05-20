@@ -253,11 +253,11 @@ export default function PricingPage() {
       }
 
       const razorpay = new window.Razorpay({
-        key: res.data.key,
+        key: res.data.key || '',
         amount: res.data.amount,
         currency: res.data.currency,
-        name: res.data.name,
-        description: res.data.description,
+        name: res.data.name || '',
+        description: res.data.description || '',
         order_id: res.data.order_id,
         prefill: res.data.prefill,
         theme: { color: '#00d285' },

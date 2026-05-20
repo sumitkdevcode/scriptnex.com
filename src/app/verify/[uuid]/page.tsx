@@ -280,11 +280,11 @@ export default function VerifyCertPage() {
       }
 
       const razorpay = new window.Razorpay({
-        key: response.data.key,
+        key: response.data.key || '',
         amount: response.data.amount,
         currency: response.data.currency,
-        name: response.data.name,
-        description: response.data.description,
+        name: response.data.name || '',
+        description: response.data.description || '',
         order_id: response.data.order_id,
         prefill: response.data.prefill,
         theme: { color: '#00d285' },
