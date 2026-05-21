@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 
-export default function LoginPage() {
+function LoginContent() {
   const { login, error, isLoading, clearErrors } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -133,5 +133,13 @@ export default function LoginPage() {
         &copy; {new Date().getFullYear()} ScriptNex. All rights reserved.
       </footer>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[#ababab]">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

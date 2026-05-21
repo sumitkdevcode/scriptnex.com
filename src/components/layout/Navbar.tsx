@@ -40,7 +40,7 @@ export default function Navbar() {
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
         <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5">
           <Link href="/" className="flex items-center z-10 shrink-0">
-            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[44px] md:h-[60px] w-auto object-contain" priority />
+            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[50px] md:h-[60px] w-auto object-contain" priority />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -163,7 +163,7 @@ export default function Navbar() {
         )}
       </div>
       {/* Spacer to prevent content from hiding behind fixed navbar */}
-      <div className="h-[56px] md:h-[64px]" aria-hidden="true"></div>
+      <div className="h-[62px] md:h-[64px]" aria-hidden="true"></div>
     </>
   );
 }
