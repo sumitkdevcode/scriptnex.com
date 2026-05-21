@@ -2,13 +2,14 @@
 
 import { useState, type FormEvent } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 
 export default function LoginPage() {
   const { login, error, isLoading, clearErrors } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +17,8 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await login({ email, password });
-      router.push('/certifications');
+      const redirect = searchParams.get('redirect') || '/dashboard';
+      router.push(redirect);
     } catch {
       // errors handled by context
     }

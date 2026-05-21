@@ -34,7 +34,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-8">
           <div className="col-span-2 lg:col-span-2 flex flex-col items-start">
             <Link href="/" className="mb-6">
-              <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[54px] md:h-[60px] w-auto object-contain" />
+              <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={64} className="h-[54px] md:h-[64px] w-auto object-contain" />
             </Link>
             
             <div className="flex flex-wrap gap-5 mb-8">

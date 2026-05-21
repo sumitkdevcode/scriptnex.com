@@ -19,7 +19,7 @@ function CallbackContent() {
     if (token) {
       loginWithToken(token)
         .then(() => {
-          router.push('/certifications');
+          router.push('/dashboard');
         })
         .catch(() => {
           router.push('/login?error=session_failed');

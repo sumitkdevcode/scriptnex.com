@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { api } from '@/lib/api';
 import dynamic from 'next/dynamic';
-import Navbar from '@/components/layout/Navbar';
+
 import { useAuth } from '@/contexts/AuthContext';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -39,19 +39,18 @@ export default function PlaygroundPage() {
     setIsRunning(true);
     setOutput('Running...');
     try {
-      // Use a temp problem or direct execution
-      const res = await api.post<{ message?: string }>('/run', {
-        problem_id: 1, // fallback
+      const res = await api.post<{ output?: string; error?: string; message?: string }>('/playground/run', {
         language_id: selectedLangId,
         source_code: code,
+        stdin: input,
       });
-      setOutput(res.data.message || 'No output');
+      setOutput(res.data.message || res.data.output || 'No output');
     } catch (err: unknown) {
       setOutput(`Error: ${err instanceof Error ? err.message : 'Run failed'}`);
     } finally {
       setIsRunning(false);
     }
-  }, [code, selectedLangId, isRunning]);
+  }, [code, selectedLangId, isRunning, input]);
 
   const handleSave = async () => {
     if (!isAuthenticated) { alert('Login to save snippets'); return; }
