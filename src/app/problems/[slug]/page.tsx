@@ -3,9 +3,9 @@ import ProblemWorkspace from '@/components/problem/ProblemWorkspace';
 import { api } from '@/lib/api';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getProblem(slug: string) {

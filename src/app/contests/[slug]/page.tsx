@@ -2,9 +2,9 @@ import { Metadata } from 'next';
 import ContestDetailClient from '@/components/contest/ContestDetailClient';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getContest(slug: string) {
@@ -25,7 +25,8 @@ async function getContest(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const data = await getContest(params.slug);
+  const { slug } = await params;
+  const data = await getContest(slug);
   const contest = data?.data?.contest;
 
   if (!contest) {
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function ContestDetailPage({ params }: PageProps) {
-  return <ContestDetailClient slug={params.slug} />;
+export default async function ContestDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  return <ContestDetailClient slug={slug} />;
 }
