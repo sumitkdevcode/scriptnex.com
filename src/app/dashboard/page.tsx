@@ -562,6 +562,9 @@ export default function DashboardPage() {
               { label: 'Join a Contest', desc: 'Compete with developers worldwide', href: '/contests', emoji: '🏆', color: '#f59e0b' },
               { label: 'Get Certified', desc: 'Earn verified credentials', href: '/certifications', emoji: '📜', color: '#a855f7' },
               { label: 'Daily Challenge', desc: 'Keep your streak alive', href: '/daily', emoji: '🔥', color: '#ef4444' },
+              ...(user?.role === 'admin' ? [{
+                label: 'Manage Blog', desc: 'Create and manage blog posts', href: '/dashboard/blog', emoji: '📝', color: '#06b6d4',
+              }] : []),
               { label: 'My Profile', desc: 'View your public profile', href: user?.username ? `/${user.username}` : '#', emoji: '👤', color: '#3b82f6' },
             ].map((action, i) => (
               <Link

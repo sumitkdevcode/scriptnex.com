@@ -38,9 +38,9 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
-        <nav className="w-full flex items-center justify-between px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5">
-          <Link href="/" className="flex items-center z-10 shrink-0">
-            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[54px] md:h-[60px] w-auto object-contain" priority />
+        <nav className="w-full flex items-center justify-between px-4 sm:px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5 min-w-0 overflow-visible">
+          <Link href="/" className="flex items-center z-10 shrink-0 min-w-0">
+            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[42px] sm:h-[54px] md:h-[60px] w-auto object-contain" priority />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -66,12 +66,12 @@ export default function Navbar() {
             {!isAuthenticated ? (
               !isAuthPage && (
                 <>
-                  <Link href="/login" className="hidden sm:block px-3 md:px-4 py-2 rounded-md border border-[#2a2d35] text-xs md:text-sm text-[#ababab] hover:text-white hover:border-[#ababab]/50 transition-all font-medium whitespace-nowrap">Log In</Link>
-                  <Link href="/register" className="hidden sm:block px-3 md:px-4 py-2 rounded-md bg-[#00d285] text-black text-xs md:text-sm font-semibold hover:bg-[#00e691] transition-colors whitespace-nowrap">Sign Up</Link>
+                  <Link href="/login" className="hidden md:block px-3 md:px-4 py-2 rounded-md border border-[#2a2d35] text-xs md:text-sm text-[#ababab] hover:text-white hover:border-[#ababab]/50 transition-all font-medium whitespace-nowrap">Log In</Link>
+                  <Link href="/register" className="hidden md:block px-3 md:px-4 py-2 rounded-md bg-[#00d285] text-black text-xs md:text-sm font-semibold hover:bg-[#00e691] transition-colors whitespace-nowrap">Sign Up</Link>
                 </>
               )
             ) : (
-              <div className="flex items-center gap-2 md:gap-3">
+              <div className="hidden md:flex items-center gap-2 md:gap-3">
                 <Link href="/pricing" className="hidden sm:flex px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-md text-xs font-bold transition-colors items-center gap-1">Premium</Link>
                 
                 <div className="flex items-center gap-3 text-[#ababab] mx-1">
@@ -95,9 +95,9 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - restored to match other pages */}
             <button 
-              className="md:hidden text-[#ababab] hover:text-white z-10 p-2 -mr-2"
+              className="md:hidden text-[#ababab] hover:text-white z-10 p-2 -mr-2 flex"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -130,6 +130,7 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className={isActive('/blog') ? 'text-[#00d285] font-semibold text-lg' : 'text-[#e2e8f0] hover:text-[#00d285] transition-colors text-lg font-medium'}>Blog</Link>
               {!isAuthenticated && (
                 <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-[#00d285] font-semibold text-lg">Pro Plans</Link>
               )}

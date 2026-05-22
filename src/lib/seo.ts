@@ -76,6 +76,11 @@ const PAGE_FALLBACKS: Record<string, { title: string; description: string; keywo
     description: 'Learn about the ScriptNex refund policy for premium plans and certificate downloads.',
     keywords: 'ScriptNex refund policy, refund, cancellation policy',
   },
+  '/blog': {
+    title: 'Developer Blog — 500+ Tutorials, Guides & Tech Insights | ScriptNex',
+    description: 'Explore 500+ in-depth programming tutorials on DSA, JavaScript, Python, React, System Design, DevOps & more. Written by senior engineers. Free, updated for 2025.',
+    keywords: 'programming blog, coding tutorials, developer guides, tech articles, software engineering blog, DSA tutorials, system design, web development, ScriptNex blog',
+  },
 };
 
 export function getFallbackMetadata(path: string): Metadata {
