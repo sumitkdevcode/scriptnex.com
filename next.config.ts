@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
     memoryBasedWorkersCount: false,
     staticGenerationMaxConcurrency: 1, // Prevent parallel ISR spikes
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
   async redirects() {
     return [
       {
