@@ -38,9 +38,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${contest.title} | ScriptNex Contests`,
     description: contest.description?.substring(0, 160) || `Join the ${contest.title} coding competition on ScriptNex.`,
+    alternates: {
+      canonical: `https://scriptnex.com/contests/${slug}`,
+    },
     openGraph: {
       title: contest.title,
       description: `Participate in this ${contest.type} contest and win prizes!`,
+      url: `https://scriptnex.com/contests/${slug}`,
     }
   };
 }

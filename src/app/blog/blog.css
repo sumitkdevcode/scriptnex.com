@@ -500,6 +500,10 @@
   align-items: flex-start;
 }
 
+.blog-detail-layout > * {
+  min-width: 0;
+}
+
 /* ── Left Sidebar — Suggestions ─────────────────── */
 .blog-sidebar-left {
   position: sticky;
@@ -588,6 +592,8 @@
   font-size: 15.5px;
   line-height: 1.85;
   color: rgba(255, 255, 255, 0.7);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .blog-content h1,
@@ -980,8 +986,7 @@
 
   .blog-toc {
     position: static;
-    margin-bottom: 24px;
-    order: -1;
+    margin-top: 32px;
   }
 
   .blog-sidebar-left {

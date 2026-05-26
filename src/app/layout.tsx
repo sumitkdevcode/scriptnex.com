@@ -32,16 +32,12 @@ export const metadata: Metadata = {
   authors: [{ name: "ScriptNex", url: "https://scriptnex.com" }],
   creator: "ScriptNex",
   publisher: "ScriptNex",
-  alternates: {
-    canonical: "https://scriptnex.com",
-  },
   openGraph: {
     type: "website",
     siteName: "ScriptNex",
     title: "ScriptNex — Learn Programming Online | Free Coding Platform & Certifications",
     description: "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
     locale: "en_US",
-    url: "https://scriptnex.com",
     images: [
       {
         url: "https://scriptnex.com/og-image.png",

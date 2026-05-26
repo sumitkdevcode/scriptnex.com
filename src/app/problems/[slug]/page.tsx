@@ -40,9 +40,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${problem.title} | ScriptNex Practice`,
     description: problem.description?.substring(0, 160) || `Solve the ${problem.title} coding challenge on ScriptNex.`,
+    alternates: {
+      canonical: `https://scriptnex.com/problems/${slug}`,
+    },
     openGraph: {
       title: problem.title,
       description: `Can you solve this ${problem.difficulty} level problem?`,
+      url: `https://scriptnex.com/problems/${slug}`,
     }
   };
 }
