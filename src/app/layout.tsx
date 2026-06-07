@@ -66,6 +66,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  other: {
+    'google-adsense-account': 'ca-pub-5730762848368403',
+  },
 };
 
 export default function RootLayout({
@@ -108,6 +111,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             gtag('config', 'G-W2BD0W4NLP');
           `}
         </Script>
+
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5730762848368403"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
 
         {/* Organization + WebSite + EducationalOrganization JSON-LD for Google Knowledge Panel & Sitelinks */}
         <script
