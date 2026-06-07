@@ -23,17 +23,19 @@ async function fetchSlugs(endpoint: string): Promise<SlugItem[]> {
 }
 
 /**
- * Fetch ALL problem slugs by paginating through the API.
- * The old implementation only fetched 100.
+ * Fetch ALL slugs for a given endpoint by paginating through the API.
+ * This ensures all items (e.g., 500+ blogs) are included in the sitemap.
  */
-async function fetchAllProblemSlugs(): Promise<SlugItem[]> {
+async function fetchAllPaginatedSlugs(endpoint: string): Promise<SlugItem[]> {
   const allSlugs: SlugItem[] = [];
   let page = 1;
-  const maxPages = 20; // Safety limit
+  const maxPages = 50; // Safety limit (50 * 100 = 5000 items max)
 
   while (page <= maxPages) {
     try {
-      const res = await fetch(`${API_BASE}/problems?per_page=100&page=${page}`, {
+      // Use ? or & depending on whether the endpoint already has query params
+      const separator = endpoint.includes('?') ? '&' : '?';
+      const res = await fetch(`${API_BASE}${endpoint}${separator}per_page=100&page=${page}`, {
         headers: { Accept: 'application/json' },
         next: { revalidate: 86400 },
       });
@@ -77,9 +79,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/refund`, lastModified: BUILD_DATE, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  // Fetch dynamic content slugs in parallel — problems now paginated for ALL slugs
-  const [problemSlugs, trackSlugs, certSlugs, contestSlugs] = await Promise.all([
-    fetchAllProblemSlugs(),
+  // Fetch dynamic content slugs in parallel — problems and blogs are paginated
+  const [problemSlugs, blogSlugs, trackSlugs, certSlugs, contestSlugs] = await Promise.all([
+    fetchAllPaginatedSlugs('/problems'),
+    fetchAllPaginatedSlugs('/blog'),
     fetchSlugs('/tracks'),
     fetchSlugs('/certifications'),
     fetchSlugs('/contests'),
@@ -91,6 +94,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: item.updated_at || BUILD_DATE,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
+    })),
+    ...blogSlugs.map((item) => ({
+      url: `${baseUrl}/blog/${item.slug}`,
+      lastModified: item.updated_at || BUILD_DATE,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
     })),
     ...trackSlugs.map((item) => ({
       url: `${baseUrl}/tracks/${item.slug}`,
