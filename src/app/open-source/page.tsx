@@ -34,7 +34,7 @@ export default function OpenSourcePage() {
 
           <div className="grid md:grid-cols-2 gap-8 text-left">
             {/* Main Application Repo */}
-            <div className="group relative bg-[#15171c] border border-[#2a2d35] rounded-3xl p-6 sm:p-8 hover:border-[#00d285] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,210,133,0.1)] overflow-hidden">
+            <div className="group relative bg-[#15171c] border border-[#2a2d35] rounded-2xl p-6 sm:p-8 hover:border-[#00d285] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,210,133,0.1)] overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                 <svg className="w-32 h-32 text-[#00d285]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
@@ -69,7 +69,7 @@ export default function OpenSourcePage() {
             </div>
 
             {/* Admin Dashboard Repo */}
-            <div className="group relative bg-[#15171c] border border-[#2a2d35] rounded-3xl p-6 sm:p-8 hover:border-blue-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] overflow-hidden">
+            <div className="group relative bg-[#15171c] border border-[#2a2d35] rounded-2xl p-6 sm:p-8 hover:border-blue-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                 <svg className="w-32 h-32 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-10.5 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />
@@ -104,7 +104,7 @@ export default function OpenSourcePage() {
             </div>
           </div>
 
-          <div className="mt-12 sm:mt-20 p-6 sm:p-10 border border-[#2a2d35] rounded-3xl bg-gradient-to-b from-[#15171c] to-[#0f1115]">
+          <div className="mt-12 sm:mt-20 p-6 sm:p-10 border border-[#2a2d35] rounded-2xl bg-gradient-to-b from-[#15171c] to-[#0f1115]">
             <h3 className="text-2xl font-bold mb-4 text-white">How to Contribute</h3>
             <p className="text-[#ababab] mb-8 max-w-3xl mx-auto">
               We welcome contributions of all kinds! Whether it's fixing a bug, adding a new coding problem, improving documentation, or building an entirely new feature. Read our contributing guidelines on GitHub to get started.
