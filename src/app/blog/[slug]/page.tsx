@@ -68,6 +68,58 @@ function escapeHtml(str: string) {
 
 function renderMarkdown(md: string): string {
   let html = md;
+
+  // --- Automated SEO Internal Backlinking ---
+  // Safely extract code blocks and existing links to avoid replacing keywords inside them
+  const codeBlocks: string[] = [];
+  html = html.replace(/```[\s\S]*?```/g, (match) => {
+    codeBlocks.push(match);
+    return `___CODE_BLOCK_${codeBlocks.length - 1}___`;
+  });
+  
+  const inlineCodes: string[] = [];
+  html = html.replace(/`[^`]+`/g, (match) => {
+    inlineCodes.push(match);
+    return `___INLINE_CODE_${inlineCodes.length - 1}___`;
+  });
+
+  const links: string[] = [];
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match) => {
+    links.push(match);
+    return `___LINK_${links.length - 1}___`;
+  });
+
+  // Auto-link keywords (only the first occurrence per post to avoid spam)
+  const seoLinks = [
+    { regex: /\b(Python)\b/i, url: '/tracks' },
+    { regex: /\b(JavaScript)\b/i, url: '/tracks' },
+    { regex: /\b(React)\b/i, url: '/tracks' },
+    { regex: /\b(Java)\b/i, url: '/tracks' },
+    { regex: /\b(Coding Contests?)\b/i, url: '/contests' },
+    { regex: /\b(Hackathons?)\b/i, url: '/contests' },
+    { regex: /\b(Certifications?)\b/i, url: '/certifications' },
+    { regex: /\b(Practice Problems?)\b/i, url: '/problems' },
+    { regex: /\b(Data Structures?)\b/i, url: '/tracks' },
+    { regex: /\b(Algorithms?)\b/i, url: '/tracks' },
+  ];
+
+  seoLinks.forEach(({ regex, url }) => {
+    let replaced = false;
+    html = html.replace(new RegExp(regex.source, 'ig'), (match) => {
+      if (!replaced) {
+        replaced = true;
+        return `[${match}](${url})`;
+      }
+      return match;
+    });
+  });
+
+  // Restore extracted blocks
+  links.forEach((link, i) => { html = html.replace(`___LINK_${i}___`, link); });
+  inlineCodes.forEach((code, i) => { html = html.replace(`___INLINE_CODE_${i}___`, code); });
+  codeBlocks.forEach((code, i) => { html = html.replace(`___CODE_BLOCK_${i}___`, code); });
+  // -------------------------------------------
+
   // Code blocks (fenced)
   html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (_m, lang, code) => {
     const langAttr = lang ? ` data-lang="${lang}"` : '';

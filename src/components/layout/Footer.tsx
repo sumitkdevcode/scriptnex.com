@@ -125,6 +125,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Terms of Service</Link></li>
               <li><Link href="/refund" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Refund Policy</Link></li>
+              <li><Link href="/partners" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Partners</Link></li>
               <li><a href="mailto:support@scriptnex.com" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Contact Us</a></li>
             </ul>
           </nav>
