@@ -470,7 +470,7 @@ export default function DashboardPage() {
                       {/* Mini Certificate Preview */}
                       <div className="relative aspect-[1.414] w-full bg-white overflow-hidden">
                         <img 
-                          src="/certificate.png?v=2" 
+                          src="/certificate.png?v=3" 
                           alt="Template" 
                           className={`absolute inset-0 w-full h-full object-cover ${!isPaid ? 'blur-[6px]' : ''}`} 
                         />

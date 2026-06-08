@@ -463,7 +463,7 @@ export default function VerifyCertPage() {
             <div
               className={`relative w-full aspect-[1.414] mb-6 bg-white overflow-hidden rounded-md shadow-lg ${!canDownload && ownedCertificate ? 'blur-[8px]' : ''}`}
               style={{
-                backgroundImage: 'url(/certificate.png?v=2)',
+                backgroundImage: 'url(/certificate.png?v=3)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}

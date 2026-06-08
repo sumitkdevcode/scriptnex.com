@@ -326,7 +326,7 @@ export default function ProfileClient() {
                       {/* Mini Certificate Preview */}
                       <div className="relative aspect-[1.414] w-full bg-white overflow-hidden">
                         <Image
-                          src="/certificate.png?v=2" 
+                          src="/certificate.png?v=3" 
                           alt={`${cert.certification?.title || 'ScriptNex'} certificate preview`}
                           fill
                           unoptimized
