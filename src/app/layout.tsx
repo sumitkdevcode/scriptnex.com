@@ -55,6 +55,11 @@ export const metadata: Metadata = {
     description: "Learn programming online for free with ScriptNex. Practice 500+ coding challenges, follow structured learning tracks, compete in live contests, and earn verified coding certificates to boost your career.",
     images: ["https://scriptnex.com/og-image.png"],
   },
+  alternates: {
+    types: {
+      'application/rss+xml': 'https://scriptnex.com/feed.xml',
+    },
+  },
   robots: {
     index: true,
     follow: true,

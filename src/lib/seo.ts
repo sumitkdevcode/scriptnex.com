@@ -87,6 +87,9 @@ export function getFallbackMetadata(path: string): Metadata {
   const fb = PAGE_FALLBACKS[path] || PAGE_FALLBACKS['/'];
   const canonicalUrl = path === '/' ? SITE_URL : `${SITE_URL}${path}`;
 
+  const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register'];
+  const shouldIndex = !noIndexPaths.some(p => path.startsWith(p));
+
   return {
     title: fb.title,
     description: fb.description,
@@ -108,8 +111,8 @@ export function getFallbackMetadata(path: string): Metadata {
       description: fb.description,
     },
     robots: {
-      index: true,
-      follow: true,
+      index: shouldIndex,
+      follow: shouldIndex,
     },
   };
 }
@@ -143,13 +146,27 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
     const seo: SeoData = json.data.seo;
     const canonicalUrl = seo.canonical_url || (path === '/' ? SITE_URL : `${SITE_URL}${path}`);
 
-    // Build robots directive
     const robotsParts: string[] = [];
-    if (seo.robots_index !== undefined) {
-      robotsParts.push(seo.robots_index ? 'index' : 'noindex');
+    const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register'];
+    const shouldIndex = !noIndexPaths.some(p => path.startsWith(p));
+    
+    let index = seo.robots_index ?? true;
+    let follow = seo.robots_follow ?? true;
+
+    if (!shouldIndex) {
+      index = false;
+      follow = false;
+    } else if (path.startsWith('/blog')) {
+      // Explicitly allow indexing for all blog pages
+      index = true;
+      follow = true;
     }
-    if (seo.robots_follow !== undefined) {
-      robotsParts.push(seo.robots_follow ? 'follow' : 'nofollow');
+
+    if (index !== undefined) {
+      robotsParts.push(index ? 'index' : 'noindex');
+    }
+    if (follow !== undefined) {
+      robotsParts.push(follow ? 'follow' : 'nofollow');
     }
 
     return {
@@ -176,8 +193,8 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
       },
       ...(robotsParts.length > 0 ? {
         robots: {
-          index: seo.robots_index ?? true,
-          follow: seo.robots_follow ?? true,
+          index: index,
+          follow: follow,
         }
       } : {}),
     };
