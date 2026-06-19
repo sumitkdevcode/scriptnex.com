@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://admin.scriptnex.com/api/v1';
 const SITE_URL = 'https://scriptnex.com';
 
 interface SeoData {

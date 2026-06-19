@@ -36,9 +36,7 @@ export const downloadCertificatePdf = async (uuid: string, fallbackFileName?: st
 
   // Construct URL carefully to avoid double slashes
   const baseUrl = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
-  const downloadUrl = token 
-    ? `${baseUrl}/my-certificates/${uuid}/download?token=${token}`
-    : `${baseUrl}/my-certificates/${uuid}/download`;
+  const downloadUrl = `${baseUrl}/my-certificates/${uuid}/download`;
 
   const response = await fetch(downloadUrl, {
     method: 'GET',

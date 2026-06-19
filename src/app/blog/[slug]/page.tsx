@@ -34,7 +34,7 @@ interface PageProps {
   }>;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://admin.scriptnex.com/api/v1';
 
 async function getBlogPost(slug: string) {
   try {
@@ -346,7 +346,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               <div className="dot" />
               <span>{post.reading_time_minutes} min read</span>
               <div className="dot" />
-              <span>{post.views_count.toLocaleString()} views</span>
+              <span>{(post.views_count ?? 0).toLocaleString()} views</span>
             </div>
           </div>
         </div>

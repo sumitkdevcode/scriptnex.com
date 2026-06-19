@@ -6,10 +6,12 @@ process.env.NODE_ENV = 'production';
 process.env.HOSTNAME = '127.0.0.1';
 process.env.PORT = process.env.PORT || 3000;
 
-// AGGRESSIVE PROCESS/MEMORY LIMITS FOR SHARED HOSTING
+// PROCESS/MEMORY LIMITS FOR SHARED HOSTING
+// 384MB balances cPanel constraints with ISR + sitemap generation needs.
+// The previous 256MB caused OOM kills during sitemap revalidation (5000+ items).
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 process.env.UV_THREADPOOL_SIZE = '1';
-process.env.NODE_OPTIONS = '--max-old-space-size=256 --no-warnings';
+process.env.NODE_OPTIONS = '--max-old-space-size=384 --gc-interval=100 --no-warnings';
 process.env.NEXT_MANUAL_SIG_HANDLE = 'true';
 
 console.log('Starting standalone Next.js server on port ' + process.env.PORT);
