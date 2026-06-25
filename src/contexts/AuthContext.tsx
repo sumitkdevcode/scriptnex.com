@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setFieldErrors(null);
   }, []);
 
-  // Check for existing token on mount
+  // Check for existing token on mount — runs in background, does NOT block rendering
   useEffect(() => {
     let isActive = true;
 
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearErrors();
     setIsLoading(true);
     try {
-      const res = await api.post<AuthData>('/auth/login', payload);
+      const res = await api.post<AuthData>('/auth/login', payload, ['/auth']);
       localStorage.setItem('auth_token', res.data.token);
       setUser(res.data.user);
     } catch (err) {
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearErrors();
     setIsLoading(true);
     try {
-      const res = await api.post<{ email: string }>('/auth/register', payload);
+      const res = await api.post<{ email: string }>('/auth/register', payload, ['/auth']);
       return res.data;
     } catch (err) {
       if (err instanceof ApiError) {
@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearErrors();
     setIsLoading(true);
     try {
-      const res = await api.post<AuthData>('/auth/register/verify', payload);
+      const res = await api.post<AuthData>('/auth/register/verify', payload, ['/auth']);
       localStorage.setItem('auth_token', res.data.token);
       setUser(res.data.user);
     } catch (err) {
@@ -143,12 +143,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await api.post('/auth/logout');
+      await api.post('/auth/logout', undefined, ['/auth', '/my-']);
     } catch {
       // ignore errors
     } finally {
       localStorage.removeItem('auth_token');
       setUser(null);
+      api.clearCache(); // Full clear on logout since user context changes entirely
     }
   }, []);
 
@@ -189,6 +190,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearErrors,
       }}
     >
+      {/* Render children immediately — don't wait for auth to resolve.
+          Protected routes use ProtectedRoute wrapper for auth gating. */}
       {children}
     </AuthContext.Provider>
   );

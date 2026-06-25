@@ -11,6 +11,8 @@ export const API_BASE = _rawBase || 'https://admin.scriptnex.com/api/v1';
 
 /** Maximum number of cached GET responses to keep in memory */
 const MAX_CACHE_SIZE = 100;
+/** Default cache time-to-live (ms) — 5 minutes */
+const CACHE_TTL_MS = 5 * 60 * 1000;
 /** Default timeout for fetch requests (ms) */
 const FETCH_TIMEOUT_MS = 15_000;
 
@@ -146,32 +148,45 @@ class ApiClient {
     }
 
     const data = await this.request<T>(endpoint, { method: 'GET' });
-    this.cache.set(endpoint, { data, expiry: Date.now() + 30000 }); // Cache for 30s
+    this.cache.set(endpoint, { data, expiry: Date.now() + CACHE_TTL_MS });
     this.evictCache();
     return data;
   }
 
-  async post<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+  /**
+   * Invalidate cache entries whose keys start with any of the given prefixes.
+   * If no prefixes are provided, nothing is invalidated (safe default).
+   */
+  invalidateByPrefix(...prefixes: string[]) {
+    if (prefixes.length === 0) return;
+    for (const key of this.cache.keys()) {
+      if (prefixes.some(p => key.startsWith(p))) {
+        this.cache.delete(key);
+      }
+    }
+  }
+
+  async post<T>(endpoint: string, body?: unknown, invalidate?: string[]): Promise<ApiResponse<T>> {
     const result = await this.request<T>(endpoint, {
       method: 'POST',
       body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     });
-    this.clearCache();
+    if (invalidate) this.invalidateByPrefix(...invalidate);
     return result;
   }
 
-  async put<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body?: unknown, invalidate?: string[]): Promise<ApiResponse<T>> {
     const result = await this.request<T>(endpoint, {
       method: 'PUT',
       body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
     });
-    this.clearCache();
+    if (invalidate) this.invalidateByPrefix(...invalidate);
     return result;
   }
 
-  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+  async delete<T>(endpoint: string, invalidate?: string[]): Promise<ApiResponse<T>> {
     const result = await this.request<T>(endpoint, { method: 'DELETE' });
-    this.clearCache();
+    if (invalidate) this.invalidateByPrefix(...invalidate);
     return result;
   }
 }

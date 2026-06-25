@@ -40,7 +40,7 @@ export default function Navbar() {
       <div className="fixed top-0 left-0 right-0 w-full border-b border-[#2a2d35] bg-[#0f1115]/80 backdrop-blur-md z-50">
         <nav className="w-full flex items-center justify-between px-4 sm:px-6 md:px-12 lg:px-24 py-1.5 md:py-0.5 min-w-0 overflow-visible">
           <Link href="/" className="flex items-center z-10 shrink-0 min-w-0">
-            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[56px] sm:h-[60px] md:h-[64px] w-auto object-contain" priority />
+            <Image src="/logo-nav.png" alt="ScriptNex — Free Online Coding Platform" width={180} height={60} className="h-[56px] sm:h-[64px] md:h-[72px] w-auto object-contain" style={{ width: 'auto' }} priority />
           </Link>
           
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-6 text-sm font-medium">
@@ -71,10 +71,10 @@ export default function Navbar() {
                 </>
               )
             ) : (
-              <div className="hidden md:flex items-center gap-2 md:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-3">
                 <Link href="/pricing" className="hidden sm:flex px-3 py-1.5 bg-[#f59e0b]/10 text-[#f59e0b] hover:bg-[#f59e0b]/20 border border-[#f59e0b]/30 rounded-md text-xs font-bold transition-colors items-center gap-1">Premium</Link>
                 
-                <div className="flex items-center gap-3 text-[#ababab] mx-1">
+                <div className="flex items-center gap-2 sm:gap-3 text-[#ababab] mx-0 sm:mx-1">
                   <button className="hover:text-[#f59e0b] transition-colors flex items-center gap-1" title="0 Day Streak">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"></path></svg>
                     <span className="text-xs font-bold text-white">0</span>
