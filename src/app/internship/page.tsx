@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import Script from 'next/script';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -50,7 +49,6 @@ export default function InternshipPage() {
     setSuccess(false);
 
     try {
-      // Assuming admin.scriptnex.com is the backend domain
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://admin.scriptnex.com/api/v1';
       const response = await fetch(`${apiUrl}/internships`, {
         method: 'POST',
@@ -67,84 +65,20 @@ export default function InternshipPage() {
         throw new Error(responseJson.message || 'Something went wrong. Please try again.');
       }
 
-      const responseData = responseJson.data || {};
-
-      if (!responseData.razorpay) {
-        setSuccess(true);
-        setFormData({
-          name: '', email: '', phone: '', location: '',
-          college: '', course: '', current_semester: '', interested_roles: []
-        });
-        setLoading(false);
-        return;
-      }
-
-      const options = {
-        key: responseData.razorpay.key,
-        amount: responseData.razorpay.amount,
-        currency: responseData.razorpay.currency,
-        name: responseData.razorpay.name,
-        description: responseData.razorpay.description,
-        order_id: responseData.razorpay.order_id,
-        prefill: responseData.razorpay.prefill,
-        theme: {
-          color: '#00d285'
-        },
-        handler: async function (paymentResponse: any) {
-          try {
-            const verifyRes = await fetch(`${apiUrl}/internships/${responseData.application.id}/verify-payment`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify({
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_signature: paymentResponse.razorpay_signature
-              })
-            });
-
-            const verifyData = await verifyRes.json();
-            if (!verifyRes.ok) {
-              throw new Error(verifyData.message || 'Payment verification failed.');
-            }
-
-            setSuccess(true);
-            setFormData({
-              name: '', email: '', phone: '', location: '',
-              college: '', course: '', current_semester: '', interested_roles: []
-            });
-          } catch (err: any) {
-            setError(err.message || 'Payment verified but failed to update status.');
-          } finally {
-            setLoading(false);
-          }
-        },
-        modal: {
-          ondismiss: function () {
-            setError('Payment cancelled. Your application is saved but incomplete. Please contact support.');
-            setLoading(false);
-          }
-        }
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.on('payment.failed', function (response: any) {
-        setError(response.error.description || 'Payment failed.');
-        setLoading(false);
+      setSuccess(true);
+      setFormData({
+        name: '', email: '', phone: '', location: '',
+        college: '', course: '', current_semester: '', interested_roles: []
       });
-      rzp.open();
-
     } catch (err: any) {
       setError(err.message || 'Failed to submit application.');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-[#f8fafc] flex flex-col font-sans">
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <Navbar />
       <main className="flex-grow flex flex-col items-center py-12 md:py-20 px-4 sm:px-6 relative z-40">
         
