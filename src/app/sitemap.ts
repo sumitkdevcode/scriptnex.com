@@ -73,6 +73,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/leaderboard`, lastModified: RUN_DATE, changeFrequency: 'daily', priority: 0.7 },
     { url: `${baseUrl}/discuss`, lastModified: RUN_DATE, changeFrequency: 'daily', priority: 0.7 },
     { url: `${baseUrl}/pricing`, lastModified: RUN_DATE, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/blog`, lastModified: RUN_DATE, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${baseUrl}/sheets`, lastModified: RUN_DATE, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/daily`, lastModified: RUN_DATE, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/interview-prep`, lastModified: RUN_DATE, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/open-source`, lastModified: RUN_DATE, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/internship`, lastModified: RUN_DATE, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/partners`, lastModified: RUN_DATE, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/privacy`, lastModified: RUN_DATE, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: RUN_DATE, changeFrequency: 'yearly', priority: 0.3 },
@@ -80,12 +86,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Fetch dynamic content slugs in parallel — problems and blogs are paginated
-  const [problemSlugs, blogSlugs, trackSlugs, certSlugs, contestSlugs] = await Promise.all([
+  const [problemSlugs, blogSlugs, trackSlugs, certSlugs, contestSlugs, sheetSlugs, prepSlugs] = await Promise.all([
     fetchAllPaginatedSlugs('/problems'),
     fetchAllPaginatedSlugs('/blog'),
     fetchSlugs('/tracks'),
     fetchSlugs('/certifications'),
     fetchSlugs('/contests'),
+    fetchSlugs('/sheets'),
+    fetchSlugs('/interview-kits'),
   ]);
 
   const dynamicRoutes: MetadataRoute.Sitemap = [
@@ -118,6 +126,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: item.updated_at || RUN_DATE,
       changeFrequency: 'weekly' as const,
       priority: 0.6,
+    })),
+    ...sheetSlugs.map((item) => ({
+      url: `${baseUrl}/sheets/${item.slug}`,
+      lastModified: item.updated_at || RUN_DATE,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+    ...prepSlugs.map((item) => ({
+      url: `${baseUrl}/interview-prep/${item.slug}`,
+      lastModified: item.updated_at || RUN_DATE,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
     })),
   ];
 

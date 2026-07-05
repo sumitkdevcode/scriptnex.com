@@ -81,13 +81,53 @@ const PAGE_FALLBACKS: Record<string, { title: string; description: string; keywo
     description: 'Explore 500+ in-depth programming tutorials on DSA, JavaScript, Python, React, System Design, DevOps & more. Written by senior engineers. Free, updated for 2025.',
     keywords: 'programming blog, coding tutorials, developer guides, tech articles, software engineering blog, DSA tutorials, system design, web development, ScriptNex blog',
   },
+  '/sheets': {
+    title: 'Coding Sheets — Curated DSA Problem Lists for Systematic Practice',
+    description: 'Follow structured coding sheets to master Data Structures and Algorithms step by step. Curated problem lists covering arrays, trees, graphs, dynamic programming, and more on ScriptNex.',
+    keywords: 'DSA sheet, coding sheet, problem list, Striver sheet, love babbar sheet, data structures problems, algorithm practice, competitive programming sheet',
+  },
+  '/daily': {
+    title: 'Daily Coding Challenge — Problem of the Day',
+    description: 'Solve a new coding problem every day on ScriptNex. Build your streak, track progress with a heatmap calendar, and compete on the daily streak leaderboard.',
+    keywords: 'daily coding challenge, problem of the day, coding streak, daily programming practice, coding habit, leetcode daily',
+  },
+  '/playground': {
+    title: 'Online Code Playground — Write, Run & Share Code Instantly',
+    description: 'Write, run, and share code in 20+ programming languages directly in your browser. No setup required. Free online code editor and compiler by ScriptNex.',
+    keywords: 'online code editor, code playground, online compiler, run code online, code runner, online IDE, free compiler',
+  },
+  '/interview-prep': {
+    title: 'Interview Preparation Kits — Company-Specific Coding Practice',
+    description: 'Prepare for coding interviews at Google, Amazon, Microsoft, Meta, and more with curated company-specific problem sets. Practice the exact questions asked in real tech interviews.',
+    keywords: 'interview preparation, coding interview, FAANG interview, Google interview questions, Amazon coding, tech interview prep, DSA interview',
+  },
+  '/internship': {
+    title: 'Internship Opportunities at ScriptNex — Apply Now',
+    description: 'Join the ScriptNex team as an intern. Work on real-world projects in web development, data analytics, Python, React, and more. Apply for remote internship positions.',
+    keywords: 'coding internship, tech internship, remote internship, web development intern, Python internship, React internship, ScriptNex careers',
+  },
+  '/intern-verification': {
+    title: 'Verify Internship Certificate — ScriptNex',
+    description: 'Verify the authenticity of a ScriptNex internship certificate by entering the unique internship ID. Instant verification for employers and recruiters.',
+    keywords: 'internship verification, verify certificate, ScriptNex internship ID, credential verification',
+  },
+  '/open-source': {
+    title: 'Open Source — Contribute to ScriptNex on GitHub',
+    description: 'ScriptNex is proudly open source. Explore our GitHub repositories, contribute to the codebase, and help us build the future of coding education together.',
+    keywords: 'open source coding platform, contribute to ScriptNex, GitHub, open source education, developer community',
+  },
+  '/partners': {
+    title: 'Partners & Resources — Trusted Educational Collaborators',
+    description: 'Explore our trusted educational partners, sponsors, and coding resources. Exchange links with ScriptNex and grow together in the developer ecosystem.',
+    keywords: 'ScriptNex partners, educational resources, coding partners, link exchange, tech education',
+  },
 };
 
 export function getFallbackMetadata(path: string): Metadata {
   const fb = PAGE_FALLBACKS[path] || PAGE_FALLBACKS['/'];
   const canonicalUrl = path === '/' ? SITE_URL : `${SITE_URL}${path}`;
 
-  const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register'];
+  const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register', '/intern-verification', '/playground'];
   const shouldIndex = !noIndexPaths.some(p => path.startsWith(p));
 
   return {
@@ -147,7 +187,7 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
     const canonicalUrl = seo.canonical_url || (path === '/' ? SITE_URL : `${SITE_URL}${path}`);
 
     const robotsParts: string[] = [];
-    const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register'];
+    const noIndexPaths = ['/login', '/dashboard', '/verify', '/forgot-password', '/register', '/intern-verification', '/playground'];
     const shouldIndex = !noIndexPaths.some(p => path.startsWith(p));
     
     let index = seo.robots_index ?? true;

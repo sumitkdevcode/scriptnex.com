@@ -113,9 +113,9 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Developers</h3>
             <ul className="space-y-3">
               <li><Link href="/blog" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Blog</Link></li>
-              <li><Link href="/changelog" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Changelog</Link></li>
+              <li><Link href="/sheets" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Coding Sheets</Link></li>
               <li><Link href="/open-source" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Open Source</Link></li>
-              <li><Link href="/careers" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Careers</Link></li>
+              <li><Link href="/internship" className="text-[#ababab] hover:text-[#00d285] transition-colors text-sm">Internship</Link></li>
             </ul>
           </nav>
 

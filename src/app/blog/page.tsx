@@ -2,12 +2,13 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import BlogClient, { FeaturedPost } from './BlogClient';
 import type { BlogPostListItem, BlogPostTag } from '@/types/blog';
+import { getPageMetadata } from '@/lib/seo';
+import { Metadata } from 'next';
 import './blog.css';
 
-export const metadata = {
-  title: 'Blog - ScriptNex',
-  description: 'Deep dives into programming, system design, and developer career growth.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await getPageMetadata("/blog");
+}
 
 export default async function BlogPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
