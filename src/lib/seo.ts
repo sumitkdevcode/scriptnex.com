@@ -131,7 +131,7 @@ export function getFallbackMetadata(path: string): Metadata {
   const shouldIndex = !noIndexPaths.some(p => path.startsWith(p));
 
   return {
-    title: fb.title,
+    title: fb.title.replace(/\s*[|\-]\s*ScriptNex\s*$/i, ''),
     description: fb.description,
     keywords: fb.keywords.split(',').map(k => k.trim()),
     alternates: {
@@ -210,8 +210,8 @@ export async function getPageMetadata(path: string): Promise<Metadata> {
     }
 
     return {
-      // Use API title ONLY if it's meaningful (not just brand name)
-      title: (seo.title && seo.title.length > 15) ? seo.title : fallback.title,
+      // Use API title ONLY if it's meaningful (not just brand name), and clean duplicate suffix
+      title: ((seo.title && seo.title.length > 15) ? seo.title : (fallback.title as string))?.replace(/\s*[|\-]\s*ScriptNex\s*$/i, ''),
       description: seo.meta_description || fallback.description,
       keywords: seo.meta_keywords ? seo.meta_keywords.split(',').map(k => k.trim()) : (fallback.keywords as string[]),
       alternates: {
